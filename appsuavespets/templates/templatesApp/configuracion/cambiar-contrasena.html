@@ -1,0 +1,11 @@
+<div class="container">
+  <h2>Cambiar contraseña</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Nueva contraseña</label>
+      <input name="password" type="password" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
+</div>

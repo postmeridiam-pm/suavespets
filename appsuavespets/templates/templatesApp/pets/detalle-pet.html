@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ pet.nombre_pet }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 50%, #e0f2f1 100%);
+            background-attachment: fixed;
+            font-family: 'Quicksand', 'Segoe UI', sans-serif;
+            color: #2e7d32;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .pet-card {
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(76, 175, 80, 0.15);
+            overflow: hidden;
+            border: 2px solid rgba(129, 199, 132, 0.3);
+        }
+
+        .card-header-section {
+            background: linear-gradient(135deg, #a5d6a7 0%, #c8e6c9 100%);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .pet-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1b5e20;
+            margin: 0;
+        }
+
+        .pet-subtitle {
+            font-size: 1rem;
+            color: #388e3c;
+            margin-top: 0.5rem;
+        }
+
+        /* Layout horizontal */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            padding: 2.5rem;
+        }
+
+        @media (max-width: 968px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Columna izquierda - Foto */
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .pet-photo {
+            max-width: 280px;
+            max-height: 280px;
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            border: 4px solid #81c784;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.2);
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .pet-photo:hover {
+            transform: scale(1.05);
+        }
+
+        .no-photo-placeholder {
+            width: 280px;
+            height: 280px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #c8e6c9 0%, #e8f5e9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px dashed #81c784;
+            font-size: 1rem;
+            color: #66bb6a;
+            font-weight: 600;
+        }
+
+        /* Columna derecha - Info */
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+            border-radius: 15px;
+            padding: 1.25rem;
+            border: 2px solid rgba(129, 199, 132, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.1);
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: #388e3c;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            color: #2e7d32;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .description-section {
+            background: linear-gradient(135deg, #dcedc8 0%, #f0f4c3 100%);
+            border-radius: 20px;
+            padding: 1.75rem;
+            border: 2px solid rgba(139, 195, 74, 0.3);
+        }
+
+        .description-title {
+            font-weight: 700;
+            color: #558b2f;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .description-text {
+            color: #33691e;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Botones */
+        .actions-section {
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(232, 245, 233, 0.3), transparent);
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            border-top: 2px solid rgba(129, 199, 132, 0.2);
+        }
+
+        .btn-action {
+            padding: 0.85rem 1.75rem;
+            border-radius: 18px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-evento {
+            background: linear-gradient(135deg, #81c784 0%, #a5d6a7 100%);
+            color: #1b5e20;
+        }
+
+        .btn-evento:hover {
+            background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
+            color: #1b5e20;
+        }
+
+        .btn-editar {
+            background: linear-gradient(135deg, #aed581 0%, #c5e1a5 100%);
+            color: #33691e;
+        }
+
+        .btn-editar:hover {
+            background: linear-gradient(135deg, #9ccc65 0%, #aed581 100%);
+            color: #33691e;
+        }
+
+        .btn-volver {
+            background: linear-gradient(135deg, #c8e6c9 0%, #dcedc8 100%);
+            color: #2e7d32;
+        }
+
+        .btn-volver:hover {
+            background: linear-gradient(135deg, #a5d6a7 0%, #c8e6c9 100%);
+            color: #2e7d32;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #ffccbc 0%, #ffab91 100%);
+            color: #bf360c;
+            border: 2px solid #ff8a65;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pet-card">
+            <!-- Header -->
+            <div class="card-header-section">
+                <h1 class="pet-name">{{ pet.nombre_pet }}</h1>
+                <p class="pet-subtitle">Perfil de mascota</p>
+            </div>
+
+            <!-- Layout horizontal: Foto | Información -->
+            <div class="content-wrapper">
+                <!-- Columna izquierda: Foto -->
+                <div class="photo-section">
+                    {% if pet.foto_url %}
+                        <img src="{{ pet.foto_url.url }}" class="pet-photo" alt="Foto de {{ pet.nombre_pet }}">
+                    {% elif pet.foto %}
+                        <img src="{{ pet.foto }}" class="pet-photo" alt="Foto de {{ pet.nombre_pet }}">
+                    {% else %}
+                        <div class="no-photo-placeholder">Sin fotografía</div>
+                    {% endif %}
+                </div>
+
+                <!-- Columna derecha: Información -->
+                <div class="info-section">
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-label">Especie</div>
+                            <div class="info-value">{{ pet.especie|capfirst }}</div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-label">Sexo</div>
+                            <div class="info-value">{{ pet.sexo|capfirst }}</div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-label">Tamaño</div>
+                            <div class="info-value">{{ pet.tamanio|capfirst }}</div>
+                        </div>
+
+                        {% if pet.raza %}
+                            <div class="info-card">
+                                <div class="info-label">Raza</div>
+                                <div class="info-value">{{ pet.raza|capfirst }}</div>
+                            </div>
+                        {% endif %}
+
+                        {% if pet.edad %}
+                            <div class="info-card">
+                                <div class="info-label">Edad</div>
+                                <div class="info-value">{{ pet.edad }} año{% if pet.edad != 1 %}s{% endif %}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% if pet.descripcion_pet %}
+                        <div class="description-section">
+                            <div class="description-title">Sobre {{ pet.nombre_pet }}</div>
+                            <p class="description-text">{{ pet.descripcion_pet }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="actions-section">
+                <a href="{% url 'registrar_evento_clinico' pet.id_pet %}" class="btn-action btn-evento">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                    Evento Clínico
+                </a>
+                <a href="{% url 'actualizar_pet' pet.id_pet %}" class="btn-action btn-editar">
+                    <i class="bi bi-pencil-square"></i>
+                    Editar
+                </a>
+                <a href="{% url 'listado_pets' %}" class="btn-action btn-volver">
+                    <i class="bi bi-list-ul"></i>
+                    Volver al listado
+                </a>
+            </div>
+<!-- Información Veterinaria con IA -->
+{% if info_vet %}
+<div style="padding: 2.5rem; background: linear-gradient(to bottom, rgba(232, 245, 233, 0.5), white); border-top: 3px solid #81c784;">
+    <h3 style="color: #2e7d32; text-align: center; margin-bottom: 1rem; font-size: 2rem; font-weight: 700;">
+        <i class="bi bi-clipboard2-heart"></i> Información Veterinaria - Información generada con IA, siempre consulta con un Veterinario Profesional
+    </h3>
+    
+    <!-- Veterinario a cargo -->
+    <div style="text-align: center; margin-bottom: 2.5rem; padding: 1rem; background: white; border-radius: 12px; border: 2px solid #a5d6a7;">
+        <p style="margin: 0; color: #558b2f; font-size: 1.1rem;">
+            <i class="bi bi-person-badge"></i> <strong>Veterinario a Cargo:</strong> 
+            <span style="color: #33691e; font-weight: 600;">___________________________</span>
+        </p>
+    </div>
+
+    <!-- Secciones con contenido generado -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+        {% if info_vet.enfermedades %}
+        <div style="background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%); border-radius: 18px; padding: 2rem; border: 2px solid #fdd835; box-shadow: 0 4px 12px rgba(253, 216, 53, 0.3);">
+            <h4 style="color: #f57f17; margin-bottom: 1.5rem; font-size: 1.3rem; border-bottom: 2px solid #f9a825; padding-bottom: 0.75rem;">
+                <i class="bi bi-exclamation-triangle-fill"></i> Enfermedades Comunes
+            </h4>
+            <div style="color: #6d4c41; line-height: 2; font-size: 1rem; white-space: pre-line;">{{ info_vet.enfermedades|safe }}</div>
+        </div>
+        {% endif %}
+
+        {% if info_vet.alimentos_prohibidos %}
+        <div style="background: linear-gradient(135deg, #ffccbc 0%, #ffab91 100%); border-radius: 18px; padding: 2rem; border: 2px solid #ff8a65; box-shadow: 0 4px 12px rgba(255, 138, 101, 0.3);">
+            <h4 style="color: #d84315; margin-bottom: 1.5rem; font-size: 1.3rem; border-bottom: 2px solid #ff5722; padding-bottom: 0.75rem;">
+                <i class="bi bi-x-circle-fill"></i> Alimentos Prohibidos
+            </h4>
+            <div style="color: #4e342e; line-height: 2; font-size: 1rem; white-space: pre-line;">{{ info_vet.alimentos_prohibidos|safe }}</div>
+        </div>
+        {% endif %}
+
+        {% if info_vet.cuidados %}
+        <div style="background: linear-gradient(135deg, #b2dfdb 0%, #80cbc4 100%); border-radius: 18px; padding: 2rem; border: 2px solid #4db6ac; box-shadow: 0 4px 12px rgba(77, 182, 172, 0.3);">
+            <h4 style="color: #00695c; margin-bottom: 1.5rem; font-size: 1.3rem; border-bottom: 2px solid #00897b; padding-bottom: 0.75rem;">
+                <i class="bi bi-heart-fill"></i> Cuidados Preventivos
+            </h4>
+            <div style="color: #004d40; line-height: 2; font-size: 1rem; white-space: pre-line;">{{ info_vet.cuidados|safe }}</div>
+        </div>
+        {% endif %}
+
+        {% if info_vet.estudios %}
+        <div style="background: linear-gradient(135deg, #c5cae9 0%, #9fa8da 100%); border-radius: 18px; padding: 2rem; border: 2px solid #7986cb; box-shadow: 0 4px 12px rgba(121, 134, 203, 0.3);">
+            <h4 style="color: #283593; margin-bottom: 1.5rem; font-size: 1.3rem; border-bottom: 2px solid #5c6bc0; padding-bottom: 0.75rem;">
+                <i class="bi bi-clipboard2-pulse-fill"></i> Estudios Recomendados
+            </h4>
+            <div style="color: #1a237e; line-height: 2; font-size: 1rem; white-space: pre-line;">{{ info_vet.estudios|safe }}</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Referencias Bibliográficas -->
+    {% if info_vet.referencias %}
+    <div style="margin-top: 3rem; background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-radius: 18px; padding: 2.5rem; border: 3px solid #ba68c8; box-shadow: 0 6px 20px rgba(186, 104, 200, 0.3);">
+        <h4 style="color: #6a1b9a; margin-bottom: 2rem; font-size: 1.5rem; text-align: center; border-bottom: 3px solid #ab47bc; padding-bottom: 1rem;">
+            <i class="bi bi-book-fill"></i> Referencias Bibliográficas
+        </h4>
+        <div style="background: white; padding: 2rem; border-radius: 15px; border-left: 5px solid #ba68c8; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="color: #4a148c; line-height: 2.2; font-size: 0.95rem; white-space: pre-line;">
+                <i class="bi bi-journal-text" style="color: #8e24aa; font-size: 1.2rem;"></i>
+                {{ info_vet.referencias|safe }}
+            </div>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.9rem; color: #7b1fa2; font-weight: 600; text-align: center; border-top: 2px solid #ce93d8; padding-top: 1.5rem;">
+            <i class="bi bi-info-circle-fill"></i> Fuentes de revistas científicas veterinarias (estudios del 2010 en adelante)
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Disclaimer destacado ABAJO también -->
+    <div style="background: linear-gradient(135deg, #ffecb3 0%, #ffe082 100%); border: 3px solid #ffa726; padding: 1.5rem; margin-top: 2.5rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(255, 167, 38, 0.3);">
+        <p style="margin: 0; color: #e65100; font-size: 1.1rem; font-weight: 700; text-align: center; line-height: 1.6;">
+            <i class="bi bi-shield-exclamation" style="font-size: 1.3rem;"></i><br>
+            <strong>IMPORTANTE:</strong> Esta información es generada por IA y tiene fines educativos.<br>
+            <span style="font-size: 1.15rem;">Siempre consulta con un veterinario profesional certificado.</span>
+        </p>
+    </div>
+</div>
+{% endif %}

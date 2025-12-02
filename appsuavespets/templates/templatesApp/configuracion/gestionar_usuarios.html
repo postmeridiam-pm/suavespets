@@ -1,0 +1,28 @@
+<div class="container">
+  <h2>Gestionar usuarios</h2>
+  <p>
+    <a href="/configuracion/usuarios/crear/" class="btn btn-primary">Crear usuario especial</a>
+  </p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Tipo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in usuarios %}
+      <tr>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.tipo_usuario }}</td>
+        <td>
+          <a href="/configuracion/usuarios/asignar/{{ u.id_usuario }}/" class="btn btn-sm btn-secondary">Asignar rol</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

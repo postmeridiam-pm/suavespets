@@ -1,0 +1,20 @@
+<div class="container">
+  <h2>Asignar rol a {{ usuario.nombre }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="nuevo_rol" class="form-label">Nuevo rol</label>
+      <select id="nuevo_rol" name="nuevo_rol" class="form-select" required>
+        <option value="socio">Socio</option>
+        <option value="socio_premium">Socio Premium</option>
+        <option value="invitado">Invitado</option>
+        <option value="clinica">Clínica</option>
+        <option value="veterinario">Veterinario</option>
+        <option value="colaborador">Colaborador Web</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="/configuracion/usuarios/" class="btn btn-link">Volver</a>
+  </form>
+</div>

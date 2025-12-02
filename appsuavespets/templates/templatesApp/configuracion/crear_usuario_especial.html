@@ -1,0 +1,36 @@
+<div class="container">
+  <h2>Crear usuario especial</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input name="nombre" type="text" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">DNI</label>
+      <input name="dni" type="text" class="form-control" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input name="email" type="email" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Teléfono</label>
+      <input name="telefono" type="text" class="form-control" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Tipo de usuario</label>
+      <select name="tipo_usuario" class="form-select" required>
+        <option value="veterinario">Veterinario</option>
+        <option value="clinica">Clínica</option>
+        <option value="colaborador">Colaborador Web</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Contraseña</label>
+      <input name="password" type="password" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Crear</button>
+    <a href="/configuracion/usuarios/" class="btn btn-link">Volver</a>
+  </form>
+</div>

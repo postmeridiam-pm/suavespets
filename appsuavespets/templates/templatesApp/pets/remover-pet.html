@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Remover pet</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f1ea;
+    color: #3d5229;
+    padding: 2rem;
+  }
+  .card {
+    background-color: #fff8f0;
+    border: 2px solid #c3b091;
+    border-radius: 10px;
+    max-width: 500px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 8px rgba(60, 82, 41, 0.1);
+    padding: 1.5rem 2rem;
+    text-align: center;
+  }
+  h1 {
+    color: #5a6e2b;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+  }
+  p.info {
+    font-weight: 600;
+    color: #5a6e2b;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #5a6e2b;
+    text-align: left;
+  }
+  textarea {
+    width: 100%;
+    height: 100px;
+    resize: vertical;
+    border: 1.5px solid #a2b889;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #3d5229;
+  }
+  textarea:focus {
+    border-color: #f2b880;
+    box-shadow: 0 0 6px #f2b880a3;
+    outline: none;
+    background-color: #fffaf3;
+  }
+  .form-text {
+    font-size: 0.875rem;
+    color: #9e7a50;
+    margin-top: 0.25rem;
+    text-align: left;
+  }
+  .btn {
+    display: block;
+    width: 100%;
+    background-color: #f2b880;
+    border: none;
+    padding: 0.75rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    color: #3d5229;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1.5rem;
+  }
+  .btn:hover {
+    background-color: #d29156;
+    color: #fff;
+  }
+  .btn-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .btn-cancel, .btn-secondary {
+    background-color: transparent;
+    border: 2px solid #a2b889;
+    color: #3d5229;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1;
+  }
+  .btn-cancel:hover, .btn-secondary:hover {
+    background-color: #a2b889;
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Remover pet</h1>
+    <p class="info">¿Qué pet quieres remover del listado?</p>
+    <p class="info"><strong>Nombre:</strong> {{ pet.nombre_pet }}</p>
+    <p class="info"><strong>Código de pet:</strong> {{ pet.id_pet }}</p>
+    <form method="post" action="{% url 'remover_pet' pet.id_pet %}">
+      {% csrf_token %}
+      <label for="motivo">Motivo para quitar la pet del listado</label>
+      <textarea id="motivo" name="motivo" maxlength="1000" placeholder="Escribe aquí el motivo." required></textarea>
+      <div class="form-text" id="carCount">0 / 1000 caracteres</div>
+      
+      <button type="submit" class="btn">Confirmar</button>
+    </form>
+    <div class="btn-group">
+      <a href="/" class="btn-secondary">Inicio</a>
+      <a href="{% url 'listado_pets' %}" class="btn-cancel">Volver al listado</a>
+      <a href="{% url 'detalle_pet' pet.id_pet %}" class="btn-cancel">Cancelar</a>
+    </div>
+  </div>
+
+  <script>
+    const motivoTextarea = document.getElementById('motivo');
+    const carCount = document.getElementById('carCount');
+    motivoTextarea.addEventListener('input', () => {
+      const len = motivoTextarea.value.length;
+      carCount.textContent = `${len} / 1000 caracteres`;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Listado de Archivos de Mascota</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background-color: #f5f3f2;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a4a4a;
+        }
+
+        h2 {
+            font-weight: 700;
+            color: #675d50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        table {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+        }
+
+        thead {
+            background-color: #b0aca7;
+            color: #4a4a4a;
+        }
+
+        tbody tr:nth-of-type(odd) {
+            background-color: #f2efe7;
+        }
+
+        tbody tr:hover {
+            background-color: #bab3a5;
+            color: white;
+        }
+
+        td, th {
+            vertical-align: middle !important;
+            text-align: center;
+        }
+
+        .btn-info {
+            background-color: #a4c3a2;
+            border-color: #a4c3a2;
+            font-weight: 600;
+        }
+
+        .btn-info:hover {
+            background-color: #8bae86;
+            border-color: #8bae86;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #c2b093;
+            border-color: #c2b093;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: #a89a7a;
+            border-color: #a89a7a;
+            color: white;
+        }
+    </style>
+</head>
+<body class="container py-5">
+    <h2>Archivos adjuntos</h2>
+
+    {% csrf_token %}
+    {% if archivos %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Archivo</th>
+                    <th>Descripción</th>
+                    <th>Fecha de subida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for archivo in archivos %}
+                <tr>
+                    <td>
+                        <a href="{{ archivo.archivo_url }}" target="_blank" class="btn btn-info btn-sm">
+                            <i class="bi bi-file-earmark-text-fill"></i> Ver archivo
+                        </a>
+                    </td>
+                    <td>{{ archivo.descripcion }}</td>
+                    <td>{{ archivo.fecha_subida|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <span class="text-muted">Acción no disponible</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <h4>No hay archivos subidos aún.</h4>
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-center mt-4 gap-3">
+        <span class="btn btn-success disabled"><i class="bi bi-plus-circle"></i> Agregar archivo</span>
+        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-house-fill"></i> Inicio
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

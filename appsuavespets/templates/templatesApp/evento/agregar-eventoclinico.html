@@ -1,0 +1,463 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Evento Clínico - {{ pet.nombre_pet }}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f9fafb 0%, #e8f4f8 100%);
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  /* Botones superiores con patitas */
+  .top-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .btn-paw {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    position: relative;
+  }
+  
+  .btn-paw:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  }
+  
+  .btn-paw-home {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8c42 100%);
+  }
+  
+  .btn-paw-pets {
+    background: linear-gradient(135deg, #24796b 0%, #16584b 100%);
+  }
+  
+  .btn-paw .paw-icon {
+    font-size: 2rem;
+    margin-bottom: 2px;
+  }
+  
+  .btn-paw .paw-text {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: white;
+  }
+  
+  h1 { 
+    color: #24796b;
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .pet-info { 
+    background: linear-gradient(135deg, #d9e8c9 0%, #b8d4a0 100%);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pet-info h2 { 
+    color: #3d5229;
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  
+  .pet-info p {
+    color: #5a6e2b;
+    margin-top: 8px;
+    font-size: 1.1rem;
+  }
+  
+  .card { 
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 25px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  label { 
+    font-weight: 600;
+    color: #24796b;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.05rem;
+  }
+  
+  input[type="text"], 
+  input[type="date"], 
+  textarea, 
+  select { 
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 2px solid #c3d5e0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+  
+  input:focus, 
+  textarea:focus, 
+  select:focus {
+    outline: none;
+    border-color: #24796b;
+    box-shadow: 0 0 0 3px rgba(36, 121, 107, 0.1);
+  }
+  
+  input[readonly] {
+    background: #f0f0f0;
+    cursor: not-allowed;
+  }
+  
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  input[type="file"] { 
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 2px dashed #24796b;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  /* Checkbox de consentimiento */
+  .consent-container {
+    background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
+    border: 3px solid #f59e0b;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 25px 0;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+  }
+  
+  .consent-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #b45309;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+  
+  .consent-text {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #f59e0b;
+    margin-bottom: 20px;
+    line-height: 1.8;
+    color: #4a5568;
+  }
+  
+  .consent-text p {
+    margin-bottom: 12px;
+  }
+  
+  .consent-text ul {
+    margin-left: 20px;
+    margin-top: 10px;
+  }
+  
+  .consent-text li {
+    margin-bottom: 8px;
+  }
+  
+  .consent-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .consent-checkbox:hover {
+    background: #fef3c7;
+  }
+  
+  .consent-checkbox input[type="checkbox"] {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    margin: 0;
+  }
+  
+  .consent-checkbox label {
+    margin: 0;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #1f2937;
+  }
+  
+  button { 
+    background: linear-gradient(135deg, #24796b 0%, #16584b 100%);
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(36, 121, 107, 0.3);
+  }
+  
+  button:hover:not(:disabled) { 
+    background: linear-gradient(135deg, #16584b 0%, #0d3d31 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(36, 121, 107, 0.4);
+  }
+  
+  button:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .btn-back { 
+    background: linear-gradient(135deg, #8c7b6a 0%, #6d5d4d 100%);
+    margin-left: 15px;
+  }
+  
+  .btn-back:hover { 
+    background: linear-gradient(135deg, #6d5d4d 0%, #4d3d2d 100%);
+  }
+  
+  .img-preview { 
+    max-width: 120px;
+    max-height: 90px;
+    margin: 5px 10px 10px 0;
+    border-radius: 8px;
+    border: 2px solid #c3d5e0;
+    display: inline-block;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .care-list {
+    margin-top: 30px;
+  }
+  
+  .symptom { 
+    background: #fbe9e7;
+    color: #ad2d2d;
+    border-radius: 10px;
+    padding: 5px 15px;
+    display: inline-block;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 25px;
+  }
+  
+  #preview {
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .file-info {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<!-- Botones superiores con patitas -->
+<div class="top-navigation">
+  <a href="{% url 'inicio' %}" class="btn-paw btn-paw-home" title="Ir al inicio">
+    <span class="paw-icon">🏠</span>
+    <span class="paw-text">Home</span>
+  </a>
+  <a href="{% url 'listado_pets' %}" class="btn-paw btn-paw-pets" title="Ver mis mascotas">
+    <span class="paw-icon">🐾</span>
+    <span class="paw-text">Mis Pets</span>
+  </a>
+</div>
+
+<h1><i class="bi bi-heart-pulse-fill"></i> Registrar Evento Clínico</h1>
+
+<div class="pet-info">
+  <h2>🐶 {{ pet.nombre_pet }}</h2>
+  <p><strong>Especie:</strong> {{ pet.especie }} | <strong>Edad:</strong> {{ pet.edad }} año(s)</p>
+</div>
+
+<div class="card">
+  <form id="careForm" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="pet_id" value="{{ pet.id_pet }}" />
+    
+    <label for="petName">Nombre de la Mascota</label>
+    <input type="text" required id="petName" name="petName" value="{{ pet.nombre_pet }}" readonly />
+    
+    <label for="eventDate">Fecha del evento <span style="color: #dc2626;">*</span></label>
+    <input type="date" required id="eventDate" name="eventDate" />
+    
+    <label for="tipoEvento">Tipo de evento <span style="color: #dc2626;">*</span></label>
+    <select id="tipoEvento" name="tipoEvento" required>
+      <option value="preconsulta">Preconsulta</option>
+      <option value="emergencia">Emergencia</option>
+      <option value="adverso">Síntoma Adverso a Tratamiento</option>
+    </select>
+    
+    <label for="sintomas">Síntomas reportados <span style="color: #dc2626;">*</span></label>
+    <textarea id="sintomas" name="sintomas" required placeholder="Ej: vómitos, decaimiento, herida en pata..."></textarea>
+    
+    <label for="fotoInput">Fotos (máx. 4)</label>
+    <input type="file" id="fotoInput" name="fotos" accept="image/*" multiple />
+    <p class="file-info">💡 Puedes seleccionar hasta 4 fotografías para adjuntar al evento</p>
+    <div id="preview"></div>
+    
+    <!-- CONSENTIMIENTO INFORMADO -->
+    <div class="consent-container">
+      <div class="consent-title">
+        <i class="bi bi-shield-check"></i>
+        Consentimiento Informado
+      </div>
+      
+      <div class="consent-text">
+        <p><strong>Al registrar este evento clínico, usted declara que:</strong></p>
+        <ul>
+          <li>Autoriza expresamente al médico veterinario asignado a <strong>acceder, revisar y editar</strong> la información clínica de su mascota.</li>
+          <li>Comprende que los datos e imágenes proporcionados serán utilizados exclusivamente para fines de <strong>diagnóstico, tratamiento y seguimiento veterinario</strong>.</li>
+          <li>Otorga permiso para que el profesional veterinario pueda agregar observaciones, diagnósticos y recomendaciones al registro de este evento.</li>
+          <li>Acepta que la información será manejada bajo estricta <strong>confidencialidad profesional</strong> y normativas de protección de datos vigentes.</li>
+        </ul>
+      </div>
+      
+      <div class="consent-checkbox" onclick="toggleConsent()">
+        <input type="checkbox" id="consentCheckbox" name="consent" required />
+        <label for="consentCheckbox">
+          <strong>He leído y acepto el consentimiento informado.</strong> Autorizo al veterinario a acceder y editar la información clínica de mi mascota.
+        </label>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button type="submit" id="submitBtn" disabled>
+        <i class="bi bi-send-fill"></i> Registrar Evento
+      </button>
+      <button type="button" class="btn-back" onclick="window.location.href='{% url 'detalle_pet' pet.id_pet %}'">
+        <i class="bi bi-arrow-left"></i> Volver
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="care-list" id="careList">
+  <!-- Aquí se mostrarán las preconsultas/emergencias guardadas temporalmente -->
+</div>
+
+<script>
+  let preconsultas = [];
+  
+  // Control del checkbox de consentimiento
+  const consentCheckbox = document.getElementById('consentCheckbox');
+  const submitBtn = document.getElementById('submitBtn');
+  
+  function toggleConsent() {
+    consentCheckbox.checked = !consentCheckbox.checked;
+    updateSubmitButton();
+  }
+  
+  function updateSubmitButton() {
+    submitBtn.disabled = !consentCheckbox.checked;
+  }
+  
+  consentCheckbox.addEventListener('change', updateSubmitButton);
+  
+  // Prevenir que el click en el label toggle dos veces
+  document.querySelector('.consent-checkbox label').addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+  
+  // Manejo del formulario
+  document.getElementById('careForm').addEventListener('submit', function(e) {
+    if (!consentCheckbox.checked) {
+      e.preventDefault();
+      alert('Debe aceptar el consentimiento informado para continuar.');
+      return false;
+    }
+    // Si está checked, el formulario se envía normalmente
+  });
+
+  // Preview de fotos
+  document.getElementById('fotoInput').addEventListener('change', function() {
+    let preview = document.getElementById('preview');
+    preview.innerHTML = '';
+    
+    if (this.files.length > 0) {
+      for(let i = 0; i < Math.min(4, this.files.length); i++){
+        let img = document.createElement('img');
+        img.src = URL.createObjectURL(this.files[i]);
+        img.className = 'img-preview';
+        preview.appendChild(img);
+      }
+      
+      if (this.files.length > 4) {
+        let aviso = document.createElement('div');
+        aviso.style.color = '#ad2d2d';
+        aviso.style.fontWeight = 'bold';
+        aviso.style.marginTop = '10px';
+        aviso.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Solo se permiten 4 fotos. Se subirán las primeras 4 seleccionadas.';
+        preview.appendChild(aviso);
+      }
+    }
+  });
+</script>
+</body>
+</html>

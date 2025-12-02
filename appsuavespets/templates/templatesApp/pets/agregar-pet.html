@@ -1,0 +1,1342 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Registrar Mascota - Suaves Pets</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+<style>
+    :root {
+        --primary-color: #6eb5c0;
+        --secondary-color: #a8d5ba;
+        --accent-color: #d4c5b9;
+        --dark-text: #4a4a4a;
+        --light-bg: #f8fafb;
+    }
+
+    body {
+        background: linear-gradient(135deg, #e8f4f8 0%, #f0f8f0 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--dark-text);
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+
+    .header-top {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 20px 0;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 12px rgba(110, 181, 192, 0.2);
+    }
+
+    .header-top h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    .btn-home {
+        background: white;
+        color: var(--primary-color);
+        border: none;
+        padding: 10px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-home:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        color: var(--primary-color);
+    }
+
+    /* PROGRESS BAR */
+    .progress-container {
+        max-width: 1100px;
+        margin: 0 auto 40px;
+        padding: 0 20px;
+    }
+
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .progress-steps::before {
+        content: '';
+        position: absolute;
+        top: 25px;
+        left: 25%;
+        right: 25%;
+        height: 4px;
+        background: #e0f2f1;
+        z-index: 0;
+    }
+
+    .progress-steps-bar {
+        position: absolute;
+        top: 25px;
+        left: 25%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+        z-index: 1;
+        transition: width 0.4s ease;
+        width: 0%;
+    }
+
+    .progress-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        flex: 1;
+    }
+
+    .progress-step-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: white;
+        border: 4px solid #e0f2f1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: #9ca3af;
+        transition: all 0.3s ease;
+        margin-bottom: 10px;
+    }
+
+    .progress-step.active .progress-step-circle {
+        border-color: var(--primary-color);
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(110, 181, 192, 0.3);
+    }
+
+    .progress-step.completed .progress-step-circle {
+        border-color: var(--secondary-color);
+        background: var(--secondary-color);
+        color: white;
+    }
+
+    .progress-step-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #9ca3af;
+        text-align: center;
+        transition: color 0.3s ease;
+    }
+
+    .progress-step.active .progress-step-label {
+        color: var(--primary-color);
+    }
+
+    .progress-step.completed .progress-step-label {
+        color: var(--secondary-color);
+    }
+
+    /* FORM SLIDER */
+    .form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(110, 181, 192, 0.12);
+        border: none;
+        overflow: hidden;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .form-slider-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .form-slider {
+        display: flex;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .form-slide {
+        min-width: 100%;
+        padding: 50px 60px;
+    }
+
+    @media (max-width: 768px) {
+        .form-slide {
+            padding: 30px 20px;
+        }
+    }
+
+    .slide-title {
+        color: var(--primary-color);
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .slide-subtitle {
+        color: #6b7280;
+        font-size: 1.05rem;
+        margin-bottom: 35px;
+    }
+
+    .form-label {
+        color: var(--dark-text);
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+    }
+
+    .required-mark {
+        color: #dc2626;
+        font-weight: 700;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid #e0f2f1;
+        border-radius: 12px;
+        padding: 12px 16px;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(110, 181, 192, 0.15);
+        outline: none;
+    }
+
+    .form-control.is-invalid, .form-select.is-invalid {
+        border-color: #dc2626;
+    }
+
+    .form-control.disabled-field, .form-select.disabled-field {
+        background: linear-gradient(135deg, #b3e5fc 0%, #81d4fa 100%);
+        border-color: #4fc3f7;
+        color: #01579b;
+        font-weight: 600;
+        cursor: not-allowed;
+    }
+
+    .invalid-feedback {
+        display: none;
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 6px;
+    }
+
+    .form-control.is-invalid ~ .invalid-feedback,
+    .form-select.is-invalid ~ .invalid-feedback {
+        display: block;
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+
+    .btn-clear {
+        background: transparent;
+        border: 2px solid #e0f2f1;
+        color: var(--dark-text);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-clear:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-ninguna-alergia {
+        background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+        border: 2px solid var(--secondary-color);
+        color: var(--dark-text);
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-ninguna-alergia:hover {
+        background: linear-gradient(135deg, #b2dfdb 0%, #80cbc4 100%);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(110, 181, 192, 0.2);
+    }
+
+    .loading-spinner {
+        display: none;
+        color: var(--primary-color);
+        font-size: 0.9rem;
+        margin-top: 6px;
+    }
+
+    .loading-spinner.show {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .photo-preview {
+        max-width: 100%;
+        max-height: 250px;
+        border-radius: 12px;
+        margin-top: 12px;
+        display: none;
+        border: 2px solid #e0f2f1;
+    }
+
+    .photo-preview.show {
+        display: block;
+    }
+
+    .ficha-display {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        padding: 15px 20px;
+        background: var(--light-bg);
+        border-radius: 12px;
+        text-align: center;
+        border: 2px solid #e0f2f1;
+    }
+
+    .mestizo-question {
+        background: #fff9e6;
+        border: 2px solid #ffd700;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .mestizo-question h5 {
+        color: var(--primary-color);
+        margin-bottom: 18px;
+        font-size: 1.15rem;
+    }
+
+    .mestizo-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .mestizo-buttons button {
+        padding: 12px 35px;
+        border-radius: 10px;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .btn-mestizo-si {
+        background: var(--secondary-color);
+        color: white;
+    }
+
+    .btn-mestizo-no {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-mestizo-si:hover, .btn-mestizo-no:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* NAVIGATION BUTTONS */
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 2px solid #e0f2f1;
+    }
+
+    .btn-nav {
+        padding: 14px 35px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .btn-prev {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .btn-prev:hover {
+        background: #c4b5a9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-next, .btn-submit {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+        color: white;
+    }
+
+    .btn-next:hover, .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(110, 181, 192, 0.3);
+    }
+
+    .btn-cancel {
+        background: transparent;
+        color: var(--dark-text);
+        border: 2px solid #e0f2f1;
+    }
+
+    .btn-cancel:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .peso-validation-warning {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        color: #856404;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        margin-top: 8px;
+        display: none;
+    }
+
+    .peso-validation-warning.show {
+        display: block;
+    }
+
+    .char-counter {
+        font-size: 0.8rem;
+        color: #9ca3af;
+        text-align: right;
+        margin-top: 4px;
+    }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header-top">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1><i class="bi bi-heart-pulse-fill"></i> Suaves Pets</h1>
+            <a href="/" class="btn btn-home">
+                <i class="bi bi-house-fill"></i> Inicio
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress-container">
+    <div class="progress-steps">
+        <div class="progress-steps-bar" id="progress-bar"></div>
+        
+        <div class="progress-step active" id="step-indicator-1">
+            <div class="progress-step-circle">
+                <i class="bi bi-1-circle-fill"></i>
+            </div>
+            <div class="progress-step-label">Información Básica</div>
+        </div>
+        
+        <div class="progress-step" id="step-indicator-2">
+            <div class="progress-step-circle">
+                <i class="bi bi-2-circle-fill"></i>
+            </div>
+            <div class="progress-step-label">Características y Salud</div>
+        </div>
+    </div>
+</div>
+
+<!-- Formulario -->
+<div class="container">
+    <div class="form-card">
+        <form id="form-pet" method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            
+            <div class="form-slider-container">
+                <div class="form-slider" id="form-slider">
+                    
+                    <!-- SLIDE 1: Información Básica + Foto -->
+                    <div class="form-slide" data-step="1">
+                        <div class="slide-title">
+                            <i class="bi bi-info-circle-fill"></i>
+                            Información Básica
+                        </div>
+                        <div class="slide-subtitle">
+                            Comencemos con los datos esenciales de tu mascota
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="mb-4">
+                                    <label for="nombre_pet" class="form-label">
+                                        Nombre de la mascota <span class="required-mark">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="nombre_pet" 
+                                        name="nombre_pet"
+                                        class="form-control"
+                                        placeholder="Ej: Luna, Max, Milo"
+                                        maxlength="50"
+                                        required
+                                    />
+                                    <div class="invalid-feedback">El nombre es obligatorio (solo letras y espacios)</div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label for="especie" class="form-label">
+                                            Especie <span class="required-mark">*</span>
+                                        </label>
+                                        <select id="especie" name="especie" class="form-select" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="perro">🐕 Perro</option>
+                                            <option value="gato">🐈 Gato</option>
+                                        </select>
+                                        <div class="invalid-feedback">Debe seleccionar una especie</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="sexo" class="form-label">
+                                            Sexo <span class="required-mark">*</span>
+                                        </label>
+                                        <select id="sexo" name="sexo" class="form-select" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="Hembra">Hembra</option>
+                                            <option value="Macho">Macho</option>
+                                        </select>
+                                        <div class="invalid-feedback">Debe seleccionar el sexo</div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="descripcion_pet" class="form-label">
+                                        Descripción del temperamento y comportamiento <span class="required-mark">*</span>
+                                    </label>
+                                    <textarea 
+                                        id="descripcion_pet" 
+                                        name="descripcion_pet"
+                                        class="form-control"
+                                        placeholder="Describe el temperamento, comportamiento y características especiales..."
+                                        rows="4"
+                                        maxlength="500"
+                                        required
+                                    ></textarea>
+                                    <div class="char-counter" id="char-counter">0 / 500</div>
+                                    <div class="invalid-feedback" id="descripcion-error">La descripción debe contener al menos 10 letras válidas</div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    <label for="foto_url" class="form-label">Fotografía de la Mascota</label>
+                                    <input 
+                                        type="file" 
+                                        id="foto_url" 
+                                        name="foto_url"
+                                        class="form-control"
+                                        accept="image/*"
+                                    />
+                                    <div class="help-text">Opcional. Tamaño máximo: 5MB</div>
+                                    <div class="invalid-feedback">Archivo inválido o muy grande</div>
+                                    <img id="photo-preview" class="photo-preview" alt="Vista previa" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <a href="{% url 'listado_pets' %}" class="btn btn-nav btn-cancel">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="button" class="btn btn-nav btn-next" id="btn-next-1">
+                                Siguiente <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SLIDE 2: Características Físicas + Información Médica -->
+                    <div class="form-slide" data-step="2">
+                        <div class="slide-title">
+                            <i class="bi bi-heart-pulse"></i>
+                            Características y Salud
+                        </div>
+                        <div class="slide-subtitle">
+                            Detalles físicos e información médica de tu mascota
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <!-- Pregunta Mestizo -->
+                                <div class="mestizo-question d-none" id="mestizo-question">
+                                    <h5><i class="bi bi-question-circle"></i> ¿Es mestizo (mezcla de razas)?</h5>
+                                    <div class="mestizo-buttons">
+                                        <button type="button" class="btn-mestizo-si" id="btn-mestizo-si">
+                                            <i class="bi bi-check-circle"></i> Sí, es mestizo
+                                        </button>
+                                        <button type="button" class="btn-mestizo-no" id="btn-mestizo-no">
+                                            <i class="bi bi-x-circle"></i> No, seleccionar raza
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4" id="raza-container" style="display: none;">
+                                    <label for="raza" class="form-label">
+                                        Raza <span class="required-mark">*</span>
+                                    </label>
+                                    <select id="raza" name="raza" class="form-select" disabled>
+                                        <option value="">Primero seleccione una especie...</option>
+                                    </select>
+                                    <div class="loading-spinner" id="raza-loading">
+                                        <span class="spinner-border spinner-border-sm"></span>
+                                        <span>Cargando razas...</span>
+                                    </div>
+                                    <div class="invalid-feedback">Debe seleccionar una raza</div>
+                                </div>
+
+                                <input type="hidden" id="es_mestizo" name="es_mestizo" value="0">
+
+                                <div class="mb-4 d-none" id="otra-raza-container">
+                                    <label for="otra_raza" class="form-label">Especifique la raza:</label>
+                                    <input 
+                                        type="text" 
+                                        id="otra_raza" 
+                                        name="otra_raza"
+                                        class="form-control"
+                                        placeholder="Nombre de la raza"
+                                        maxlength="50"
+                                    />
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="tamanio" class="form-label">
+                                        Tamaño <span class="required-mark">*</span>
+                                    </label>
+                                    <select id="tamanio" name="tamanio" class="form-select" required disabled>
+                                        <option value="">Primero seleccione una especie...</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="tamanio-error">Debe seleccionar un tamaño</div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label for="peso_kg" class="form-label">Peso (kg)</label>
+                                        <input 
+                                            type="text" 
+                                            id="peso_kg" 
+                                            name="peso_kg"
+                                            class="form-control"
+                                            placeholder="Ej: 4.5"
+                                            maxlength="6"
+                                        />
+                                        <div class="help-text" id="peso-help">Seleccione primero la especie</div>
+                                        <div class="peso-validation-warning" id="peso-warning">
+                                            <i class="bi bi-exclamation-triangle"></i> El peso no coincide con el tamaño seleccionado
+                                        </div>
+                                        <button type="button" id="btn-peso-desconocido" class="btn btn-clear btn-sm mt-2">
+                                            <i class="bi bi-question-circle"></i> Peso desconocido
+                                        </button>
+                                        <div class="invalid-feedback" id="peso-error"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="edad" class="form-label">Edad (años)</label>
+                                        <input 
+                                            type="number" 
+                                            id="edad" 
+                                            name="edad"
+                                            class="form-control"
+                                            placeholder="Ej: 3"
+                                            min="0"
+                                            max="30"
+                                        />
+                                        <button type="button" id="btn-edad-desconocida" class="btn btn-clear btn-sm mt-2">
+                                            <i class="bi bi-question-circle"></i> Edad desconocida
+                                        </button>
+                                        <div class="invalid-feedback">Edad debe estar entre 0 y 30 años</div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                    <input 
+                                        type="date" 
+                                        id="fecha_nacimiento" 
+                                        name="fecha_nacimiento"
+                                        class="form-control"
+                                    />
+                                    <button type="button" id="btn-fecha-clear" class="btn btn-clear btn-sm mt-2">
+                                        <i class="bi bi-x-circle"></i> Borrar fecha
+                                    </button>
+                                    <div class="invalid-feedback">Fecha no puede ser futura</div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <label for="alergias" class="form-label">Alergias y Condiciones Médicas</label>
+                                    <textarea 
+                                        id="alergias" 
+                                        name="alergias"
+                                        class="form-control"
+                                        placeholder="Menciona alguna alergia o condición médica reportada por su médico veterinario"
+                                        rows="5"
+                                        maxlength="500"
+                                    ></textarea>
+                                    <button type="button" id="btn-ninguna-alergia" class="btn btn-ninguna-alergia mt-2">
+                                        <i class="bi bi-shield-check"></i> Ninguna alergia o condición médica reportada por veterinarios
+                                    </button>
+                                    <div class="help-text mt-2">Opcional. Puede dejar vacío si no hay condiciones conocidas.</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Número de Ficha</label>
+                                    <div class="ficha-display" id="ficha-display">
+                                        <i class="bi bi-hash"></i> F-<span id="ficha-number">----</span>
+                                    </div>
+                                    <div class="help-text text-center">Generado automáticamente</div>
+                                    <input type="hidden" id="numero_ficha" name="numero_ficha" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <button type="button" class="btn btn-nav btn-prev" id="btn-prev-2">
+                                <i class="bi bi-arrow-left"></i> Anterior
+                            </button>
+                            <button type="submit" class="btn btn-nav btn-submit" id="btn-submit">
+                                <i class="bi bi-check-circle"></i> Registrar Mascota
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ====== ELEMENTOS DEL DOM ======
+const form = document.getElementById('form-pet');
+const formSlider = document.getElementById('form-slider');
+const progressBar = document.getElementById('progress-bar');
+const especieSelect = document.getElementById('especie');
+const razaSelect = document.getElementById('raza');
+const razaContainer = document.getElementById('raza-container');
+const razaLoading = document.getElementById('raza-loading');
+const otraRazaContainer = document.getElementById('otra-raza-container');
+const mestizoQuestion = document.getElementById('mestizo-question');
+const btnMestizoSi = document.getElementById('btn-mestizo-si');
+const btnMestizoNo = document.getElementById('btn-mestizo-no');
+const esMestizoInput = document.getElementById('es_mestizo');
+const tamanioSelect = document.getElementById('tamanio');
+const pesoInput = document.getElementById('peso_kg');
+const pesoHelp = document.getElementById('peso-help');
+const pesoError = document.getElementById('peso-error');
+const pesoWarning = document.getElementById('peso-warning');
+const edadInput = document.getElementById('edad');
+const fechaNacInput = document.getElementById('fecha_nacimiento');
+const foto_urlInput = document.getElementById('foto_url');
+const photoPreview = document.getElementById('photo-preview');
+const btnSubmit = document.getElementById('btn-submit');
+const fichaNumber = document.getElementById('ficha-number');
+const numeroFichaInput = document.getElementById('numero_ficha');
+const alergiasTextarea = document.getElementById('alergias');
+const btnNingunaAlergia = document.getElementById('btn-ninguna-alergia');
+const descripcionInput = document.getElementById('descripcion_pet');
+const charCounter = document.getElementById('char-counter');
+const descripcionError = document.getElementById('descripcion-error');
+
+// ====== CONTROL DEL SLIDER ======
+let currentStep = 1;
+const totalSteps = 2;
+
+function updateProgress() {
+    const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+    progressBar.style.width = percentage + '%';
+    
+    // Update step indicators
+    for (let i = 1; i <= totalSteps; i++) {
+        const stepIndicator = document.getElementById(`step-indicator-${i}`);
+        stepIndicator.classList.remove('active', 'completed');
+        
+        if (i < currentStep) {
+            stepIndicator.classList.add('completed');
+        } else if (i === currentStep) {
+            stepIndicator.classList.add('active');
+        }
+    }
+}
+
+function goToStep(step) {
+    if (step < 1 || step > totalSteps) return;
+    
+    currentStep = step;
+    const offset = -(currentStep - 1) * 100;
+    formSlider.style.transform = `translateX(${offset}%)`;
+    updateProgress();
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ====== VALIDAR DESCRIPCIÓN ======
+function validarDescripcion() {
+    const texto = descripcionInput.value;
+    const letras = texto.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ]/g, '');
+    const caracteresEspeciales = texto.replace(/[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g, '');
+    
+    // Actualizar contador
+    charCounter.textContent = `${texto.length} / 500`;
+    
+    // Validar: al menos 10 letras y no más de 6 caracteres especiales
+    if (texto.trim().length === 0) {
+        return false;
+    }
+    
+    if (letras.length < 10) {
+        descripcionError.textContent = 'La descripción debe contener al menos 10 letras';
+        return false;
+    }
+    
+    if (caracteresEspeciales.length > 6) {
+        descripcionError.textContent = 'No puede contener más de 6 caracteres especiales';
+        return false;
+    }
+    
+    return true;
+}
+
+descripcionInput.addEventListener('input', function() {
+    const texto = this.value;
+    charCounter.textContent = `${texto.length} / 500`;
+});
+
+descripcionInput.addEventListener('blur', function() {
+    if (!validarDescripcion()) {
+        this.classList.add('is-invalid');
+    } else {
+        this.classList.remove('is-invalid');
+    }
+});
+
+// ====== NAVEGACIÓN ======
+document.getElementById('btn-next-1').addEventListener('click', function() {
+    // Validar paso 1
+    let isValid = true;
+    
+    const nombreInput = document.getElementById('nombre_pet');
+    
+    if (!nombreInput.value.trim()) {
+        nombreInput.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        nombreInput.classList.remove('is-invalid');
+    }
+    
+    if (!validarDescripcion()) {
+        descripcionInput.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        descripcionInput.classList.remove('is-invalid');
+    }
+    
+    if (!especieSelect.value) {
+        especieSelect.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        especieSelect.classList.remove('is-invalid');
+    }
+    
+    if (!document.getElementById('sexo').value) {
+        document.getElementById('sexo').classList.add('is-invalid');
+        isValid = false;
+    } else {
+        document.getElementById('sexo').classList.remove('is-invalid');
+    }
+    
+    if (isValid) {
+        goToStep(2);
+        
+        // Mostrar pregunta de mestizo si aún no se ha respondido
+        if (especieSelect.value && esMestizoInput.value === '0' && razaContainer.style.display === 'none') {
+            mestizoQuestion.classList.remove('d-none');
+        }
+    } else {
+        alert('⚠️ Por favor complete todos los campos obligatorios del paso 1');
+    }
+});
+
+document.getElementById('btn-prev-2').addEventListener('click', function() {
+    goToStep(1);
+});
+
+// ====== GENERAR NÚMERO DE FICHA ======
+function generarNumeroFicha() {
+    const numero = Math.floor(Math.random() * 9999) + 1;
+    const fichaFormatted = numero.toString().padStart(4, '0');
+    fichaNumber.textContent = fichaFormatted;
+    numeroFichaInput.value = fichaFormatted;
+}
+
+generarNumeroFicha();
+
+// ====== ACTUALIZAR OPCIONES DE TAMAÑO SEGÚN ESPECIE ======
+function actualizarTamanios(especie) {
+    tamanioSelect.innerHTML = '';
+    tamanioSelect.disabled = false;
+    
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Seleccionar...';
+    tamanioSelect.appendChild(defaultOption);
+    
+    if (especie === 'perro') {
+        const opciones = [
+            { value: 'Gigante', text: 'Gigante (>45kg)', min: 45, max: 100 },
+            { value: 'Grande', text: 'Grande (26-45kg)', min: 26, max: 45 },
+            { value: 'Mediano', text: 'Mediano (11-25kg)', min: 11, max: 25 },
+            { value: 'Pequeño', text: 'Pequeño (<10kg)', min: 0.4, max: 10 }
+        ];
+        opciones.forEach(opt => {
+            const option = document.createElement('option');
+            option.value = opt.value;
+            option.textContent = opt.text;
+            option.dataset.min = opt.min;
+            option.dataset.max = opt.max;
+            tamanioSelect.appendChild(option);
+        });
+    } else if (especie === 'gato') {
+        const opciones = [
+            { value: 'Gigante', text: 'Gigante (10kg o más)', min: 10, max: 15 },
+            { value: 'Grande', text: 'Grande (7-10kg)', min: 7, max: 10 },
+            { value: 'Mediano', text: 'Mediano (4.5-7kg)', min: 4.5, max: 7 },
+            { value: 'Pequeño', text: 'Pequeño (0.4-4.5kg)', min: 0.4, max: 4.5 }
+        ];
+        opciones.forEach(opt => {
+            const option = document.createElement('option');
+            option.value = opt.value;
+            option.textContent = opt.text;
+            option.dataset.min = opt.min;
+            option.dataset.max = opt.max;
+            tamanioSelect.appendChild(option);
+        });
+    }
+}
+
+// ====== CAMBIO DE ESPECIE ======
+especieSelect.addEventListener('change', function() {
+    const especie = this.value.toLowerCase();
+    
+    // Resetear estado
+    mestizoQuestion.classList.add('d-none');
+    razaContainer.style.display = 'none';
+    razaSelect.value = '';
+    esMestizoInput.value = '0';
+    
+    // Actualizar límites de peso según especie
+    if (especie === 'perro') {
+        pesoInput.dataset.min = '0.4';
+        pesoInput.dataset.max = '100';
+        pesoHelp.textContent = 'Aceptamos formatos: 4.5 o 4,5';
+        actualizarTamanios('perro');
+    } else if (especie === 'gato') {
+        pesoInput.dataset.min = '0.4';
+        pesoInput.dataset.max = '15';
+        pesoHelp.textContent = 'Aceptamos formatos: 4.5 o 4,5';
+        actualizarTamanios('gato');
+    } else {
+        tamanioSelect.innerHTML = '<option value="">Primero seleccione una especie...</option>';
+        tamanioSelect.disabled = true;
+        pesoHelp.textContent = 'Seleccione primero la especie';
+    }
+    
+    // Validar peso actual
+    validarPeso();
+});
+
+// ====== BOTONES MESTIZO ======
+btnMestizoSi.addEventListener('click', function() {
+    esMestizoInput.value = '1';
+    razaSelect.disabled = false;
+    razaSelect.value = 'Mestizo';
+    mestizoQuestion.classList.add('d-none');
+    razaContainer.style.display = 'none';
+});
+
+btnMestizoNo.addEventListener('click', function() {
+    esMestizoInput.value = '0';
+    mestizoQuestion.classList.add('d-none');
+    razaContainer.style.display = 'block';
+    cargarRazas(especieSelect.value.toLowerCase());
+});
+
+// ====== CARGAR RAZAS DESDE API ======
+function cargarRazas(especie) {
+    razaLoading.classList.add('show');
+    razaSelect.innerHTML = '<option value="">Cargando...</option>';
+    razaSelect.disabled = true;
+    
+    fetch(`/api/razas/?especie=${especie}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Error al cargar razas');
+            return response.json();
+        })
+        .then(data => {
+            razaLoading.classList.remove('show');
+            razaSelect.disabled = false;
+            razaSelect.innerHTML = '<option value="">Seleccionar raza...</option>';
+            
+            if (data.razas && data.razas.length > 0) {
+                data.razas.forEach(raza => {
+                    const option = document.createElement('option');
+                    option.value = raza.name;
+                    option.textContent = raza.name;
+                    razaSelect.appendChild(option);
+                });
+                
+                const otraOpt = document.createElement('option');
+                otraOpt.value = 'Otra';
+                otraOpt.textContent = '--- Otra ---';
+                razaSelect.appendChild(otraOpt);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            razaLoading.classList.remove('show');
+            razaSelect.disabled = false;
+            razaSelect.innerHTML = '<option value="">Error al cargar</option>';
+        });
+}
+
+// ====== LÓGICA RAZA Y MESTIZO ======
+razaSelect.addEventListener('change', function() {
+    if (this.value === 'Otra') {
+        otraRazaContainer.classList.remove('d-none');
+    } else {
+        otraRazaContainer.classList.add('d-none');
+    }
+});
+
+// ====== NORMALIZAR PESO (acepta 4.5, 4,5) ======
+function normalizarPeso(valor) {
+    if (!valor) return '';
+    
+    // Reemplazar coma por punto
+    let normalizado = valor.replace(',', '.');
+    
+    return normalizado;
+}
+
+// ====== VALIDACIÓN DE PESO ======
+function validarPeso() {
+    const valorOriginal = pesoInput.value.trim();
+    if (!valorOriginal || pesoInput.classList.contains('disabled-field')) {
+        pesoInput.classList.remove('is-invalid');
+        pesoWarning.classList.remove('show');
+        return true;
+    }
+    
+    const valorNormalizado = normalizarPeso(valorOriginal);
+    const peso = parseFloat(valorNormalizado);
+    const min = parseFloat(pesoInput.dataset.min || 0.4);
+    const max = parseFloat(pesoInput.dataset.max || 100);
+    
+    if (isNaN(peso) || peso < min || peso > max) {
+        pesoInput.classList.add('is-invalid');
+        pesoError.textContent = `Peso debe estar entre ${min} y ${max} kg`;
+        pesoWarning.classList.remove('show');
+        return false;
+    }
+    
+    pesoInput.classList.remove('is-invalid');
+    
+    // Validar con el tamaño seleccionado
+    if (tamanioSelect.value) {
+        const selectedOption = tamanioSelect.options[tamanioSelect.selectedIndex];
+        const minTamanio = parseFloat(selectedOption.dataset.min || 0);
+        const maxTamanio = parseFloat(selectedOption.dataset.max || 1000);
+        
+        if (peso < minTamanio || peso > maxTamanio) {
+            pesoWarning.classList.add('show');
+            return true; // No es error fatal, solo advertencia
+        } else {
+            pesoWarning.classList.remove('show');
+        }
+    }
+    
+    return true;
+}
+
+pesoInput.addEventListener('input', function(e) {
+    // Permitir números, punto, coma
+    this.value = this.value.replace(/[^0-9.,]/g, '');
+});
+
+pesoInput.addEventListener('blur', function() {
+    if (!this.classList.contains('disabled-field')) {
+        validarPeso();
+    }
+});
+
+tamanioSelect.addEventListener('change', function() {
+    // Quitar el error rojo al seleccionar
+    this.classList.remove('is-invalid');
+    validarPeso();
+});
+
+document.getElementById('btn-peso-desconocido').addEventListener('click', function() {
+    pesoInput.value = '';
+    pesoInput.classList.add('disabled-field');
+    pesoInput.disabled = true;
+    pesoInput.classList.remove('is-invalid');
+    pesoWarning.classList.remove('show');
+    pesoInput.placeholder = 'Peso desconocido';
+});
+
+// Re-habilitar peso al hacer clic
+pesoInput.addEventListener('focus', function() {
+    if (this.classList.contains('disabled-field')) {
+        this.classList.remove('disabled-field');
+        this.disabled = false;
+        this.placeholder = 'Ej: 4.5';
+    }
+});
+
+// ====== VALIDACIÓN DE EDAD ======
+edadInput.addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+edadInput.addEventListener('blur', function() {
+    if (!this.classList.contains('disabled-field')) {
+        const valor = parseInt(this.value);
+        if (this.value && (valor < 0 || valor > 30)) {
+            this.classList.add('is-invalid');
+        } else {
+            this.classList.remove('is-invalid');
+        }
+    }
+});
+
+document.getElementById('btn-edad-desconocida').addEventListener('click', function() {
+    edadInput.value = '';
+    edadInput.classList.add('disabled-field');
+    edadInput.disabled = true;
+    edadInput.classList.remove('is-invalid');
+    edadInput.placeholder = 'Edad desconocida';
+});
+
+// Re-habilitar edad al hacer clic
+edadInput.addEventListener('focus', function() {
+    if (this.classList.contains('disabled-field')) {
+        this.classList.remove('disabled-field');
+        this.disabled = false;
+        this.placeholder = 'Ej: 3';
+    }
+});
+
+// ====== VALIDACIÓN DE FECHA ======
+fechaNacInput.addEventListener('change', function() {
+    if (this.value) {
+        const fecha = new Date(this.value);
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        
+        if (fecha > hoy) {
+            this.classList.add('is-invalid');
+        } else {
+            this.classList.remove('is-invalid');
+        }
+    } else {
+        this.classList.remove('is-invalid');
+    }
+});
+
+document.getElementById('btn-fecha-clear').addEventListener('click', function() {
+    fechaNacInput.value = '';
+    fechaNacInput.classList.remove('is-invalid');
+});
+
+// ====== BOTÓN NINGUNA ALERGIA ======
+btnNingunaAlergia.addEventListener('click', function() {
+    alergiasTextarea.value = '';
+    alergiasTextarea.placeholder = 'Ninguna alergia o condición médica reportada por veterinarios';
+});
+
+// ====== PREVIEW DE FOTO ======
+foto_urlInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+            this.classList.add('is-invalid');
+            this.value = '';
+            photoPreview.classList.remove('show');
+            alert('El archivo es demasiado grande. Máximo 5MB.');
+            return;
+        }
+        
+        if (!file.type.startsWith('image/')) {
+            this.classList.add('is-invalid');
+            this.value = '';
+            photoPreview.classList.remove('show');
+            alert('Por favor seleccione un archivo de imagen válido.');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            photoPreview.src = e.target.result;
+            photoPreview.classList.add('show');
+        };
+        reader.readAsDataURL(file);
+        
+        this.classList.remove('is-invalid');
+    } else {
+        photoPreview.classList.remove('show');
+    }
+});
+
+// ====== VALIDACIÓN DEL NOMBRE ======
+const nombreInput = document.getElementById('nombre_pet');
+nombreInput.addEventListener('input', function() {
+    this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '');
+});
+
+nombreInput.addEventListener('blur', function() {
+    if (!this.value.trim()) {
+        this.classList.add('is-invalid');
+    } else {
+        this.classList.remove('is-invalid');
+    }
+});
+
+// ====== SUBMIT DEL FORMULARIO ======
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    let isValid = true;
+    
+    // Validar campos requeridos del paso 2
+    if (!tamanioSelect.value) {
+        tamanioSelect.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        tamanioSelect.classList.remove('is-invalid');
+    }
+    
+    // Validar raza solo si no es mestizo
+    if (esMestizoInput.value === '0') {
+        if (!razaSelect.value) {
+            razaSelect.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            razaSelect.classList.remove('is-invalid');
+        }
+    }
+    
+    // Validar peso si está lleno y no desconocido
+    if (pesoInput.value && !pesoInput.classList.contains('disabled-field')) {
+        if (!validarPeso()) {
+            isValid = false;
+        }
+    }
+    
+    // Validar fecha si está llena
+    if (fechaNacInput.value) {
+        const fecha = new Date(fechaNacInput.value);
+        const hoy = new Date();
+        if (fecha > hoy) {
+            fechaNacInput.classList.add('is-invalid');
+            isValid = false;
+        }
+    }
+    
+    if (!isValid) {
+        alert('⚠️ Por favor complete todos los campos obligatorios correctamente');
+        return;
+    }
+    
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Guardando...';
+    
+    const formData = new FormData(form);
+    
+    // Normalizar el peso antes de enviar
+    if (pesoInput.value && !pesoInput.classList.contains('disabled-field')) {
+        const pesoNormalizado = normalizarPeso(pesoInput.value);
+        formData.set('peso_kg', pesoNormalizado);
+    } else if (pesoInput.classList.contains('disabled-field')) {
+        formData.delete('peso_kg');
+    }
+    
+    // No enviar edad si es desconocida
+    if (edadInput.classList.contains('disabled-field')) {
+        formData.delete('edad');
+    }
+    
+    const csrftoken = formData.get('csrfmiddlewaretoken');
+    
+    fetch('/api/pets/', {
+        method: 'POST',
+        headers: { 
+            'X-CSRFToken': csrftoken
+        },
+        body: formData
+    })
+    .then(resp => {
+        if (resp.status >= 200 && resp.status < 300) {
+            return Promise.resolve();
+        }
+        return resp.text().then(t => {
+            let e;
+            try { e = JSON.parse(t); } catch { e = { error: t }; }
+            return Promise.reject(e);
+        });
+    })
+    .then(() => {
+        window.location.href = '/pets/';
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="bi bi-check-circle"></i> Registrar Mascota';
+    });
+});
+
+// Inicializar barra de progreso
+updateProgress();
+</script>
+</body>
+</html>

@@ -1,0 +1,558 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Registro - Suaves Pets</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+    * {
+        margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif;
+    }
+    body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #fff5f7 0%, #fff9e6 100%);
+    }
+    .container {
+        width: 100%;
+        max-width: 700px;
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 10px 40px rgba(255, 107, 107, 0.2);
+        overflow: hidden;
+        position: relative;
+        padding-top: 50px;
+    }
+    
+    /* Logo y botón home en header */
+    .top-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 24px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 10;
+        border-bottom: 2px solid #ffd6dd;
+    }
+    
+    .logo-text {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ff6b6b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .home-button {
+        background: linear-gradient(135deg, #ff8c42 0%, #ff6b6b 100%);
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .home-button:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+    }
+    
+    .header-image {
+        position: relative;
+        height: 280px;
+        overflow: hidden;
+        margin-top: 50px;
+    }
+    .header-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .header-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    }
+    .header-content {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        right: 24px;
+        color: white;
+    }
+    .header-content h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .heart-icon {
+        color: #ff6b6b;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    .header-content p {
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+    .form-container {
+        padding: 40px;
+        background: linear-gradient(135deg, #fff5f7 0%, #fff9e6 100%);
+    }
+    .form-group {
+        margin-bottom: 24px;
+    }
+    label {
+        display: block;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        color: #ff6b6b;
+    }
+    .required {
+        color: #dc2626;
+    }
+    input, select {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #ffd6dd;
+        border-radius: 16px;
+        font-size: 1rem;
+        background: white;
+        transition: all 0.3s ease;
+        outline: none;
+        font-family: inherit;
+    }
+    input:focus, select:focus {
+        border-color: #ff6b6b;
+        box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+        transform: scale(1.02);
+    }
+    input::placeholder {
+        color: #aaa;
+    }
+    select {
+        cursor: pointer;
+    }
+    
+    /* Estilos especiales para el select de tipo de usuario */
+    .user-type-group {
+        background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
+        padding: 20px;
+        border-radius: 16px;
+        border: 2px solid #ffb366;
+        margin-bottom: 24px;
+    }
+    
+    .user-type-group label {
+        color: #ff8c42;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .user-type-hint {
+        font-size: 0.85rem;
+        color: #b45309;
+        margin-top: 8px;
+        font-style: italic;
+    }
+    
+    .error-message {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 6px;
+        display: none;
+    }
+    .error-message.show {
+        display: block;
+    }
+    input.invalid, select.invalid {
+        border-color: #dc2626;
+    }
+    .django-messages {
+        margin-bottom: 20px;
+    }
+    .alert {
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        animation: slideIn 0.3s ease;
+    }
+    .alert-success {
+        background: #10b981;
+        color: white;
+    }
+    .alert-error {
+        background: #dc2626;
+        color: white;
+    }
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .btn-submit {
+        width: 100%;
+        padding: 16px;
+        border: none;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8c42 100%);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.35);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .btn-submit:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.45);
+    }
+    .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    .btn-back {
+        width: 100%;
+        margin-top: 16px;
+        padding: 12px;
+        border: none;
+        background: none;
+        color: #ff8c42;
+        font-weight: 500;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+    .btn-back:hover {
+        color: #ff6b6b;
+    }
+    .char-count {
+        font-size: 0.875rem;
+        color: #666;
+        margin-top: 4px;
+    }
+    .password-hint {
+        font-size: 0.875rem;
+        color: #666;
+        margin-top: 4px;
+    }
+    .password-wrapper { position: relative; }
+    .password-wrapper input { padding-right: 120px; }
+    .toggle-password { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: 2px solid #ff6b6b; color: #ff6b6b; border-radius: 10px; padding: 6px 10px; cursor: pointer; font-weight: 600; }
+    .toggle-password:hover { background: #ff6b6b; color: #fff; }
+</style>
+</head>
+<body>
+<div class="container">
+    <!-- Barra superior con logo y botón home -->
+    <div class="top-bar">
+        <div class="logo-text">
+            <span>🐾</span> Suaves Pets
+        </div>
+        <button class="home-button" onclick="window.location.href='{% url 'inicio' %}'" title="Ir al inicio">
+            🏠
+        </button>
+    </div>
+
+    <div class="header-image">
+        <img src="https://images.pexels.com/photos/7210754/pexels-photo-7210754.jpeg?auto=compress&cs=tinysrgb&w=1200"
+             alt="Voluntaria abrazando perrito">
+        <div class="header-overlay"></div>
+        <div class="header-content">
+            <h1>
+                ¡Sé Parte de Nuestra Comunidad!
+                <span class="heart-icon">❤️</span>
+            </h1>
+            <p>Tu ayuda puede cambiar vidas 🐾</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Mensajes de Django -->
+        {% if messages %}
+        <div class="django-messages">
+            {% for message in messages %}
+            {% if 'Corrige' not in message and 'formulario' not in message %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form id="registroForm" method="POST" action="{% url 'registro' %}" novalidate>
+            {% csrf_token %}
+
+            <!-- Tipo de Usuario -->
+            <div class="user-type-group">
+                <label for="tipo_usuario">
+                    <span>👤</span> ¿Cómo quieres unirte? <span class="required">*</span>
+                </label>
+                <select id="tipo_usuario" name="tipo_usuario" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="socio" {% if form.tipo_usuario.value == 'socio' %}selected{% endif %}>
+                        🐕 Socio - Acceso básico a servicios
+                    </option>
+                    <option value="socio_premium" {% if form.tipo_usuario.value == 'socio_premium' %}selected{% endif %}>
+                        ⭐ Socio Premium - Acceso completo + beneficios
+                    </option>
+                    <option value="invitado" {% if form.tipo_usuario.value == 'invitado' %}selected{% endif %}>
+                        👋 Voluntario Fundación - Colabora con nosotros
+                    </option>
+                    <option value="veterinario" {% if form.tipo_usuario.value == 'veterinario' %}selected{% endif %}>
+                        🩺 Veterinario - Profesional de la salud animal
+                    </option>
+                    <option value="clinica" {% if form.tipo_usuario.value == 'clinica' %}selected{% endif %}>
+                        🏥 Clínica Veterinaria - Institución médica
+                    </option>
+                </select>
+                <div class="error-message" id="errorTipoUsuario"></div>
+                <div class="user-type-hint">💡 Selecciona el tipo de perfil que mejor se ajuste a ti</div>
+            </div>
+
+            <div class="form-group">
+                <label for="nombre">Nombre completo <span class="required">*</span></label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ej: María González" 
+                       required minlength="3" maxlength="100"
+                       pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" 
+                       value="{{ form.nombre.value|default:'' }}" />
+                <div class="error-message" id="errorNombre"></div>
+                <div class="char-count"><span id="nombreCount">0</span>/100 caracteres</div>
+            </div>
+
+            <div class="form-group">
+                <label for="dni">DNI (RUT o Pasaporte) <span class="required">*</span></label>
+                <input type="text" id="dni" name="dni" placeholder="Ej: 12345678-9 o AB1234567" 
+                       required maxlength="20"
+                       value="{{ form.dni.value|default:'' }}" />
+                <div class="error-message" id="errorDni"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Correo electrónico <span class="required">*</span></label>
+                <input type="email" id="email" name="email" placeholder="correo@ejemplo.cl" 
+                       required maxlength="254"
+                       value="{{ form.email.value|default:'' }}" />
+                <div class="error-message" id="errorEmail"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input type="tel" id="telefono" name="telefono" placeholder="+56987654321" 
+                       maxlength="16" pattern="^\+?\d{8,15}$"
+                       value="{{ form.telefono.value|default:'' }}" />
+                <div class="error-message" id="errorTelefono"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña <span class="required">*</span></label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" 
+                           placeholder="Mínimo 8 caracteres, 1 letra, 1 número, 1 especial" required minlength="8" />
+                    <button type="button" class="toggle-password" id="toggleRegPassword">Mostrar</button>
+                </div>
+                <div class="error-message" id="errorPassword"></div>
+                <div class="password-hint">Debe tener al menos 8 caracteres, una letra (mayúscula o minúscula), un número y un carácter especial</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirm">Confirmar contraseña <span class="required">*</span></label>
+                <div class="password-wrapper">
+                    <input type="password" id="password_confirm" name="password_confirm" 
+                           placeholder="Repite tu contraseña" required />
+                    <button type="button" class="toggle-password" id="toggleRegPasswordConfirm">Mostrar</button>
+                </div>
+                <div class="error-message" id="errorPasswordConfirm"></div>
+            </div>
+
+            <button type="submit" class="btn-submit">Registrarme</button>
+            <button type="button" class="btn-back" onclick="window.history.back()">← Volver atrás</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('registroForm');
+    const tipoUsuarioSelect = document.getElementById('tipo_usuario');
+    const nombreInput = document.getElementById('nombre');
+    const dniInput = document.getElementById('dni');
+    const emailInput = document.getElementById('email');
+    const telefonoInput = document.getElementById('telefono');
+    const passwordInput = document.getElementById('password');
+    const passwordConfirmInput = document.getElementById('password_confirm');
+    const toggleRegPassword = document.getElementById('toggleRegPassword');
+    const toggleRegPasswordConfirm = document.getElementById('toggleRegPasswordConfirm');
+    const nombreCount = document.getElementById('nombreCount');
+
+    // Actualizar contador inicial
+    nombreCount.textContent = nombreInput.value.length;
+
+    tipoUsuarioSelect.addEventListener('change', validateTipoUsuario);
+    nombreInput.addEventListener('input', function () {
+        nombreCount.textContent = this.value.length;
+        validateNombre();
+    });
+
+    dniInput.addEventListener('input', validateDni);
+    emailInput.addEventListener('input', validateEmail);
+    telefonoInput.addEventListener('input', validateTelefono);
+    passwordInput.addEventListener('input', validatePassword);
+    passwordConfirmInput.addEventListener('input', validatePasswordConfirm);
+
+    function showError(input, errorDiv, message) {
+        input.classList.add('invalid');
+        errorDiv.textContent = message;
+        errorDiv.classList.add('show');
+    }
+
+    function clearError(input, errorDiv) {
+        input.classList.remove('invalid');
+        errorDiv.classList.remove('show');
+    }
+
+    function validateTipoUsuario() {
+        const val = tipoUsuarioSelect.value;
+        const errorDiv = document.getElementById('errorTipoUsuario');
+        if (!val) {
+            return showError(tipoUsuarioSelect, errorDiv, 'Debes seleccionar un tipo de usuario');
+        }
+        clearError(tipoUsuarioSelect, errorDiv);
+        return true;
+    }
+
+    function validateNombre() {
+        const val = nombreInput.value.trim();
+        const errorDiv = document.getElementById('errorNombre');
+        const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+        if (val.length < 3) return showError(nombreInput, errorDiv, 'Al menos 3 caracteres');
+        if (val.length > 100) return showError(nombreInput, errorDiv, 'Máx 100 caracteres');
+        if (!regex.test(val)) return showError(nombreInput, errorDiv, 'Solo letras y espacios');
+        clearError(nombreInput, errorDiv);
+        return true;
+    }
+
+    function validateDni() {
+        const val = dniInput.value.trim();
+        const errorDiv = document.getElementById('errorDni');
+        const rutRegex = /^\d{7,8}[-]?[\dkK]$/;
+        const pasaporteRegex = /^[A-Za-z0-9]{5,15}$/;
+        if (!val) return showError(dniInput, errorDiv, 'Este campo es obligatorio');
+        if (!(rutRegex.test(val) || pasaporteRegex.test(val)))
+            return showError(dniInput, errorDiv, 'Debe ser RUT o Pasaporte válido');
+        clearError(dniInput, errorDiv);
+        return true;
+    }
+
+    function validateEmail() {
+        const val = emailInput.value.trim();
+        const errorDiv = document.getElementById('errorEmail');
+        const allowedDomains = ["gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "live.com"];
+        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!val) {
+            return showError(emailInput, errorDiv, 'Email requerido');
+        }
+        if (!regexEmail.test(val)) {
+            return showError(emailInput, errorDiv, 'Email inválido');
+        }
+        const domain = val.split('@')[1]?.toLowerCase();
+        if (!allowedDomains.includes(domain)) {
+            return showError(emailInput, errorDiv, 'Solo emails de dominios válidos como gmail.com, outlook.com, hotmail.com');
+        }
+        if (val.length > 254) {
+            return showError(emailInput, errorDiv, 'Email muy largo');
+        }
+        clearError(emailInput, errorDiv);
+        return true;
+    }
+
+    function validateTelefono() {
+        const val = telefonoInput.value.trim();
+        const errorDiv = document.getElementById('errorTelefono');
+        if (val === '') {
+            clearError(telefonoInput, errorDiv);
+            return true;
+        }
+        if (!/^\+?\d{8,15}$/.test(val))
+            return showError(telefonoInput, errorDiv, 'Teléfono inválido (ej: +56987654321)');
+        clearError(telefonoInput, errorDiv);
+        return true;
+    }
+
+    function validatePassword() {
+        const val = passwordInput.value;
+        const errorDiv = document.getElementById('errorPassword');
+        const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+={}[\]|\\:;"'<>,.?/~`]).{8,}$/;
+        if (val.length < 8) {
+            return showError(passwordInput, errorDiv, 'La contraseña debe tener al menos 8 caracteres');
+        }
+        if (!regex.test(val)) {
+            return showError(passwordInput, errorDiv, 'Debe incluir al menos una letra, un número y un carácter especial');
+        }
+        clearError(passwordInput, errorDiv);
+        return true;
+    }
+
+    function validatePasswordConfirm() {
+        const val = passwordConfirmInput.value;
+        const password = passwordInput.value;
+        const errorDiv = document.getElementById('errorPasswordConfirm');
+        if (val !== password) {
+            return showError(passwordConfirmInput, errorDiv, 'Las contraseñas no coinciden');
+        }
+        clearError(passwordConfirmInput, errorDiv);
+        return true;
+    }
+
+    toggleRegPassword.addEventListener('click', function() {
+        const isPassword = passwordInput.getAttribute('type') === 'password';
+        passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+        this.textContent = isPassword ? 'Ocultar' : 'Mostrar';
+    });
+
+    toggleRegPasswordConfirm.addEventListener('click', function() {
+        const isPassword = passwordConfirmInput.getAttribute('type') === 'password';
+        passwordConfirmInput.setAttribute('type', isPassword ? 'text' : 'password');
+        this.textContent = isPassword ? 'Ocultar' : 'Mostrar';
+    });
+
+    form.addEventListener('submit', function (e) {
+        const isValid = validateTipoUsuario() && validateNombre() && validateDni() && validateEmail() && 
+                        validateTelefono() && validatePassword() && validatePasswordConfirm();
+        
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+</script>
+</body>
+</html>

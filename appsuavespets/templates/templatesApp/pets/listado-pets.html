@@ -1,0 +1,197 @@
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listado de mascotas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f5f3f2;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a4a4a;
+        }
+
+        h1.display-4 {
+            font-weight: 700;
+            color: #675d50;
+        }
+
+        .table thead {
+            background-color: #b0aca7; /* gris suave */
+            color: #4a4a4a;
+        }
+
+        .btn-success {
+            background-color: #7eb998;
+            border-color: #7eb998;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-success:hover {
+            background-color: #679f89;
+            border-color: #679f89;
+            color: white;
+        }
+
+        .btn-outline-primary {
+            color: #a38971;
+            border-color: #a38971;
+            font-weight: 600;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #a38971;
+            color: white;
+        }
+
+        .btn-outline-secondary {
+            color: #8c7b6a;
+            border-color: #8c7b6a;
+            font-weight: 600;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #8c7b6a;
+            color: white;
+        }
+
+        .table {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f2efe7;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #bab3a5;
+            color: white;
+        }
+
+        td, th {
+            vertical-align: middle !important;
+            text-align: center;
+        }
+
+        .btn-info {
+            background-color: #a4c3a2;
+            border-color: #a4c3a2;
+            font-weight: 600;
+        }
+
+        .btn-info:hover {
+            background-color: #8bae86;
+            border-color: #8bae86;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #c2b093;
+            border-color: #c2b093;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: #a89a7a;
+            border-color: #a89a7a;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #cb6d51;
+            border-color: #cb6d51;
+            font-weight: 600;
+        }
+
+        .btn-danger:hover {
+            background-color: #b35840;
+            border-color: #b35840;
+            color: white;
+        }
+
+        .d-flex.justify-content-center.mt-4.gap-3 a {
+            min-width: 160px;
+            font-size: 1rem;
+        }
+
+        a.btn i {
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center mb-4">
+            <h1 class="display-4 mb-4">
+                  Pets registradas 🐾
+            </h1>
+            <div class="d-flex justify-content-center mb-3 gap-2">
+                <a href="/" class="btn btn-outline-secondary" title="Inicio">
+                    <i class="bi bi-house-fill"></i> Inicio
+                </a>
+                <a href="{% url 'agregar_pet' %}" class="btn btn-success" title="Agregar nueva mascota">
+                    <i class="bi bi-plus-circle"></i> Agregar nueva
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    {% if pets %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Especie</th>
+                    <th>Tamaño</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pet in pets %}
+                <tr>
+                    <td>{{ pet.nombre_pet }}</td>
+                    <td>{{ pet.especie }}</td>
+                    <td>{{ pet.tamanio }}</td>
+                        <td>
+                            <a href="{% url 'detalle_pet' pet.id_pet %}" class="btn btn-info btn-sm" title="Ver detalles">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                            <a href="{% url 'gestionar_cuidados' pet.id_pet %}" class="btn btn-success btn-sm" title="Cuidados">
+                                <i class="bi bi-heart-pulse-fill"></i>
+                            </a>
+                            <a href="{% url 'actualizar_pet' pet.id_pet %}" class="btn btn-primary btn-sm" title="Actualizar">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a href="{% url 'remover_pet' pet.id_pet %}" class="btn btn-danger btn-sm" title="Remover">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <h4>No hay mascotas agregadas actualmente.</h4>
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-center mt-4 gap-3">
+        <a href="{% url 'listado_pets' %}" class="btn btn-outline-primary">
+            <i class="bi bi-list-ul"></i> Volver al listado
+        </a>
+        <a href="/" class="btn btn-outline-secondary">
+            <i class="bi bi-house-fill"></i> Volver a inicio
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,337 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Suaves Pets - Membresía y Cuidados</title>
+<style>
+  * { margin:0; padding:0; box-sizing: border-box;}
+  body {
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #fafcfd);
+    color: #3d4f41;
+    padding-top: 70px;
+    line-height: 1.6;
+    transition: background 0.35s, color 0.3s;
+  }
+  header {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: #c8e6c9;
+    color: #294a36;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 1000;
+    transition: background 0.3s;
+  }
+  .logo {
+    font-weight: bold;
+    font-size: 1.7rem;
+  }
+  .dark-toggle-btn {
+    background: #b0dab3;
+    color: #184e52;
+    border: none;
+    font-weight: 700;
+    padding: 0.5em 1.2em;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-left: 1rem;
+    transition: background 0.25s, color 0.25s;
+    box-shadow: 0 1px 8px #184e5220;
+    font-size: 1rem;
+  }
+  .dark-toggle-btn:hover { background: #81c784; }
+
+  .login-top-btn {
+    background: #7ebc92;
+    color: white;
+    border: none;
+    font-weight: 700;
+    border-radius: 30px;
+    padding: 0.5em 1.5em;
+    cursor: pointer;
+    margin-left: 1rem;
+    transition: background 0.3s;
+    font-size: 1rem;
+  }
+  .login-top-btn:hover {
+    background: #528979;
+  }
+  .welcome-top {
+    margin-left: auto;
+    font-weight: 700;
+    color: #184e52;
+  }
+
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1rem 1rem 3rem;
+  }
+  .main-card {
+    margin: 3rem auto 4rem auto;
+    background: #b0dab3;
+    border-radius: 18px;
+    box-shadow: 0 4px 22px rgba(125, 185, 134, 0.105);
+    padding: 3rem 2rem 3rem 2rem;
+    text-align: center;
+    max-width: 1000px;
+    position: relative;
+  }
+  .main-card h1 {
+    font-size: 2.7rem;
+    font-weight: 700;
+    color: #219ebc;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.3em;
+    text-shadow: none;
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+  }
+  .main-card .paws {
+    font-size: 2.3rem;
+    margin: 0.5rem 0 1.5rem 0;
+    color: #6b588e;
+    letter-spacing: 0.2em;
+  }
+  .main-card p {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #39594a;
+    margin-bottom: 0.8em;
+  }
+  .main-card .cta-btns {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .main-card .cta-btns a, .main-card .cta-btns button.suscribir {
+    background: linear-gradient(74deg, #a1cba1 70%, #7ebc92 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.18rem;
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0 2px 22px rgba(90,110,88, 0.15);
+    padding: 1rem 3.2rem;
+    margin-top: 0.2em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.27s, transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+  }
+  .main-card .cta-btns a:hover, .main-card .cta-btns button.suscribir:hover {
+    background: linear-gradient(74deg, #8bc399 85%, #528979 100%);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 6px 28px rgba(59,120,80,0.17);
+  }
+  section.cards {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+    gap: 2.5rem;
+    padding-bottom: 1em;
+  }
+  .card {
+    background: #e9f7ed;
+    border-radius: 14px;
+    padding: 2rem 1rem 1.5rem;
+    box-shadow: 0 6px 20px rgba(86,125,90,0.11);
+    color: #31573b;
+    border-left: 6px solid #90bba1;
+    text-align: center;
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+  .card:hover {
+    border-left-color: #7ebc92;
+    box-shadow: 0 12px 26px rgba(86,125,90,0.14);
+    transform: translateY(-4px);
+  }
+  .card h3 {
+    margin-bottom: 0.6em;
+    color: #2d6c54;
+    font-size: 1.35em;
+    font-weight: 600;
+  }
+  .youtube-rect {
+    background: #fff;
+    border-radius: 14px;
+    margin: 2em auto 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 18px #0002;
+    width: 100%;
+    max-width: 480px;
+    min-height: 130px;
+    padding: 0.7em 1em;
+    transition: background 0.38s;
+  }
+  .youtube-rect iframe {
+    width: 100%; min-height: 120px; max-height: 250px; border: none;
+  }
+  footer {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    background: #c8e6c9;
+    color: #294a36;
+    border-top: 2px solid #81c784;
+    margin-top: 4rem;
+    font-size: 1.1em;
+  }
+  @media (max-width: 640px) {
+    header {padding: 0 1rem;}
+    .main-card h1 { font-size: 2.1rem; }
+    .main-card p { font-size: 1.08rem; }
+    .main-card .cta-btns a, .main-card .cta-btns button.suscribir { font-size: 1em; padding: 0.85rem 2rem;}
+    section.cards { grid-template-columns: 1fr; gap: 1.6rem;}
+    .card h3 { font-size: 1.13em; }
+    .youtube-rect { max-width:99vw; min-height:180px;}
+  }
+  /* ---- DARK MODE ---- */
+  body.dark-mode {
+    background: #181c1f;
+    color: #e0f7fa;
+  }
+  body.dark-mode header {
+    background: #232b31;
+    color: #e0f7fa;
+  }
+  body.dark-mode .logo {
+    color: #62dde9;
+  }
+  body.dark-mode .main-card {
+    background: #232b31;
+    box-shadow: 0 4px 24px #101a1e44;
+    color: #e0f7fa;
+  }
+  body.dark-mode .main-card h1 {
+    font-size: 2.7rem;
+    color: #65def1;
+    background: none;
+    letter-spacing: 1.5px;
+    text-shadow: 0 2px 8px #17a6c360;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+  }
+  body.dark-mode .main-card .paws { color: #b39cd0; }
+  body.dark-mode .main-card p { color: #d0e9f0; }
+  body.dark-mode .main-card .cta-btns a, body.dark-mode .main-card .cta-btns button.suscribir {
+    background: linear-gradient(74deg, #43b3c9 45%, #60c1c6 100%);
+    color: #002b31;
+    box-shadow: 0 1.5px 16px #62dde966;
+  }
+  body.dark-mode .main-card .cta-btns a:hover, body.dark-mode .main-card .cta-btns button.suscribir:hover {
+    background: linear-gradient(74deg,#62dde9 60%, #37cad8 100%);
+    color:#232b31;
+    box-shadow: 0 4px 24px #37cad822;
+  }
+  body.dark-mode .card {
+    background: #26343A;
+    color: #e0f7fa;
+    border-left-color: #62dde9;
+    box-shadow: 0 6px 20px #18bbc833;
+  }
+  body.dark-mode .card h3 { color: #62dde9; }
+  body.dark-mode .card:hover {
+    border-left-color: #b39cd0;
+    background: #273943;
+    box-shadow: 0 12px 30px #232b3122;
+    transform: none;
+  }
+  body.dark-mode .youtube-rect {
+    background: #273943;
+    box-shadow: 0 3px 14px #0008;
+  }
+  body.dark-mode footer {
+    background: #232b31;
+    color: #e0f7fa;
+    border-top: 2px solid #62dde9;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const paws = document.querySelector('.paws');
+    if (paws) {
+      let pulse = true;
+      setInterval(function(){
+        paws.style.transform = pulse ? 'scale(1.15)' : 'scale(1.00)';
+        paws.style.opacity = pulse ? '0.85' : '1';
+        pulse = !pulse;
+      }, 1050);
+    }
+    document.querySelectorAll('.cta-btns a, .cta-btns button.suscribir').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        if(this.classList.contains('suscribir') && this.tagName === 'BUTTON') {
+          alert('¡Gracias por tu interés en suscribirte! Serás redirigido al formulario.');
+        }
+      });
+    });
+    const toggleBtn = document.getElementById('dark-mode-toggle');
+    toggleBtn.addEventListener('click', function(){
+      document.body.classList.toggle('dark-mode');
+      toggleBtn.textContent =
+        document.body.classList.contains('dark-mode') ? "Modo claro" : "Modo oscuro";
+    });
+  });
+
+  function handleMisMascotasClick() {
+    {% if user.is_authenticated %}
+      window.location.href = "{% url 'listado_pets' %}";
+    {% else %}
+      window.location.href = "{% url 'login' %}";
+    {% endif %}
+  }
+</script>
+</head>
+<body>
+<header>
+  <div class="logo">Suaves Pets</div>
+  <button id="dark-mode-toggle" class="dark-toggle-btn" aria-label="Cambiar modo oscuro">Modo oscuro</button>
+  {% if user.is_authenticated %}
+    <div class="welcome-top">Bienvenido {{ user.nombre }}</div>
+  {% else %}
+    <button class="login-top-btn" onclick="location.href='{% url 'login' %}'">Iniciar sesión</button>
+  {% endif %}
+</header>
+<main>
+  <div class="main-card">
+    <h1>Cuida a tus Mascotas con Nuestra Membresía</h1>
+    <div class="paws">&#128062;&#128062;</div>
+    <p>Accede a recordatorios personalizados de vacunas y controles para tus mascotas.</p>
+    <div class="cta-btns">
+      <form method="post" action="{% url 'registro' %}">
+        {% csrf_token %}
+        <button type="submit" class="suscribir">Regístrate ahora</button>
+      </form>
+      <a href="javascript:void(0);" onclick="handleMisMascotasClick()" class="suscribir">Mis Mascotas</a>
+    </div>
+  </div>
+  <section class="cards" aria-label="Beneficios de la membresía">
+    <article class="card">
+      <h3>Recordatorios Personalizados</h3>
+      <p>Recibe alertas oportunas para vacunas y controles, asegurando el bienestar y salud de tus mascotas con una pequeña suscripción mensual.</p>
+    </article>
+    <article class="card">
+      <h3>Apoyo a Fundaciones Rescatistas</h3>
+      <p>Con tu aporte mensual regalas esperanza a perros y gatos que esperan una oportunidad. ¡Deja tu huella hoy!</p>
+    </article>
+    <article class="card">
+      <h3>Plataforma Amigable con Clínicas Veterinarias</h3>
+      <p>Con una suscripción mensual accesible, conecta de forma rápida y sencilla con clínicas y médicos veterinarios de confianza para el cuidado de tus mascotas.</p>
+    </article>
+  </section>
+
+</main>
+<footer>
+  <p>&copy; 2025 Suaves Pets. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>
