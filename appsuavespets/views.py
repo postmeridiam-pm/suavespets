@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.db import IntegrityError, transaction
 from django.core.exceptions import ValidationError
-from .forms import PetForm, PetUpdateForm, EditarPerfilForm, RegistroForm
+from .forms import PetForm, EditarPerfilForm, RegistroForm
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -23,6 +23,7 @@ import requests
 import logging
 import uuid
 from decimal import Decimal, InvalidOperation
+import re
 from .models import Pet, Cuidados
 
 
@@ -30,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 from django.contrib import messages
 from django.utils import timezone
+import datetime
 from .models import Pet, Cuidados, EventoClinico
 
 
@@ -191,9 +193,18 @@ def editar_perfil(request):
 @login_required
 def listado_pets(request):
     if request.user.tipo_usuario == 'admin' or request.user.is_staff:
-        pets = Pet.objects.filter(Q(is_deleted=0) | Q(is_deleted__isnull=True))
+        pets = (
+            Pet.objects
+            .filter(Q(is_deleted=0) | Q(is_deleted__isnull=True))
+            .only('id_pet', 'nombre_pet', 'especie', 'tamanio')
+        )
     else:
-        pets = Pet.objects.filter(responsable_id=request.user.id_usuario).filter(Q(is_deleted=0) | Q(is_deleted__isnull=True))
+        pets = (
+            Pet.objects
+            .filter(responsable_id=request.user.id_usuario)
+            .filter(Q(is_deleted=0) | Q(is_deleted__isnull=True))
+            .only('id_pet', 'nombre_pet', 'especie', 'tamanio')
+        )
     
     return render(request, 'templatesApp/pets/listado-pets.html', {'pets': pets})
 
@@ -202,11 +213,12 @@ from .models import Pet
 @login_required
 @role_required(['socio', 'socio_premium'])
 def detalle_pet(request, pk):
-    # Obtener la mascota, verificando si es administrador o responsable
     if is_admin(request.user):
-        pet = get_object_or_404(Pet, pk=pk)
+        pet_qs = Pet.objects.only('id_pet','nombre_pet','descripcion_pet','especie','sexo','tamanio','raza','edad','peso_kg','foto_url','foto','responsable','veterinario')
+        pet = get_object_or_404(pet_qs, pk=pk)
     else:
-        pet = get_object_or_404(Pet, pk=pk, responsable=request.user)
+        pet_qs = Pet.objects.only('id_pet','nombre_pet','descripcion_pet','especie','sexo','tamanio','raza','edad','peso_kg','foto_url','foto','responsable','veterinario')
+        pet = get_object_or_404(pet_qs, pk=pk, responsable=request.user)
 
     # Obtener información veterinaria generada con IA usando Gemini
     info_vet = GeminiVetService.get_pet_health_info(pet)
@@ -233,7 +245,7 @@ def detalle_pet(request, pk):
                 'enfermedades': '- Enfermedades comunes según especie\n- Consulta profesional recomendada',
                 'alimentos_prohibidos': '- Evitar tóxicos conocidos\n- Dieta específica por especie',
                 'cuidados': '- Calendario de vacunas y desparasitación\n- Controles periódicos',
-                'estudios': '- Pruebas básicas según edad',
+                'estudios': '- Pruebas recomendadas según edad, basadas en evidencia desde 2005 en adelante',
                 'referencias': '- Guías veterinarias generales.'
             }
 
@@ -297,7 +309,6 @@ def agregar_pet(request):
 @csrf_exempt
 def agregar_pet_api(request):
     try:
-        # Obtener datos del formulario
         nombre_pet = request.data.get('nombre_pet')
         descripcion_pet = request.data.get('descripcion_pet')
         especie = request.data.get('especie')
@@ -310,44 +321,46 @@ def agregar_pet_api(request):
         fecha_nacimiento = request.data.get('fecha_nacimiento')
         alergias = request.data.get('alergias')
         numero_ficha = request.data.get('numero_ficha')
-        
-        # Obtener archivo de foto
-        foto = request.FILES.get('foto')
-        
-        # Validaciones básicas
+        foto_url = request.FILES.get('foto_url')
+
         if not nombre_pet or not especie or not sexo or not tamanio:
             return Response({'error': 'Faltan campos obligatorios'}, status=400)
-        
-        # Crear instancia de Pet
-        pet = Pet(
-            nombre_pet=nombre_pet,
-            descripcion_pet=descripcion_pet,
-            especie=especie,
-            sexo=sexo,
-            tamanio=tamanio,
-            raza=raza if raza else None,
-            es_mestizo=es_mestizo,
-            peso_kg=float(peso_kg) if peso_kg else None,
-            edad=int(edad) if edad else None,
-            fecha_nacimiento=fecha_nacimiento if fecha_nacimiento else None,
-            alergias=alergias if alergias else None,
-            numero_ficha=numero_ficha,
-            responsable_id=request.user.id_usuario,
-            is_deleted=0
-        )
-        
-        pet.save()
-        
-        if foto:
-            pet.foto = foto
+
+        raza_final = raza if raza else ('Mestizo' if es_mestizo else None)
+        if not raza_final:
+            return Response({'error': 'Raza requerida'}, status=400)
+
+        numero = numero_ficha
+        if not numero:
+            numero = f"PET-{uuid.uuid4().hex[:8].upper()}"
+        else:
+            if Pet.objects.filter(numero_ficha=numero).exists():
+                numero = f"PET-{uuid.uuid4().hex[:8].upper()}"
+
+        with transaction.atomic():
+            pet = Pet(
+                nombre_pet=nombre_pet,
+                descripcion_pet=descripcion_pet,
+                especie=especie,
+                sexo=sexo,
+                tamanio=tamanio,
+                raza=raza_final,
+                es_mestizo=es_mestizo,
+                peso_kg=float(peso_kg) if peso_kg else None,
+                edad=int(edad) if edad else None,
+                fecha_nacimiento=fecha_nacimiento if fecha_nacimiento else None,
+                alergias=alergias if alergias else None,
+                numero_ficha=numero,
+                responsable_id=request.user.id_usuario,
+                is_deleted=0
+            )
             pet.save()
-        
-        return Response({
-            'success': True,
-            'message': 'Mascota registrada exitosamente',
-            'id_pet': pet.id_pet
-        }, status=201)
-        
+            if foto_url:
+                pet.foto_url = foto_url
+                pet.save()
+
+        return Response({'success': True, 'id_pet': pet.id_pet}, status=201)
+
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
@@ -355,64 +368,38 @@ def agregar_pet_api(request):
 @login_required
 @role_required(['socio', 'socio_premium', 'veterinario'])
 def actualizar_pet(request, pk):
-    """Actualizar información de mascota"""
-    try:
-        if is_admin(request.user):
-            pet = get_object_or_404(Pet, id_pet=pk, is_deleted=0)
-        elif request.user.tipo_usuario == 'veterinario':
-            pet = get_object_or_404(Pet, id_pet=pk, veterinario_id=request.user.id_usuario, is_deleted=0)
-            consent = request.GET.get('consent') == '1'
-            if not consent:
-                messages.error(request, 'Se requiere consentimiento previo del responsable para editar.')
-                return redirect('detalle_pet', pk=pk)
-        else:
-            pet = get_object_or_404(Pet, id_pet=pk, responsable_id=request.user.id_usuario, is_deleted=0)
-        
-        if request.method == 'POST':
-            # Actualizar campos básicos
-            pet.nombre_pet = request.POST.get('nombre_pet')
-            pet.especie = request.POST.get('especie')
-            pet.raza = request.POST.get('raza')
-            pet.sexo = request.POST.get('sexo')
-            pet.tamanio = request.POST.get('tamanio')
-            pet.descripcion_pet = request.POST.get('descripcion_pet', '')
-            
-            # Campos opcionales
-            edad = request.POST.get('edad')
-            pet.edad = int(edad) if edad else None
-            
-            peso = request.POST.get('peso_kg')
-            pet.peso_kg = float(peso) if peso else None
-            
-            fecha_nac = request.POST.get('fecha_nacimiento')
-            pet.fecha_nacimiento = fecha_nac if fecha_nac else None
-            
-            pet.alergias = request.POST.get('alergias', '')
-            pet.es_mestizo = 1 if request.POST.get('es_mestizo') else 0
-            pet.otra_raza = request.POST.get('otra_raza', '')
-            
-            # Manejo de foto
-            if 'foto_url' in request.FILES:
-                pet.foto_url = request.FILES['foto_url']
-            
-            pet.fecha_actualizacion = timezone.now()
-            pet.save()
-            
+    if is_admin(request.user):
+        pet_qs = Pet.objects.only('id_pet','nombre_pet','descripcion_pet','especie','tamanio','raza','es_mestizo','sexo','edad','peso_kg','foto_url')
+        pet = get_object_or_404(pet_qs, id_pet=pk, is_deleted=0)
+    elif request.user.tipo_usuario == 'veterinario':
+        pet_qs = Pet.objects.only('id_pet','nombre_pet','descripcion_pet','especie','tamanio','raza','es_mestizo','sexo','edad','peso_kg','foto_url')
+        pet = get_object_or_404(pet_qs, id_pet=pk, veterinario_id=request.user.id_usuario, is_deleted=0)
+        if not request.GET.get('consent') == '1':
+            messages.error(request, 'Se requiere consentimiento previo.')
+            return redirect('detalle_pet', pk=pk)
+    else:
+        pet_qs = Pet.objects.only('id_pet','nombre_pet','descripcion_pet','especie','tamanio','raza','es_mestizo','sexo','edad','peso_kg','foto_url')
+        pet = get_object_or_404(pet_qs, id_pet=pk, responsable_id=request.user.id_usuario, is_deleted=0)
+
+    # **GET**: Mostrar formulario precargado con datos actuales
+    if request.method == 'GET':
+        form = PetForm(instance=pet)
+    
+    # **POST**: Procesar formulario enviado
+    elif request.method == 'POST':
+        form = PetForm(request.POST, request.FILES, instance=pet)
+        if form.is_valid():
+            form.save()
             messages.success(request, f'✅ {pet.nombre_pet} actualizado correctamente.')
             return redirect('detalle_pet', pk=pk)
+        # Si inválido, form mantiene valores y errores
+
+    return render(request, 'templatesApp/pets/actualizar-pet.html', {
+        'form': form,
+        'pet': pet
+    })
+
         
-        return render(request, 'templatesApp/pets/actualizar-pet.html', {
-            'pet': pet
-        })
-    
-    except Pet.DoesNotExist:
-        messages.error(request, '❌ Mascota no encontrada.')
-        return redirect('listado_pets')
-    
-    except Exception as e:
-        logger.error(f'Error al actualizar pet: {e}')
-        messages.error(request, '❌ Error al actualizar la mascota.')
-        return redirect('listado_pets')
 
 @login_required
 @role_required(['socio', 'socio_premium'])
@@ -433,8 +420,8 @@ def remover_pet(request, pk):
                 pet.is_deleted = 1
                 pet.save()
                 
-                messages.success(request, f'✅ {pet.nombre_pet} removida correctamente del listado.')
-                logger.info(f'Pet removida (soft): {pet.id_pet} por usuario {request.user.id_usuario}. Motivo: {motivo}')
+                messages.success(request, f'✅ {pet.nombre_pet} removido/a correctamente del listado.')
+                logger.info(f'Pet removido/a (soft): {pet.id_pet} por usuario {request.user.id_usuario}. Motivo: {motivo}')
                 return redirect('listado_pets')
         
         return render(request, 'templatesApp/pets/remover-pet.html', {'pet': pet})
@@ -626,12 +613,17 @@ def pet_detail_api(request, pk):
 # EVENTOS CLÍNICOS
 # ============================================
 @login_required
-@role_required(['socio', 'socio_premium'])
+@role_required(['socio', 'socio_premium', 'veterinario'])
 def registrar_evento_clinico(request, pk):
     """Registrar evento clínico con archivos adjuntos"""
     try:
         if is_admin(request.user):
             pet = get_object_or_404(Pet, pk=pk, is_deleted=False)
+        elif request.user.tipo_usuario == 'veterinario':
+            pet = get_object_or_404(Pet, pk=pk, veterinario_id=request.user.id_usuario, is_deleted=False)
+            if request.method == 'GET' and request.GET.get('consent') != '1':
+                messages.error(request, 'Se requiere consentimiento informado para registrar eventos clínicos.')
+                return redirect('detalle_pet', pk=pk)
         else:
             pet = get_object_or_404(Pet, pk=pk, responsable_id=request.user, is_deleted=False)
         
@@ -678,7 +670,7 @@ def registrar_evento_clinico(request, pk):
                 logger.error(f'Error al registrar evento clínico: {e}')
                 messages.error(request, '❌ Error al registrar evento.')
         
-        return render(request, 'templatesApp/evento/agregar-eventoclinico.html', {'pet': pet})
+            return render(request, 'templatesApp/evento/agregar-eventoclinico.html', {'pet': pet})
     
     except Pet.DoesNotExist:
         messages.error(request, '❌ Mascota no encontrada.')
@@ -686,12 +678,20 @@ def registrar_evento_clinico(request, pk):
 
 
 @login_required
-@role_required(['socio', 'socio_premium'])
+@role_required(['socio', 'socio_premium', 'veterinario', 'clinica'])
 def listado_eventos_clinicos(request, pk):
     """Listado de eventos clínicos de una mascota"""
     try:
+        mask_pet_name = (request.user.tipo_usuario == 'clinica')
+        can_register = not mask_pet_name
         if is_admin(request.user):
             pet = get_object_or_404(Pet, pk=pk, is_deleted=False)
+            eventos = EventoClinico.objects.filter(
+                id_pet=pet,
+                is_deleted=False
+            ).order_by('-fecha_evento', '-fecha_registro')
+        elif request.user.tipo_usuario == 'veterinario':
+            pet = get_object_or_404(Pet, pk=pk, veterinario_id=request.user.id_usuario, is_deleted=False)
             eventos = EventoClinico.objects.filter(
                 id_pet=pet,
                 is_deleted=False
@@ -718,7 +718,9 @@ def listado_eventos_clinicos(request, pk):
         
         return render(request, 'templatesApp/evento/listado-eventosclinicos.html', {
             'pet': pet,
-            'eventos_con_fotos': eventos_con_fotos
+            'eventos_con_fotos': eventos_con_fotos,
+            'mask_pet_name': mask_pet_name,
+            'can_register': can_register
         })
     
     except Pet.DoesNotExist:
@@ -774,26 +776,79 @@ class RazasAPI(View):
 
 @login_required
 def gestionar_cuidados(request, pk):
-    pet = get_object_or_404(Pet, id_pet=pk)
-    cuidados = Cuidados.objects.filter(id_pet=pk, is_deleted=0).order_by('-fecha_proxima')
+    if is_admin(request.user):
+        pet = get_object_or_404(Pet, id_pet=pk)
+    elif getattr(request.user, 'tipo_usuario', '') == 'veterinario':
+        pet = get_object_or_404(Pet, id_pet=pk, veterinario_id=request.user.id_usuario)
+    else:
+        pet = get_object_or_404(Pet, id_pet=pk, responsable_id=request.user.id_usuario)
+    cuidados = Cuidados.objects.filter(id_pet=pk).filter(Q(is_deleted=0) | Q(is_deleted__isnull=True)).order_by('-fecha_proxima')
+    mask_pet_name = (getattr(request.user, 'tipo_usuario', '') == 'clinica')
+    can_edit_cuidados = not mask_pet_name
     
     if request.method == 'POST':
+        if mask_pet_name:
+            messages.error(request, 'No tienes permiso para registrar cuidados.')
+            return render(request, 'templatesApp/cuidados/gestionar-cuidados.html', {
+                'pet': pet,
+                'cuidados': cuidados,
+                'mask_pet_name': mask_pet_name,
+                'can_edit_cuidados': can_edit_cuidados
+            })
         tipo_cuidado = request.POST.get('tipo_cuidado')
         fecha_proxima = request.POST.get('fecha_proxima')
-        dosis = request.POST.get('dosis')
+        dosis = (request.POST.get('dosis') or '').strip()
+
+        if dosis:
+            if not re.search(r'[A-Za-z0-9]', dosis):
+                messages.error(request, 'La dosis debe incluir al menos una letra o un número.')
+                return render(request, 'templatesApp/cuidados/gestionar-cuidados.html', {
+                    'pet': pet,
+                    'cuidados': cuidados
+                })
+            especiales = re.findall(r'[^A-Za-z0-9\s]', dosis)
+            if len(especiales) > 4:
+                messages.error(request, 'La dosis admite máximo 4 caracteres especiales.')
+                return render(request, 'templatesApp/cuidados/gestionar-cuidados.html', {
+                    'pet': pet,
+                    'cuidados': cuidados
+                })
         
         Cuidados.objects.create(
             id_pet=pet,
             tipo_cuidado=tipo_cuidado,
             fecha_proxima=fecha_proxima,
-            dosis=dosis or None
+            dosis=dosis or None,
+            is_deleted=0
         )
+        try:
+            if getattr(pet.responsable, 'tipo_usuario', '') == 'socio_premium' and tipo_cuidado in ['Vacunación', 'Control Veterinario']:
+                fecha_envio_dt = None
+                try:
+                    fecha_envio_dt = timezone.make_aware(datetime.datetime.strptime(fecha_proxima, '%Y-%m-%d'))
+                except Exception:
+                    fecha_envio_dt = timezone.now()
+                Notificacion.objects.create(
+                    usuario=pet.responsable,
+                    pet=pet,
+                    titulo=f'Recordatorio: {tipo_cuidado} para {pet.nombre_pet}',
+                    mensaje=f'Recuerda la próxima {tipo_cuidado} el {fecha_proxima}.',
+                    tipo='recordatorio',
+                    leido=0,
+                    fecha_creacion=timezone.now(),
+                    fecha_envio=fecha_envio_dt,
+                    is_deleted=0
+                )
+        except Exception as e:
+            logger.warning(f'No se pudo crear notificación: {e}')
         messages.success(request, 'Cuidado agregado exitosamente.')
         return redirect('gestionar_cuidados', pk=pk)
     
     return render(request, 'templatesApp/cuidados/gestionar-cuidados.html', {
         'pet': pet,
-        'cuidados': cuidados
+        'cuidados': cuidados,
+        'mask_pet_name': mask_pet_name,
+        'can_edit_cuidados': can_edit_cuidados
     })
 
 @login_required
@@ -801,12 +856,52 @@ def editar_cuidado(request, pk, cuidado_id):
     pet = get_object_or_404(Pet, id_pet=pk)
     cuidado = get_object_or_404(Cuidados, id_cuidado=cuidado_id, id_pet=pk)
     cuidados = Cuidados.objects.filter(id_pet=pk, is_deleted=0).order_by('-fecha_proxima')
+    if getattr(request.user, 'tipo_usuario', '') == 'clinica':
+        messages.error(request, 'No tienes permiso para editar cuidados.')
+        return redirect('gestionar_cuidados', pk=pk)
     
     if request.method == 'POST':
         cuidado.tipo_cuidado = request.POST.get('tipo_cuidado')
         cuidado.fecha_proxima = request.POST.get('fecha_proxima')
-        cuidado.dosis = request.POST.get('dosis') or None
+        dosis = (request.POST.get('dosis') or '').strip()
+        if dosis:
+            if not re.search(r'[A-Za-z0-9]', dosis):
+                messages.error(request, 'La dosis debe incluir al menos una letra o un número.')
+                return render(request, 'templatesApp/cuidados/gestionar-cuidados.html', {
+                    'pet': pet,
+                    'cuidados': cuidados,
+                    'cuidado_editar': cuidado
+                })
+            especiales = re.findall(r'[^A-Za-z0-9\s]', dosis)
+            if len(especiales) > 4:
+                messages.error(request, 'La dosis admite máximo 4 caracteres especiales.')
+                return render(request, 'templatesApp/cuidados/gestionar-cuidados.html', {
+                    'pet': pet,
+                    'cuidados': cuidados,
+                    'cuidado_editar': cuidado
+                })
+        cuidado.dosis = dosis or None
         cuidado.save()
+        try:
+            if getattr(pet.responsable, 'tipo_usuario', '') == 'socio_premium' and cuidado.tipo_cuidado in ['Vacunación', 'Control Veterinario']:
+                fecha_envio_dt = None
+                try:
+                    fecha_envio_dt = timezone.make_aware(datetime.datetime.strptime(str(cuidado.fecha_proxima), '%Y-%m-%d'))
+                except Exception:
+                    fecha_envio_dt = timezone.now()
+                Notificacion.objects.create(
+                    usuario=pet.responsable,
+                    pet=pet,
+                    titulo=f'Recordatorio actualizado: {cuidado.tipo_cuidado} para {pet.nombre_pet}',
+                    mensaje=f'Se actualizó la próxima {cuidado.tipo_cuidado} al {cuidado.fecha_proxima}.',
+                    tipo='recordatorio',
+                    leido=0,
+                    fecha_creacion=timezone.now(),
+                    fecha_envio=fecha_envio_dt,
+                    is_deleted=0
+                )
+        except Exception as e:
+            logger.warning(f'No se pudo crear notificación (edición): {e}')
         messages.success(request, 'Cuidado actualizado exitosamente.')
         return redirect('gestionar_cuidados', pk=pk)
     
@@ -819,6 +914,9 @@ def editar_cuidado(request, pk, cuidado_id):
 @login_required
 def eliminar_cuidado(request, pk, cuidado_id):
     cuidado = get_object_or_404(Cuidados, id_cuidado=cuidado_id, id_pet=pk)
+    if getattr(request.user, 'tipo_usuario', '') in ['clinica', 'veterinario']:
+        messages.error(request, 'No tienes permiso para eliminar cuidados.')
+        return redirect('gestionar_cuidados', pk=pk)
     cuidado.is_deleted = 1
     cuidado.save()
     messages.success(request, 'Cuidado eliminado exitosamente.')

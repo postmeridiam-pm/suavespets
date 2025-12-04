@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eventos Clínicos - {{ pet.nombre_pet }}</title>
+    <title>Eventos Clínicos{% if not mask_pet_name %} - {{ pet.nombre_pet }}{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
@@ -313,7 +313,11 @@
                 Eventos Clínicos
             </h1>
             <div class="pet-info">
-                <strong>{{ pet.nombre_pet }}</strong> | {{ pet.especie }} | {{ pet.edad }} año(s)
+                {% if not mask_pet_name %}
+                  <strong>{{ pet.nombre_pet }}</strong> | {{ pet.especie }} | {{ pet.edad }} año(s)
+                {% else %}
+                  Información de mascota protegida
+                {% endif %}
             </div>
         </div>
 
@@ -321,9 +325,11 @@
 
         <!-- Barra de acciones -->
         <div class="actions-bar">
+            {% if can_register %}
             <a href="{% url 'registrar_evento_clinico' pet.id_pet %}" class="btn-custom btn-add">
                 <i class="bi bi-plus-circle-fill"></i> Registrar Nuevo Evento
             </a>
+            {% endif %}
             <a href="{% url 'detalle_pet' pet.id_pet %}" class="btn-custom btn-back">
                 <i class="bi bi-arrow-left-circle-fill"></i> Volver al Detalle
             </a>
@@ -394,7 +400,7 @@
             <div class="empty-state">
                 <i class="bi bi-inbox"></i>
                 <h3>No hay eventos clínicos registrados</h3>
-                <p>Aún no has registrado ningún evento clínico para {{ pet.nombre_pet }}</p>
+                <p>{% if not mask_pet_name %}Aún no has registrado ningún evento clínico para {{ pet.nombre_pet }}{% else %}Aún no existen eventos clínicos registrados{% endif %}</p>
             </div>
         {% endif %}
     </div>

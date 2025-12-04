@@ -59,8 +59,8 @@ class GeminiVetService:
             1. **ENFERMEDADES COMUNES** (5-7 enfermedades específicas)
             2. **ALIMENTOS PROHIBIDOS** (lista de alimentos tóxicos)
             3. **CUIDADOS PREVENTIVOS** (vacunas, desparasitación, higiene)
-            4. **ESTUDIOS RECOMENDADOS** (chequeos y exámenes según edad)
-            5. **REFERENCIAS BIBLIOGRÁFICAS** (3-4 referencias de revistas veterinarias del 2010 en adelante)
+            4. **ESTUDIOS RECOMENDADOS** (chequeos y exámenes según edad; prioriza evidencia desde 2005 en adelante)
+            5. **REFERENCIAS BIBLIOGRÁFICAS** (3-4 referencias de revistas veterinarias del 2005 en adelante)
             
             **FORMATO DE RESPUESTA (usa exactamente este formato):**
             

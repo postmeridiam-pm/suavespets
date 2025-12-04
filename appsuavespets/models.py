@@ -44,7 +44,7 @@ class Cuidados(models.Model):
     id_pet = models.ForeignKey('Pet', models.DO_NOTHING, db_column='id_pet')
     tipo_cuidado = models.CharField(max_length=50)
     fecha_proxima = models.DateField()
-    dosis = models.IntegerField(blank=True, null=True)
+    dosis = models.CharField(max_length=120, blank=True, null=True)
     is_deleted = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -89,65 +89,44 @@ class Notificacion(models.Model):
 
 
 class Pet(models.Model):
-    id_pet = models.AutoField(primary_key=True, db_column='id_pet')
-    nombre_pet = models.CharField(max_length=50)
-    descripcion_pet = models.TextField()
-    especie = models.CharField(max_length=10)
-    tamanio = models.CharField(max_length=20)
+    ESPECIE_CHOICES = [
+        ('perro', 'Perro'),
+        ('gato', 'Gato'),
+    ]
+    
+    SEXO_CHOICES = [
+        ('macho', 'Macho'),
+        ('hembra', 'Hembra'),
+    ]
+    
+    TAMANIO_CHOICES = [
+        ('pequeno', 'Pequeño'),
+        ('mediano', 'Mediano'),
+        ('grande', 'Grande'),
+        ('gigante', 'Gigante'),
+    ]
+    
+    id_pet = models.AutoField(primary_key=True)
+    nombre_pet = models.CharField(max_length=100)
+    descripcion_pet = models.TextField(blank=True)
+    especie = models.CharField(max_length=10, choices=ESPECIE_CHOICES)
+    tamanio = models.CharField(max_length=10, choices=TAMANIO_CHOICES)
     raza = models.CharField(max_length=100)
-    es_mestizo = models.IntegerField()
-    otra_raza = models.CharField(max_length=50, blank=True, null=True)
-    sexo = models.CharField(max_length=20)
-    edad = models.IntegerField(blank=True, null=True)
+    es_mestizo = models.BooleanField(default=False)
+    sexo = models.CharField(max_length=10, choices=SEXO_CHOICES, blank=True, null=True) 
+    edad = models.IntegerField(blank=True, null=True) 
     peso_kg = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    fecha_nacimiento = models.DateField(blank=True, null=True)
-    numero_ficha = models.CharField(unique=True, max_length=50, blank=True, null=True)
+    numero_ficha = models.CharField(max_length=50, unique=True, blank=True, null=True)
     alergias = models.TextField(blank=True, null=True)
-    foto_url = models.ImageField(upload_to='media/', blank=True, null=True)
-
-    responsable = models.ForeignKey(
-        'Usuario', 
-        models.DO_NOTHING, 
-        blank=True, 
-        null=True,
-        db_column='responsable_id',
-        to_field='id_usuario'  # ← Apunta a id_usuario en vez de id
-    )
-    veterinario = models.ForeignKey(
-        'Usuario', 
-        models.DO_NOTHING, 
-        related_name='pet_veterinario_set', 
-        blank=True, 
-        null=True,
-        db_column='veterinario_id',
-        to_field='id_usuario'  # ← Apunta a id_usuario en vez de id
-    )
-    psvpet_uno = models.ForeignKey(
-        'Usuario', 
-        models.DO_NOTHING, 
-        related_name='pet_psvpet_uno_set', 
-        blank=True, 
-        null=True,
-        db_column='psvpet_uno_id',
-        to_field='id_usuario'  # ← Apunta a id_usuario en vez de id
-    )
-    psvpet_dos = models.ForeignKey(
-        'Usuario', 
-        models.DO_NOTHING, 
-        related_name='pet_psvpet_dos_set', 
-        blank=True, 
-        null=True,
-        db_column='psvpet_dos_id',
-        to_field='id_usuario'  
-    )
-    is_deleted = models.IntegerField(blank=True, null=True)
-    fecha_actualizacion = models.DateTimeField(blank=True, null=True)
-    foto = models.CharField(max_length=100, blank=True, null=True)
+    responsable = models.ForeignKey('Usuario', models.DO_NOTHING, blank=True, null=True)
+    veterinario = models.ForeignKey('Usuario', models.DO_NOTHING, blank=True, null=True, related_name='pet_veterinario_set')
+    is_deleted = models.IntegerField(blank=True, null=True, default=0)
+    foto_url = models.ImageField(upload_to='pets/', blank=True, null=True)
+    foto = models.URLField(blank=True, null=True)
 
     class Meta:
         managed = True
         db_table = 'pet'
-
 
 class ProductoVeterinario(models.Model):
     id_producto = models.AutoField(primary_key=True)

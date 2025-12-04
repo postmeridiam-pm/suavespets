@@ -3,11 +3,6 @@ from .models import Usuario, Pet, ArchivoAdjunto, Notificacion, EventoClinico
 from django.core.exceptions import ValidationError
 import re
 
-import re
-from django import forms
-from django.core.exceptions import ValidationError
-from .models import Usuario
-
 
 class RegistroForm(forms.ModelForm):
     password = forms.CharField(
@@ -40,29 +35,51 @@ class RegistroForm(forms.ModelForm):
             raise ValidationError('El nombre solo puede contener letras y espacios.')
         if len(nombre) < 3:
             raise ValidationError('El nombre debe tener al menos 3 caracteres.')
+        if len(nombre) > 50:
+            raise ValidationError('El nombre debe tener máximo 50 caracteres.')
         return nombre.title()
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '').lower().strip()
-        
-        # Verificar si ya existe
         if Usuario.objects.filter(email=email).exists():
             raise ValidationError('Este email ya está registrado.')
-        
-        # Validar dominios permitidos
-        dominios_permitidos = [
-            'gmail.com', 'outlook.com', 'hotmail.com', 'live.com',
-            'yahoo.com', 'icloud.com', 'protonmail.com'
-        ]
-        
-        dominio = email.split('@')[-1].lower()
-        
-        # Permitir dominios conocidos O cualquier dominio corporativo
-        if dominio not in dominios_permitidos:
-            # Es un dominio corporativo - permitirlo
-            # Puedes agregar validación adicional aquí si quieres
-            pass
-        
+        if not re.match(r'^[^\s@]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$', email or ''):
+            raise ValidationError('Formato de email inválido.')
+        dominio = email.split('@')[-1]
+        edu_suffixes = {
+            'edu.ar','edu.cl'
+        }
+        known_university_suffixes = {
+            # Chile (Vet)
+            'uchile.cl','uach.cl','unab.cl','umayor.cl','uvm.cl','udec.cl','uss.cl','udla.cl',
+            # Argentina (Vet)
+            'uba.ar','unlp.edu.ar','unr.edu.ar','unicen.edu.ar','unne.edu.ar','unrc.edu.ar','unl.edu.ar','usal.edu.ar','unimoron.edu.ar'
+        }
+        proveedores = {
+            'gmail.com','outlook.com','hotmail.com','live.com','yahoo.com','icloud.com','protonmail.com','gmx.com','aol.com'
+        }
+        desechables = {
+            'mailinator.com','yopmail.com','tempmail.com','10minutemail.com','guerrillamail.com','discard.email','trashmail.com'
+        }
+        tlds = {
+            'com','net','org','edu','gov','mil','info','biz','io','co','us','uk','es','cl','mx','ar','pe','uy','br','ve','cr','pa','ec','ca','de','fr','it'
+        }
+        if dominio in desechables:
+            raise ValidationError('No se permiten correos de dominios desechables.')
+        if any(dominio.endswith(suf) for suf in edu_suffixes | known_university_suffixes):
+            return email
+        if dominio in proveedores:
+            return email
+        partes = dominio.split('.')
+        if len(partes) < 2:
+            raise ValidationError('Dominio de email inválido.')
+        sld, tld = partes[-2], partes[-1]
+        if len(sld) < 2 or not re.match(r'^[A-Za-z0-9-]+$', sld):
+            raise ValidationError('Dominio corporativo inválido.')
+        if tld.lower() not in tlds:
+            raise ValidationError('Dominio de email no reconocido.')
+        if dominio.startswith('-') or dominio.endswith('-') or '..' in dominio:
+            raise ValidationError('Dominio de email inválido.')
         return email
 
     def es_dominio_corporativo(self, dominio):
@@ -118,6 +135,47 @@ class EditarPerfilForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').lower().strip()
+        if not re.match(r'^[^\s@]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$', email or ''):
+            raise ValidationError('Formato de email inválido.')
+        dominio = email.split('@')[-1]
+        edu_suffixes = {
+            'edu.ar','edu.cl'
+        }
+        known_university_suffixes = {
+            'uchile.cl','uach.cl','unab.cl','umayor.cl','uvm.cl','udec.cl','uss.cl','udla.cl',
+            'uba.ar','unlp.edu.ar','unr.edu.ar','unicen.edu.ar','unne.edu.ar','unrc.edu.ar','unl.edu.ar','usal.edu.ar','unimoron.edu.ar'
+        }
+        proveedores = {
+            'gmail.com','outlook.com','hotmail.com','live.com','yahoo.com','icloud.com','protonmail.com','gmx.com','aol.com'
+        }
+        desechables = {
+            'mailinator.com','yopmail.com','tempmail.com','10minutemail.com','guerrillamail.com','discard.email','trashmail.com'
+        }
+        tlds = {
+            'com','net','org','edu','gov','mil','info','biz','io','co','us','uk','es','cl','mx','ar','pe','uy','br','ve','cr','pa','ec','ca','de','fr','it'
+        }
+        if Usuario.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise ValidationError('Este email ya está registrado.')
+        if dominio in desechables:
+            raise ValidationError('No se permiten correos de dominios desechables.')
+        if any(dominio.endswith(suf) for suf in edu_suffixes | known_university_suffixes):
+            return email
+        if dominio in proveedores:
+            return email
+        partes = dominio.split('.')
+        if len(partes) < 2:
+            raise ValidationError('Dominio de email inválido.')
+        sld, tld = partes[-2], partes[-1]
+        if len(sld) < 2 or not re.match(r'^[A-Za-z0-9-]+$', sld):
+            raise ValidationError('Dominio corporativo inválido.')
+        if tld.lower() not in tlds:
+            raise ValidationError('Dominio de email no reconocido.')
+        if dominio.startswith('-') or dominio.endswith('-') or '..' in dominio:
+            raise ValidationError('Dominio de email inválido.')
+        return email
+
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
@@ -133,6 +191,47 @@ class UsuarioForm(forms.ModelForm):
             'fecha_vencimiento_cuota': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').lower().strip()
+        if Usuario.objects.filter(email=email).exclude(pk=getattr(self.instance, 'pk', None)).exists():
+            raise ValidationError('Este email ya está registrado.')
+        if not re.match(r'^[^\s@]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$', email or ''):
+            raise ValidationError('Formato de email inválido.')
+        dominio = email.split('@')[-1]
+        edu_suffixes = {
+            'edu.ar','edu.cl'
+        }
+        known_university_suffixes = {
+            'uchile.cl','uach.cl','unab.cl','umayor.cl','uvm.cl','udec.cl','uss.cl','udla.cl',
+            'uba.ar','unlp.edu.ar','unr.edu.ar','unicen.edu.ar','unne.edu.ar','unrc.edu.ar','unl.edu.ar','usal.edu.ar','unimoron.edu.ar'
+        }
+        proveedores = {
+            'gmail.com','outlook.com','hotmail.com','live.com','yahoo.com','icloud.com','protonmail.com','gmx.com','aol.com'
+        }
+        desechables = {
+            'mailinator.com','yopmail.com','tempmail.com','10minutemail.com','guerrillamail.com','discard.email','trashmail.com'
+        }
+        tlds = {
+            'com','net','org','edu','gov','mil','info','biz','io','co','us','uk','es','cl','mx','ar','pe','uy','br','ve','cr','pa','ec','ca','de','fr','it'
+        }
+        if dominio in desechables:
+            raise ValidationError('No se permiten correos de dominios desechables.')
+        if any(dominio.endswith(suf) for suf in edu_suffixes | known_university_suffixes):
+            return email
+        if dominio in proveedores:
+            return email
+        partes = dominio.split('.')
+        if len(partes) < 2:
+            raise ValidationError('Dominio de email inválido.')
+        sld, tld = partes[-2], partes[-1]
+        if len(sld) < 2 or not re.match(r'^[A-Za-z0-9-]+$', sld):
+            raise ValidationError('Dominio corporativo inválido.')
+        if tld.lower() not in tlds:
+            raise ValidationError('Dominio de email no reconocido.')
+        if dominio.startswith('-') or dominio.endswith('-') or '..' in dominio:
+            raise ValidationError('Dominio de email inválido.')
+        return email
+
 class PetForm(forms.ModelForm):
     class Meta:
         model = Pet
@@ -145,19 +244,60 @@ class PetForm(forms.ModelForm):
             'raza': forms.TextInput(attrs={'class': 'form-control'}),
             'es_mestizo': forms.HiddenInput(),
             'sexo': forms.Select(attrs={'class': 'form-select'}),
-            'edad': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 30}),
-            'peso_kg': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': 0.1}),
+            'edad': forms.NumberInput(attrs={
+                'class': 'form-control', 
+                'min': 0, 
+                'max': 30,
+                'step': '1',
+                'placeholder': 'Dejar vacío si es desconocida'
+            }),
+            'peso_kg': forms.NumberInput(attrs={
+                'class': 'form-control', 
+                'step': '0.01', 
+                'min': 0.4,
+                'max': 160,
+                'pattern': r'[0-9]+([.][0-9]+)?',
+                'inputmode': 'decimal',
+                'placeholder': 'Opcional'
+            }),
             'foto_url': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
         }
+        labels = {
+            'nombre_pet': 'Nombre',
+            'descripcion_pet': 'Descripción',
+            'especie': 'Especie',
+            'tamanio': 'Tamaño',
+            'raza': 'Raza',
+            'sexo': 'Sexo',
+            'edad': 'Edad (años)',
+            'peso_kg': 'Peso (kg)',
+            'foto_url': 'Foto',
+        }
 
-    # Métodos clean para validaciones específicas
-
-class PetUpdateForm(PetForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields:
-            self.fields[field].required = False
-
+    def clean_peso_kg(self):
+        """Validación adicional para peso SOLO si se ingresa"""
+        peso = self.cleaned_data.get('peso_kg')
+        
+        # Si está vacío, está bien (es opcional)
+        if peso is None or peso == '':
+            return None
+        
+        if peso < 0.4:
+            raise forms.ValidationError('El peso mínimo es 0.4 kg')
+        
+        if peso > 160:
+            raise forms.ValidationError('El peso máximo es 160 kg')
+        
+        # Validar que tenga máximo 2 decimales
+        peso_str = str(peso)
+        if '.' in peso_str:
+            decimales = len(peso_str.split('.')[1])
+            if decimales > 2:
+                raise forms.ValidationError('El peso puede tener máximo 2 decimales')
+        
+        return peso
+    
+    
 class ArchivoAdjuntoForm(forms.ModelForm):
     class Meta:
         model = ArchivoAdjunto

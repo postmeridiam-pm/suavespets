@@ -893,7 +893,7 @@ document.getElementById('btn-next-1').addEventListener('click', function() {
             mestizoQuestion.classList.remove('d-none');
         }
     } else {
-        alert('⚠️ Por favor complete todos los campos obligatorios del paso 1');
+        alert('Por favor complete todos los campos obligatorios');
     }
 });
 
@@ -1310,26 +1310,19 @@ form.addEventListener('submit', function(e) {
     
     fetch('/api/pets/', {
         method: 'POST',
-        headers: { 
-            'X-CSRFToken': csrftoken
-        },
-        body: formData
+        headers: { 'X-CSRFToken': csrftoken },
+        body: formData,
+        credentials: 'same-origin'
     })
     .then(resp => {
-        if (resp.status >= 200 && resp.status < 300) {
-            return Promise.resolve();
-        }
-        return resp.text().then(t => {
-            let e;
-            try { e = JSON.parse(t); } catch { e = { error: t }; }
-            return Promise.reject(e);
-        });
+        if (resp.ok) return resp.json();
+        return resp.text().then(t => { let e; try { e = JSON.parse(t); } catch { e = { error: t }; } return Promise.reject(e); });
     })
-    .then(() => {
+    .then(data => {
         window.location.href = '/pets/';
     })
     .catch(err => {
-        console.error('Error:', err);
+        alert(err && err.error ? err.error : 'No se pudo registrar la mascota');
         btnSubmit.disabled = false;
         btnSubmit.innerHTML = '<i class="bi bi-check-circle"></i> Registrar Mascota';
     });

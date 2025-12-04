@@ -309,58 +309,31 @@
         </div>
         {% endif %}
 
-        <form id="registroForm" method="POST" action="{% url 'registro' %}" novalidate>
+        <form id="registroForm" method="POST" action="{% url 'registro' %}" novalidate autocomplete="off">
             {% csrf_token %}
-
-            <!-- Tipo de Usuario -->
-            <div class="user-type-group">
-                <label for="tipo_usuario">
-                    <span>👤</span> ¿Cómo quieres unirte? <span class="required">*</span>
-                </label>
-                <select id="tipo_usuario" name="tipo_usuario" required>
-                    <option value="">Selecciona una opción</option>
-                    <option value="socio" {% if form.tipo_usuario.value == 'socio' %}selected{% endif %}>
-                        🐕 Socio - Acceso básico a servicios
-                    </option>
-                    <option value="socio_premium" {% if form.tipo_usuario.value == 'socio_premium' %}selected{% endif %}>
-                        ⭐ Socio Premium - Acceso completo + beneficios
-                    </option>
-                    <option value="invitado" {% if form.tipo_usuario.value == 'invitado' %}selected{% endif %}>
-                        👋 Voluntario Fundación - Colabora con nosotros
-                    </option>
-                    <option value="veterinario" {% if form.tipo_usuario.value == 'veterinario' %}selected{% endif %}>
-                        🩺 Veterinario - Profesional de la salud animal
-                    </option>
-                    <option value="clinica" {% if form.tipo_usuario.value == 'clinica' %}selected{% endif %}>
-                        🏥 Clínica Veterinaria - Institución médica
-                    </option>
-                </select>
-                <div class="error-message" id="errorTipoUsuario"></div>
-                <div class="user-type-hint">💡 Selecciona el tipo de perfil que mejor se ajuste a ti</div>
-            </div>
 
             <div class="form-group">
                 <label for="nombre">Nombre completo <span class="required">*</span></label>
                 <input type="text" id="nombre" name="nombre" placeholder="Ej: María González" 
-                       required minlength="3" maxlength="100"
+                       required minlength="3" maxlength="50"
                        pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" 
                        value="{{ form.nombre.value|default:'' }}" />
                 <div class="error-message" id="errorNombre"></div>
-                <div class="char-count"><span id="nombreCount">0</span>/100 caracteres</div>
             </div>
 
             <div class="form-group">
-                <label for="dni">DNI (RUT o Pasaporte) <span class="required">*</span></label>
-                <input type="text" id="dni" name="dni" placeholder="Ej: 12345678-9 o AB1234567" 
+                <label for="identificacion">DNI (RUT o Pasaporte) <span class="required">*</span></label>
+                <input type="text" id="identificacion" name="identificacion" placeholder="Ej: 12345678-9 o AB1234567" 
                        required maxlength="20"
-                       value="{{ form.dni.value|default:'' }}" />
+                       value="{{ form.identificacion.value|default:'' }}" />
+                <input type="hidden" name="tipo_identificacion" value="dni" />
                 <div class="error-message" id="errorDni"></div>
             </div>
 
             <div class="form-group">
                 <label for="email">Correo electrónico <span class="required">*</span></label>
                 <input type="email" id="email" name="email" placeholder="correo@ejemplo.cl" 
-                       required maxlength="254"
+                       required maxlength="254" autocomplete="off" autocapitalize="none" autocorrect="off" inputmode="email"
                        value="{{ form.email.value|default:'' }}" />
                 <div class="error-message" id="errorEmail"></div>
             </div>
@@ -402,23 +375,15 @@
 
 <script>
     const form = document.getElementById('registroForm');
-    const tipoUsuarioSelect = document.getElementById('tipo_usuario');
     const nombreInput = document.getElementById('nombre');
-    const dniInput = document.getElementById('dni');
+    const dniInput = document.getElementById('identificacion');
     const emailInput = document.getElementById('email');
     const telefonoInput = document.getElementById('telefono');
     const passwordInput = document.getElementById('password');
     const passwordConfirmInput = document.getElementById('password_confirm');
     const toggleRegPassword = document.getElementById('toggleRegPassword');
     const toggleRegPasswordConfirm = document.getElementById('toggleRegPasswordConfirm');
-    const nombreCount = document.getElementById('nombreCount');
-
-    // Actualizar contador inicial
-    nombreCount.textContent = nombreInput.value.length;
-
-    tipoUsuarioSelect.addEventListener('change', validateTipoUsuario);
     nombreInput.addEventListener('input', function () {
-        nombreCount.textContent = this.value.length;
         validateNombre();
     });
 
@@ -439,22 +404,12 @@
         errorDiv.classList.remove('show');
     }
 
-    function validateTipoUsuario() {
-        const val = tipoUsuarioSelect.value;
-        const errorDiv = document.getElementById('errorTipoUsuario');
-        if (!val) {
-            return showError(tipoUsuarioSelect, errorDiv, 'Debes seleccionar un tipo de usuario');
-        }
-        clearError(tipoUsuarioSelect, errorDiv);
-        return true;
-    }
-
     function validateNombre() {
         const val = nombreInput.value.trim();
         const errorDiv = document.getElementById('errorNombre');
         const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
         if (val.length < 3) return showError(nombreInput, errorDiv, 'Al menos 3 caracteres');
-        if (val.length > 100) return showError(nombreInput, errorDiv, 'Máx 100 caracteres');
+        if (val.length > 50) return showError(nombreInput, errorDiv, 'Máx 50 caracteres');
         if (!regex.test(val)) return showError(nombreInput, errorDiv, 'Solo letras y espacios');
         clearError(nombreInput, errorDiv);
         return true;
@@ -475,22 +430,34 @@
     function validateEmail() {
         const val = emailInput.value.trim();
         const errorDiv = document.getElementById('errorEmail');
-        const allowedDomains = ["gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "live.com"];
-        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!val) {
-            return showError(emailInput, errorDiv, 'Email requerido');
-        }
-        if (!regexEmail.test(val)) {
-            return showError(emailInput, errorDiv, 'Email inválido');
-        }
+        const regexEmail = /^[^\s@]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        const providers = ["gmail.com","outlook.com","hotmail.com","yahoo.com","live.com","icloud.com","protonmail.com","gmx.com","aol.com"];
+        const eduSuffixes = ["edu.ar","edu.cl"];
+        const knownUniversitySuffixes = [
+          // Chile (Vet)
+          "uchile.cl","uach.cl","unab.cl","umayor.cl","uvm.cl","udec.cl","uss.cl","udla.cl",
+          // Argentina (Vet)
+          "uba.ar","unlp.edu.ar","unr.edu.ar","unicen.edu.ar","unne.edu.ar","unrc.edu.ar","unl.edu.ar","usal.edu.ar","unimoron.edu.ar"
+        ];
+        const disposable = ["mailinator.com","yopmail.com","tempmail.com","10minutemail.com","guerrillamail.com","discard.email","trashmail.com"];
+        const tlds = ["com","net","org","edu","gov","mil","info","biz","io","co","us","uk","es","cl","mx","ar","pe","uy","br","ve","cr","pa","ec","ca","de","fr","it"];
+        if (!val) return showError(emailInput, errorDiv, 'Email requerido');
+        if (!regexEmail.test(val)) return showError(emailInput, errorDiv, 'Email inválido');
+        if (val.length > 254) return showError(emailInput, errorDiv, 'Email muy largo');
         const domain = val.split('@')[1]?.toLowerCase();
-        if (!allowedDomains.includes(domain)) {
-            return showError(emailInput, errorDiv, 'Solo emails de dominios válidos como gmail.com, outlook.com, hotmail.com');
+        if (!domain) return showError(emailInput, errorDiv, 'Dominio inválido');
+        if (disposable.includes(domain)) return showError(emailInput, errorDiv, 'No se permiten dominios desechables');
+        if (providers.includes(domain)) { clearError(emailInput, errorDiv); return true; }
+        if (eduSuffixes.some(suf => domain.endsWith(suf)) || knownUniversitySuffixes.some(suf => domain.endsWith(suf))) {
+            clearError(emailInput, errorDiv); return true;
         }
-        if (val.length > 254) {
-            return showError(emailInput, errorDiv, 'Email muy largo');
-        }
+        const parts = domain.split('.');
+        if (parts.length < 2) return showError(emailInput, errorDiv, 'Dominio inválido');
+        const sld = parts[parts.length - 2];
+        const tld = parts[parts.length - 1];
+        if (sld.length < 2) return showError(emailInput, errorDiv, 'Dominio corporativo inválido');
+        if (!tlds.includes(tld)) return showError(emailInput, errorDiv, 'Dominio no reconocido');
+        if (domain.startsWith('-') || domain.endsWith('-') || domain.includes('..')) return showError(emailInput, errorDiv, 'Dominio inválido');
         clearError(emailInput, errorDiv);
         return true;
     }

@@ -51,7 +51,7 @@
         }
 
         .navbar-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -98,16 +98,16 @@
 
         /* Container principal */
         .main-container {
-            max-width: 1000px;
-            margin: 3rem auto;
-            padding: 0 2rem 4rem 2rem;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem 3rem 2rem;
             position: relative;
             z-index: 1;
         }
 
         .page-header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .page-header h1 {
@@ -115,6 +115,20 @@
             font-weight: 700;
             color: #5a7d7c;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .page-header h1 .fa-dog {
+            color: #d4a574;
+            font-size: 1.8rem;
+        }
+
+        .page-header h1 .fa-cat {
+            color: #9b8fb3;
+            font-size: 1.8rem;
         }
 
         .page-header p {
@@ -122,27 +136,32 @@
             font-size: 1rem;
         }
 
-        /* Card del formulario */
-        .form-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
+        /* Layout horizontal: foto + formulario */
+        .form-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 992px) {
+            .form-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Preview de foto */
         .photo-preview-section {
-            background: #f8f9fa;
-            border-radius: 15px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
             padding: 1.5rem;
-            margin-bottom: 2rem;
             text-align: center;
         }
 
         .photo-preview-section img {
-            max-width: 250px;
-            max-height: 250px;
+            width: 100%;
+            height: 240px;
             border-radius: 15px;
             border: 3px solid #7a9a97;
             object-fit: cover;
@@ -150,31 +169,64 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
+        .photo-preview-section .placeholder-image {
+            width: 100%;
+            height: 240px;
+            border-radius: 15px;
+            border: 3px dashed #7a9a97;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            margin-bottom: 1rem;
+            font-size: 3rem;
+            color: #7a9a97;
+        }
+
         .photo-preview-section p {
             color: #6c757d;
             font-size: 0.9rem;
-            margin: 0;
+            margin: 0.5rem 0;
         }
 
-        /* Grid de dos columnas */
+        .pet-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #7a9a97 0%, #5a7d7c 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Card del formulario */
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            padding: 2rem;
+        }
+
+        /* Grid del formulario - 3 columnas */
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
             .form-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
             }
-        }
-
-        .form-section {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 1px solid #e9ecef;
         }
 
         .section-title {
@@ -187,6 +239,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            grid-column: 1 / -1;
         }
 
         .section-title i {
@@ -195,7 +248,7 @@
 
         /* Campos de formulario */
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 0;
         }
 
         .form-group label {
@@ -203,7 +256,7 @@
             color: #495057;
             margin-bottom: 0.5rem;
             display: block;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .form-group label .required {
@@ -214,10 +267,11 @@
         .form-control, .form-select {
             border: 2px solid #e9ecef;
             border-radius: 10px;
-            padding: 0.65rem 1rem;
-            font-size: 0.95rem;
+            padding: 0.6rem 0.9rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             background: white;
+            width: 100%;
         }
 
         .form-control:focus, .form-select:focus {
@@ -231,13 +285,27 @@
             min-height: 120px;
         }
 
-        /* Full width section */
-        .full-width-section {
-            margin-top: 2rem;
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 1px solid #e9ecef;
+        /* Descripción ocupa todo el ancho */
+        .full-width-group {
+            grid-column: 1 / -1;
+        }
+
+        /* Alertas de error */
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c2c7;
+            color: #842029;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-message i {
+            font-size: 0.9rem;
         }
 
         /* Botones */
@@ -245,14 +313,14 @@
             display: flex;
             gap: 1rem;
             margin-top: 2rem;
+            justify-content: flex-end;
         }
 
         .btn-save {
-            flex: 1;
             background: linear-gradient(135deg, #7a9a97 0%, #5a7d7c 100%);
             border: none;
             color: white;
-            padding: 0.9rem 2rem;
+            padding: 0.8rem 2.5rem;
             border-radius: 12px;
             font-weight: 600;
             font-size: 1rem;
@@ -267,11 +335,10 @@
         }
 
         .btn-cancel {
-            flex: 1;
             background: white;
             border: 2px solid #dee2e6;
             color: #6c757d;
-            padding: 0.9rem 2rem;
+            padding: 0.8rem 2.5rem;
             border-radius: 12px;
             font-weight: 600;
             font-size: 1rem;
@@ -290,34 +357,11 @@
             transform: translateY(-2px);
         }
 
-        /* Alertas */
-        .alert-custom {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            border: 1px solid #b1dfbb;
-            color: #155724;
-            padding: 1rem 1.25rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .alert-custom.error {
-            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-            border-color: #f1aeb5;
-            color: #721c24;
-        }
-
-        .alert-custom i {
-            font-size: 1.2rem;
-        }
-
         /* Huellas decorativas */
         .paw-decoration {
             position: fixed;
-            font-size: 40px;
-            opacity: 0.03;
+            font-size: 45px;
+            opacity: 0.04;
             pointer-events: none;
             z-index: 0;
         }
@@ -331,11 +375,6 @@
             50% { transform: translateY(-20px) rotate(10deg); }
         }
 
-        /* Inputs de archivo personalizados */
-        input[type="file"] {
-            padding: 0.5rem;
-        }
-
         input[type="file"]::file-selector-button {
             background: #7a9a97;
             color: white;
@@ -345,10 +384,26 @@
             cursor: pointer;
             font-weight: 600;
             margin-right: 1rem;
+            font-size: 0.85rem;
         }
 
         input[type="file"]::file-selector-button:hover {
             background: #5f7c7a;
+        }
+
+        /* Nota informativa para sexo */
+        .field-note {
+            color: #6c757d;
+            font-size: 0.8rem;
+            font-style: italic;
+            margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .field-note i {
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -370,155 +425,193 @@
     <!-- Contenido principal -->
     <div class="main-container">
         <div class="page-header">
-            <h1><i class="fas fa-edit"></i> Actualizar Mascota</h1>
-            <p>Modifica la información de tu mascota</p>
+            <h1>
+                <i class="fas fa-dog"></i>
+                <i class="fas fa-edit"></i>
+                Actualizar Mascota
+                <i class="fas fa-cat"></i>
+            </h1>
+            <p>Modifica la información de tu perro o gato</p>
         </div>
 
-        
-
-        <div class="form-card">
-            <!-- Preview de foto actual -->
-            {% if pet.foto_url %}
+        <div class="form-layout">
+            <!-- Columna izquierda: Preview de foto -->
             <div class="photo-preview-section">
-                <img src="{{ pet.foto_url.url }}" alt="Foto de {{ pet.nombre_pet }}">
-                <p><i class="fas fa-camera"></i> Foto actual</p>
+                {% if pet.foto_url %}
+                    <img src="{{ pet.foto_url.url }}" alt="Foto de {{ pet.nombre_pet }}" id="preview-image">
+                {% elif pet.foto %}
+                    <img src="{{ pet.foto }}" alt="Foto de {{ pet.nombre_pet }}" id="preview-image">
+                {% else %}
+                    <div class="placeholder-image" id="placeholder-image">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                {% endif %}
+                <p><i class="fas fa-image"></i> Foto actual</p>
             </div>
-            {% elif pet.foto %}
-            <div class="photo-preview-section">
-                <img src="{{ pet.foto }}" alt="Foto de {{ pet.nombre_pet }}">
-                <p><i class="fas fa-camera"></i> Foto actual</p>
-            </div>
-            {% endif %}
 
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+            <!-- Columna derecha: Formulario -->
+            <div class="form-card">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
 
-                <!-- Grid de dos columnas -->
-                <div class="form-grid">
-                    <!-- Columna 1: Información Básica -->
-                    <div class="form-section">
+                    <div class="form-grid">
+                        <!-- Título de sección -->
                         <h3 class="section-title">
                             <i class="fas fa-info-circle"></i>
-                            Información Básica
+                            Información de la Mascota
                         </h3>
 
-                        <div class="form-group">
-                            <label for="id_nombre_pet">Nombre</label>
-                            <input type="text" 
-                                   name="nombre_pet" 
-                                   id="id_nombre_pet" 
-                                   class="form-control" 
-                                   value="{{ form.nombre_pet.value|default:'' }}"
-                                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]{1,50}"
-                                   maxlength="50"
-                                   title="Solo letras, máximo 50 caracteres">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_especie">Especie</label>
-                            <select name="especie" id="id_especie" class="form-select">
-                                <option value="">Seleccione...</option>
-                                <option value="perro" {% if form.especie.value == 'perro' %}selected{% endif %}>Perro</option>
-                                <option value="gato" {% if form.especie.value == 'gato' %}selected{% endif %}>Gato</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_sexo">Sexo</label>
-                            <select name="sexo" id="id_sexo" class="form-select">
-                                <option value="">Seleccione...</option>
-                                <option value="macho" {% if form.sexo.value == 'macho' %}selected{% endif %}>Macho</option>
-                                <option value="hembra" {% if form.sexo.value == 'hembra' %}selected{% endif %}>Hembra</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_edad">Edad (años)</label>
-                            <input type="number" 
-                                   name="edad" 
-                                   id="id_edad" 
-                                   class="form-control" 
-                                   value="{{ form.edad.value|default:'' }}"
-                                   min="0" 
-                                   max="30"
-                                   placeholder="Edad en años">
-                        </div>
-                    </div>
-
-                    <!-- Columna 2: Características Físicas -->
-                    <div class="form-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-ruler"></i>
-                            Características Físicas
-                        </h3>
-
-                        <div class="form-group">
-                            <label for="id_tamanio">Tamaño</label>
-                            <select name="tamanio" id="id_tamanio" class="form-select">
-                                <option value="">Seleccione...</option>
-                                <option value="pequeño" {% if form.tamanio.value == 'pequeño' %}selected{% endif %}>Pequeño</option>
-                                <option value="mediano" {% if form.tamanio.value == 'mediano' %}selected{% endif %}>Mediano</option>
-                                <option value="grande" {% if form.tamanio.value == 'grande' %}selected{% endif %}>Grande</option>
-                                <option value="gigante" {% if form.tamanio.value == 'gigante' %}selected{% endif %}>Gigante</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_raza">Raza</label>
-                            <select name="raza" id="id_raza" class="form-select">
-                                <option value="">Seleccione primero una especie...</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" id="otra_raza_group" style="display: none;">
-                            <label for="id_otra_raza">Especificar raza</label>
-                            <input type="text" 
-                                   name="otra_raza" 
-                                   id="id_otra_raza" 
-                                   class="form-control" 
-                                   value="{{ form.otra_raza.value|default:'' }}"
-                                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]{1,30}"
-                                   maxlength="30"
-                                   placeholder="Especificar raza">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_foto_url">Foto</label>
-                            <input type="file" 
-                                   name="foto_url" 
-                                   id="id_foto_url" 
-                                   class="form-control" 
-                                   accept="image/*">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sección completa: Descripción -->
-                <div class="full-width-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-file-alt"></i>
-                        Descripción y Personalidad
-                    </h3>
+                                            <!-- Nombre -->
                     <div class="form-group">
-                        <label for="id_descripcion_pet">Descripción</label>
-                        <textarea name="descripcion_pet" 
-                                  id="id_descripcion_pet" 
-                                  class="form-control" 
-                                  maxlength="500"
-                                  placeholder="Describe detalles de su personalidad e historial médico veterinario">{{ form.descripcion_pet.value|default:'' }}</textarea>
+                        <label for="{{ form.nombre_pet.id_for_label }}">
+                            Nombre
+                            {% if form.nombre_pet.field.required %}<span class="required">*</span>{% endif %}
+                        </label>
+                        {{ form.nombre_pet }}
+                        {% if form.nombre_pet.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.nombre_pet.errors.0 }}</span>
+                            </div>
+                        {% endif %}
                     </div>
-                </div>
 
-                <!-- Botones -->
-                <div class="button-group">
-                    <a href="{% url 'listado_pets' %}" class="btn-cancel">
-                        <i class="fas fa-times"></i> Cancelar
-                    </a>
-                    <button type="submit" class="btn-save">
-                        <i class="fas fa-save"></i> Guardar Cambios
-                    </button>
-                </div>
-            </form>
+                    <!-- Especie -->
+                    <div class="form-group">
+                        <label for="{{ form.especie.id_for_label }}">
+                            Especie
+                            {% if form.especie.field.required %}<span class="required">*</span>{% endif %}
+                        </label>
+                        {{ form.especie }}
+                        {% if form.especie.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.especie.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Sexo -->
+                    <div class="form-group">
+                        <label for="{{ form.sexo.id_for_label }}">
+                            Sexo
+                        </label>
+                        {{ form.sexo }}
+                        <div class="field-note">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Opcional si es menor a 1 año</span>
+                        </div>
+                        {% if form.sexo.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.sexo.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Edad -->
+                    <div class="form-group">
+                        <label for="{{ form.edad.id_for_label }}">
+                            Edad (años)
+                            {% if form.edad.field.required %}<span class="required">*</span>{% endif %}
+                        </label>
+                        {{ form.edad }}
+                        {% if form.edad.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.edad.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Tamaño -->
+                    <div class="form-group">
+                        <label for="{{ form.tamanio.id_for_label }}">
+                            Tamaño
+                            {% if form.tamanio.field.required %}<span class="required">*</span>{% endif %}
+                        </label>
+                        {{ form.tamanio }}
+                        {% if form.tamanio.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.tamanio.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Raza -->
+                    <div class="form-group">
+                        <label for="{{ form.raza.id_for_label }}">
+                            Raza
+                            {% if form.raza.field.required %}<span class="required">*</span>{% endif %}
+                        </label>
+                        {{ form.raza }}
+                        <datalist id="raza-options"></datalist>
+                        {% if form.raza.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.raza.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Peso -->
+                    <div class="form-group">
+                        <label for="{{ form.peso_kg.id_for_label }}">
+                            Peso (kg)
+                            {% if form.peso_kg.field.required %}<span class="required">*</span>{% endif %}
+                        </label>
+                        {{ form.peso_kg }}
+                        <div class="field-note">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Entre 0.4 kg y 160 kg</span>
+                        </div>
+                        {% if form.peso_kg.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.peso_kg.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Foto -->
+                    <div class="form-group">
+                        <label for="{{ form.foto_url.id_for_label }}">
+                            Foto
+                        </label>
+                        {{ form.foto_url }}
+                        {% if form.foto_url.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.foto_url.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Descripción - ancho completo -->
+                    <div class="form-group full-width-group">
+                        <label for="{{ form.descripcion_pet.id_for_label }}">
+                            Descripción
+                        </label>
+                        {{ form.descripcion_pet }}
+                        {% if form.descripcion_pet.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.descripcion_pet.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!-- Botones -->
+                    <div class="button-group">
+                        <a href="{% url 'listado_pets' %}" class="btn-cancel">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -530,120 +623,110 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Razas según especie
-        const razasPerro = [
-            'Mestizo',
-            'Labrador Retriever',
-            'Golden Retriever',
-            'Pastor Alemán',
-            'Bulldog Francés',
-            'Beagle',
-            'Poodle',
-            'Chihuahua',
-            'Yorkshire Terrier',
-            'Boxer',
-            'Dachshund',
-            'Shih Tzu',
-            'Rottweiler',
-            'Husky Siberiano',
-            'Pug',
-            'Schnauzer',
-            'Cocker Spaniel',
-            'Border Collie',
-            'Dálmata',
-            'Akita',
-            'Otra'
-        ];
-
-        const razasGato = [
-            'Mestizo',
-            'Persa',
-            'Siamés',
-            'Maine Coon',
-            'Bengalí',
-            'Ragdoll',
-            'British Shorthair',
-            'Sphynx',
-            'Scottish Fold',
-            'Abisinio',
-            'Birmano',
-            'Exótico',
-            'Devon Rex',
-            'Angora Turco',
-            'Azul Ruso',
-            'Otra'
-        ];
-
-        const especieSelect = document.getElementById('id_especie');
-        const razaSelect = document.getElementById('id_raza');
-        const otraRazaGroup = document.getElementById('otra_raza_group');
-        const otraRazaInput = document.getElementById('id_otra_raza');
-
-        // Cargar razas según especie
-        function cargarRazas() {
-            const especie = especieSelect.value;
-            const razaActual = '{{ form.raza.value|default:"" }}';
-            
-            razaSelect.innerHTML = '<option value="">Seleccione...</option>';
-            
-            if (especie === 'perro') {
-                razasPerro.forEach(raza => {
-                    const option = document.createElement('option');
-                    option.value = raza.toLowerCase().replace(/ /g, '_');
-                    option.textContent = raza;
-                    if (razaActual === option.value) option.selected = true;
-                    razaSelect.appendChild(option);
-                });
-            } else if (especie === 'gato') {
-                razasGato.forEach(raza => {
-                    const option = document.createElement('option');
-                    option.value = raza.toLowerCase().replace(/ /g, '_');
-                    option.textContent = raza;
-                    if (razaActual === option.value) option.selected = true;
-                    razaSelect.appendChild(option);
+        const especieEditSelect = document.getElementById('id_especie');
+        const razaInputEdit = document.getElementById('id_raza');
+        const razaDatalist = document.getElementById('raza-options');
+        function cargarRazasEdit(especie) {
+            if (!especie || !razaDatalist) return;
+            razaDatalist.innerHTML = '';
+            fetch(`/api/razas/?especie=${especie.toLowerCase()}`)
+                .then(resp => resp.ok ? resp.json() : Promise.reject('error'))
+                .then(data => {
+                    if (data.razas && data.razas.length) {
+                        const frag = document.createDocumentFragment();
+                        data.razas.forEach(r => {
+                            const opt = document.createElement('option');
+                            opt.value = r.name;
+                            frag.appendChild(opt);
+                        });
+                        razaDatalist.appendChild(frag);
+                        if (razaInputEdit) razaInputEdit.setAttribute('list', 'raza-options');
+                    }
+                })
+                .catch(() => {});
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            if (especieEditSelect) {
+                const especieVal = especieEditSelect.value || '';
+                if (especieVal) cargarRazasEdit(especieVal);
+                especieEditSelect.addEventListener('change', function() {
+                    cargarRazasEdit(this.value || '');
                 });
             }
-        }
+        });
+        // Mostrar/ocultar "otra raza"
+        const razaSelect = document.getElementById("id_raza");
+        const otraRazaGroup = document.getElementById("otra_raza_group");
 
-        // Mostrar/ocultar campo "Otra raza"
         function toggleOtraRaza() {
-            if (razaSelect.value === 'otra') {
-                otraRazaGroup.style.display = 'block';
-                otraRazaInput.required = true;
-            } else {
-                otraRazaGroup.style.display = 'none';
-                otraRazaInput.required = false;
+            if (razaSelect && razaSelect.value === "otra") {
+                otraRazaGroup.style.display = "block";
+            } else if (otraRazaGroup) {
+                otraRazaGroup.style.display = "none";
             }
         }
 
-        // Event listeners
-        especieSelect.addEventListener('change', cargarRazas);
-        razaSelect.addEventListener('change', toggleOtraRaza);
-
-        // Cargar al inicio
-        if (especieSelect.value) {
-            cargarRazas();
-            toggleOtraRaza();
+        if (razaSelect) {
+            razaSelect.addEventListener("change", toggleOtraRaza);
         }
 
         // Preview de imagen
-        const fotoInput = document.getElementById('id_foto_url');
+        const fotoInput = document.getElementById("id_foto_url");
         if (fotoInput) {
-            fotoInput.addEventListener('change', function(e) {
+            fotoInput.addEventListener("change", function (e) {
                 const file = e.target.files[0];
-                if (file && file.type.startsWith('image/')) {
+                if (file && file.type.startsWith("image/")) {
                     const reader = new FileReader();
-                    reader.onload = function(event) {
-                        let preview = document.querySelector('.new-photo-preview');
-                        if (!preview) {
-                            preview = document.createElement('div');
-                            preview.className = 'photo-preview-section new-photo-preview';
-                            preview.innerHTML = '<img src="" alt="Nueva foto"><p><i class="fas fa-image"></i> Nueva foto (sin guardar)</p>';
-                            document.querySelector('.form-card').insertBefore(preview, document.querySelector('.form-grid'));
+                    reader.onload = function (event) {
+                        const previewImage = document.getElementById("preview-image");
+                        const placeholderImage = document.getElementById("placeholder-image");
+                        
+                        if (previewImage) {
+                            previewImage.src = event.target.result;
+                        } else if (placeholderImage) {
+                            const img = document.createElement("img");
+                            img.src = event.target.result;
+                            img.alt = "Nueva foto";
+                            img.id = "preview-image";
+                            placeholderImage.replaceWith(img);
                         }
-                        preview.querySelector('img').src = event.target.result;
                     };
                     reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Validación de peso solo números
+        const pesoInput = document.getElementById("id_peso_kg");
+        if (pesoInput) {
+            pesoInput.addEventListener("input", function(e) {
+                // Remover cualquier caracter que no sea número, punto o coma
+                this.value = this.value.replace(/[^0-9.,]/g, '');
+                // Reemplazar coma por punto
+                this.value = this.value.replace(',', '.');
+                // Permitir solo un punto decimal
+                const parts = this.value.split('.');
+                if (parts.length > 2) {
+                    this.value = parts[0] + '.' + parts.slice(1).join('');
+                }
+                // Limitar a 2 decimales
+                if (parts.length === 2 && parts[1].length > 2) {
+                    this.value = parts[0] + '.' + parts[1].substring(0, 2);
+                }
+            });
+
+            // Validación adicional al perder el foco
+            pesoInput.addEventListener("blur", function(e) {
+                const peso = parseFloat(this.value);
+                if (isNaN(peso)) {
+                    return;
+                }
+                if (peso < 0.4) {
+                    alert("El peso mínimo permitido es 0.4 kg");
+                    this.value = "0.4";
+                } else if (peso > 160) {
+                    alert("El peso máximo permitido es 160 kg");
+                    this.value = "160";
                 }
             });
         }

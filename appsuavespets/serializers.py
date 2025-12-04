@@ -17,6 +17,14 @@ class PetSerializer(serializers.ModelSerializer):
             return UsuarioSerializer(usuario).data
         return None
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if data.get('peso_kg') in (None, ''):
+            data['peso_kg'] = 'Desconocido'
+        if data.get('fecha_nacimiento') in (None, ''):
+            data['fecha_nacimiento'] = 'Desconocida'
+        return data
+
 
 # ------------ Usuario ------------
 class UsuarioSerializer(serializers.ModelSerializer):

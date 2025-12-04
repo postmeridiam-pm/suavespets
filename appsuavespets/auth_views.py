@@ -7,15 +7,10 @@ from .models import Usuario
 
 
 def registro_view(request):
-
     if request.method == 'POST':
         form = RegistroForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            if hasattr(user, 'username'):
-                user.username = user.email
-            user.set_password(form.cleaned_data['password'])
-            user.save()
+            user = form.save()
             messages.success(request, 'Registro exitoso.')
             return redirect('login')
         else:
@@ -27,34 +22,25 @@ def registro_view(request):
 
 def login_view(request):
     last_email = request.COOKIES.get('last_email', '')
-    
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         remember_me = request.POST.get('remember_me')
-        
         user = None
         try:
             user = Usuario.objects.get(email=email)
         except Usuario.DoesNotExist:
-            pass
-        
+            user = None
         if user and check_password(password, user.password):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
-            
             response = redirect('inicio')
-            
             if remember_me:
                 response.set_cookie('last_email', email, max_age=30*24*60*60)
             else:
                 response.delete_cookie('last_email')
-            
-            
             return response
-        else:
-            messages.error(request, 'Email o contraseña incorrectos.')
-    
+        messages.error(request, 'Email o contraseña incorrectos.')
     return render(request, 'templatesApp/registro/login.html', {'last_email': last_email})
 
 def logout_view(request):
@@ -65,43 +51,10 @@ def logout_view(request):
 def acceso_denegado(request):
     return render(request, 'templatesApp/registro/acceso-denegado.html')
 
-def registro_view(request):
-    if request.method == 'POST':
-        form = RegistroForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            if hasattr(user, 'username'):
-                user.username = user.email
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            messages.success(request, 'Registro exitoso.')
-            return redirect('login')
-        else:
-            messages.error(request, 'Corrige los errores del formulario.')
-    else:
-        form = RegistroForm()
-    return render(request, 'templatesApp/registro/registro.html', {'form': form})
+# eliminado duplicado de registro_view (se usa el definido arriba)
 
 
-def login_view(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')  
-        password = request.POST.get('password')
-        
-        user = None
-        try:
-            user = Usuario.objects.get(email=email)
-        except Usuario.DoesNotExist:
-            pass
-        
-        if user and check_password(password, user.password):
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(request, user)
-            return redirect('inicio')
-        else:
-            messages.error(request, 'Email o contraseña incorrectos.')
-    
-    return render(request, 'templatesApp/registro/login.html')
+# eliminado duplicado de login_view
 
 
 def logout_view(request):

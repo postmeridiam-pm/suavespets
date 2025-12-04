@@ -296,7 +296,7 @@
   <div class="logo">Suaves Pets</div>
   <button id="dark-mode-toggle" class="dark-toggle-btn" aria-label="Cambiar modo oscuro">Modo oscuro</button>
   {% if user.is_authenticated %}
-    <div class="welcome-top">Bienvenido {{ user.nombre }}</div>
+    <div class="welcome-top">Bienvenido/a a Suaves Pets {{ user.nombre }}!❤️</div>
   {% else %}
     <button class="login-top-btn" onclick="location.href='{% url 'login' %}'">Iniciar sesión</button>
   {% endif %}

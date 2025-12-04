@@ -203,7 +203,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <h1 class="text-center mb-4">
-                <i class="bi bi-heart-pulse-fill"></i> Cuidados de {{ pet.nombre_pet }}
+                <i class="bi bi-heart-pulse-fill"></i> Cuidados {% if not mask_pet_name %}de {{ pet.nombre_pet }}{% endif %}
             </h1>
 
             
@@ -242,9 +242,11 @@
                             </div>
                         </div>
                         <div class="mt-3 d-flex gap-2">
+                            {% if can_edit_cuidados %}
                             <button type="submit" class="btn btn-success">
                                 <i class="bi bi-check-circle"></i> {% if cuidado_editar %}Actualizar{% else %}Agregar{% endif %}
                             </button>
+                            {% endif %}
                             {% if cuidado_editar %}
                             <a href="{% url 'gestionar_cuidados' pet.id_pet %}" class="btn btn-secondary">
                                 <i class="bi bi-x-circle"></i> Cancelar
@@ -281,14 +283,16 @@
                                     <td>{{ cuidado.fecha_proxima|date:"d/m/Y" }}</td>
                                     <td>{{ cuidado.dosis|default:"—" }}</td>
                                     <td>
-                                        <a href="{% url 'editar_cuidado' pet.id_pet cuidado.id_cuidado %}" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="{% url 'eliminar_cuidado' pet.id_pet cuidado.id_cuidado %}" 
-                                           class="btn btn-danger btn-sm"
-                                           onclick="return confirm('¿Eliminar este cuidado?')">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        {% if can_edit_cuidados %}
+                                            <a href="{% url 'editar_cuidado' pet.id_pet cuidado.id_cuidado %}" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="{% url 'eliminar_cuidado' pet.id_pet cuidado.id_cuidado %}" 
+                                               class="btn btn-danger btn-sm"
+                                               onclick="return confirm('¿Eliminar este cuidado?')">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}
