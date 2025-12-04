@@ -19,9 +19,9 @@ pymysql.install_as_MySQLdb
 DOG_API_KEY = os.getenv('DOG_API_KEY')
 CAT_API_KEY = os.getenv('CAT_API_KEY')
 
+DATABASE_URL = os.getenv('DATABASE_URL')
 
-from dotenv import load_dotenv
-load_dotenv()  # lee variables desde .env automáticamente
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
