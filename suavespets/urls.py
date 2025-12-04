@@ -29,7 +29,6 @@ urlpatterns = [
     path('login/', auth_views.login_view, name='login'),
     path('logout/', auth_views.logout_view, name='logout'),
     path('acceso-denegado/', auth_views.acceso_denegado, name='acceso_denegado'),
-    path('social-auth/', include('social_django.urls', namespace='social')),
 
     path('perfil/', views.perfil, name='perfil'),
     path('perfil/editar/', views.editar_perfil, name='editar_perfil'),
