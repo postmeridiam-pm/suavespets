@@ -13,9 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv, find_dotenv
-import pymysql
-pymysql.install_as_MySQLdb()
-
+import dj_database_url
 load_dotenv(find_dotenv())
 
 DOG_API_KEY = os.getenv('DOG_API_KEY')
@@ -32,10 +30,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY: se lee desde variables de entorno
-# Usa `SECRET_KEY` y `DEBUG` configuradas en el entorno (Render/Local)
+_ah = os.getenv('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [h.strip() for h in _ah.split(',') if h.strip()] or ['127.0.0.1']
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'suavespets.onrender.com').split(',')
+=======
+
+DATABASES = {'default': dj_database_url.config(default='sqlite:///db.sqlite3')}
+>>>>>>> 31162d4 (Leer hosts y DB desde variables de entorno)
 
 
 
@@ -58,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -88,33 +92,13 @@ WSGI_APPLICATION = 'suavespets.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 def env_bool(name, default=False):
     val = os.getenv(name)
     return (str(val).lower() in ('1', 'true', 'yes')) if val is not None else default
 
-DB_OPTIONS = {
-    "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-    "charset": "utf8mb4",
-}
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-if env_bool('DB_USE_SSL', False):
-    ssl_cfg = {
-        'check_hostname': False,
-        'verify_cert': False,
-    }
-    if os.getenv('DB_SSL_CA'):
-        ssl_cfg['ca'] = os.getenv('DB_SSL_CA')
-    if os.getenv('DB_SSL_CERT'):
-        ssl_cfg['cert'] = os.getenv('DB_SSL_CERT')
-    if os.getenv('DB_SSL_KEY'):
-        ssl_cfg['key'] = os.getenv('DB_SSL_KEY')
-    DB_OPTIONS['ssl'] = ssl_cfg
-
-USE_SQLITE = env_bool('DB_USE_SQLITE', False) or (os.getenv('DB_NAME') is None)
-
-if USE_SQLITE:
+if DEBUG and not DATABASE_URL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -122,16 +106,9 @@ if USE_SQLITE:
         }
     }
 else:
+    import dj_database_url
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASS'),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '3306'),
-            'OPTIONS': DB_OPTIONS,
-        }
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=env_bool('DB_SSL_REQUIRE', True)),
     }
 
 
@@ -140,7 +117,7 @@ import os
 
 # Definir DEBUG mediante variable de entorno para distinguir entorno desarrollo/producción
 # Esto permite que las configuraciones HTTPS solo se apliquen en producción
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+# DEBUG ya definido arriba
 
 
 if not DEBUG:
@@ -248,6 +225,7 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
