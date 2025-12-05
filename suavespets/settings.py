@@ -14,7 +14,9 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv, find_dotenv
 import dj_database_url
-load_dotenv(find_dotenv())
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+if DEBUG:
+    load_dotenv(find_dotenv())
 
 DOG_API_KEY = os.getenv('DOG_API_KEY')
 CAT_API_KEY = os.getenv('CAT_API_KEY')
@@ -96,7 +98,7 @@ def env_bool(name, default=False):
     val = os.getenv(name)
     return (str(val).lower() in ('1', 'true', 'yes')) if val is not None else default
 
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+pass
 
 if DEBUG and not DATABASE_URL:
     DATABASES = {
