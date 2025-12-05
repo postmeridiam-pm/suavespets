@@ -307,10 +307,7 @@
     <div class="paws">&#128062;&#128062;</div>
     <p>Accede a recordatorios personalizados de vacunas y controles para tus mascotas.</p>
     <div class="cta-btns">
-      <form method="post" action="{% url 'registro' %}">
-        {% csrf_token %}
-        <button type="submit" class="suscribir">Regístrate ahora</button>
-      </form>
+      <a href="{% url 'registro' %}" class="suscribir">Regístrate ahora</a>
       <a href="javascript:void(0);" onclick="handleMisMascotasClick()" class="suscribir">Mis Mascotas</a>
     </div>
   </div>

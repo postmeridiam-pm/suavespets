@@ -90,6 +90,28 @@ WSGI_APPLICATION = 'suavespets.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+def env_bool(name, default=False):
+    val = os.getenv(name)
+    return (str(val).lower() in ('1', 'true', 'yes')) if val is not None else default
+
+DB_OPTIONS = {
+    "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+    "charset": "utf8mb4",
+}
+
+if env_bool('DB_USE_SSL', False):
+    ssl_cfg = {
+        'check_hostname': False,
+        'verify_cert': False,
+    }
+    if os.getenv('DB_SSL_CA'):
+        ssl_cfg['ca'] = os.getenv('DB_SSL_CA')
+    if os.getenv('DB_SSL_CERT'):
+        ssl_cfg['cert'] = os.getenv('DB_SSL_CERT')
+    if os.getenv('DB_SSL_KEY'):
+        ssl_cfg['key'] = os.getenv('DB_SSL_KEY')
+    DB_OPTIONS['ssl'] = ssl_cfg
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -98,18 +120,9 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASS'),
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', '3306'),
-        'OPTIONS': {
-            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-            "charset": "utf8mb4",
-            'ssl': {
-                'ca': 'C:/ssl/OpenSSL-Win64/bin/ca-cert.srl',
-#                'key': '/certchoco/localhostkey.pem',
-                'check_hostname': False,
-                'verify_cert': False,
-                    }
-                    }
-                }
-            }
+        'OPTIONS': DB_OPTIONS,
+    }
+}
 
 
 # Supongamos que defines la variable de entorno DJANGO_DEBUG para controlar el entorno
