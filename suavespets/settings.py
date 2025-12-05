@@ -35,12 +35,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 _ah = os.getenv('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [h.strip() for h in _ah.split(',') if h.strip()] or ['127.0.0.1']
 
-<<<<<<< HEAD
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'suavespets.onrender.com').split(',')
-=======
 
 DATABASES = {'default': dj_database_url.config(default='sqlite:///db.sqlite3')}
->>>>>>> 31162d4 (Leer hosts y DB desde variables de entorno)
 
 
 
