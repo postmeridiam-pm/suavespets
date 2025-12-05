@@ -35,7 +35,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY: se lee desde variables de entorno
 # Usa `SECRET_KEY` y `DEBUG` configuradas en el entorno (Render/Local)
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '192.168.1.136,127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'suavespets.onrender.com,192.168.1.136,127.0.0.1,localhost').split(',')
 
 
 
