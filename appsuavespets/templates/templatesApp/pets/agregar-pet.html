@@ -531,8 +531,8 @@
                                         </label>
                                         <select id="sexo" name="sexo" class="form-select" required>
                                             <option value="">Seleccionar...</option>
-                                            <option value="Hembra">Hembra</option>
-                                            <option value="Macho">Macho</option>
+                                            <option value="hembra">Hembra</option>
+                                            <option value="macho">Macho</option>
                                         </select>
                                         <div class="invalid-feedback">Debe seleccionar el sexo</div>
                                     </div>
@@ -923,10 +923,10 @@ function actualizarTamanios(especie) {
     
     if (especie === 'perro') {
         const opciones = [
-            { value: 'Gigante', text: 'Gigante (>45kg)', min: 45, max: 100 },
-            { value: 'Grande', text: 'Grande (26-45kg)', min: 26, max: 45 },
-            { value: 'Mediano', text: 'Mediano (11-25kg)', min: 11, max: 25 },
-            { value: 'Pequeño', text: 'Pequeño (<10kg)', min: 0.4, max: 10 }
+            { value: 'gigante', text: 'Gigante (>45kg)', min: 45, max: 100 },
+            { value: 'grande', text: 'Grande (26-45kg)', min: 26, max: 45 },
+            { value: 'mediano', text: 'Mediano (11-25kg)', min: 11, max: 25 },
+            { value: 'pequeno', text: 'Pequeño (<10kg)', min: 0.4, max: 10 }
         ];
         opciones.forEach(opt => {
             const option = document.createElement('option');
@@ -938,10 +938,10 @@ function actualizarTamanios(especie) {
         });
     } else if (especie === 'gato') {
         const opciones = [
-            { value: 'Gigante', text: 'Gigante (10kg o más)', min: 10, max: 15 },
-            { value: 'Grande', text: 'Grande (7-10kg)', min: 7, max: 10 },
-            { value: 'Mediano', text: 'Mediano (4.5-7kg)', min: 4.5, max: 7 },
-            { value: 'Pequeño', text: 'Pequeño (0.4-4.5kg)', min: 0.4, max: 4.5 }
+            { value: 'gigante', text: 'Gigante (10kg o más)', min: 10, max: 15 },
+            { value: 'grande', text: 'Grande (7-10kg)', min: 7, max: 10 },
+            { value: 'mediano', text: 'Mediano (4.5-7kg)', min: 4.5, max: 7 },
+            { value: 'pequeno', text: 'Pequeño (0.4-4.5kg)', min: 0.4, max: 4.5 }
         ];
         opciones.forEach(opt => {
             const option = document.createElement('option');
