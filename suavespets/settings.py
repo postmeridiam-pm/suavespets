@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 _ah = os.getenv('ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = [h.strip() for h in _ah.split(',') if h.strip()] or ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [h.strip() for h in _ah.split(',') if h.strip()] or ['127.0.0.1', 'localhost', 'suavespets.onrender.com']
 
 DATABASES = {'default': dj_database_url.config(default='sqlite:///db.sqlite3')}
 
