@@ -14,7 +14,6 @@ from functools import wraps
 from appsuavespets.models import ArchivoAdjunto, EventoClinico, Usuario, Pet, Notificacion
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.conf import settings
@@ -306,7 +305,6 @@ def agregar_pet(request):
     return render(request, 'templatesApp/pets/agregar-pet.html', {'form': form})
 
 @api_view(['POST'])
-@csrf_exempt
 def agregar_pet_api(request):
     try:
         nombre_pet = request.data.get('nombre_pet')

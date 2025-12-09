@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
+from django.conf import settings
 from django.contrib.auth.hashers import check_password
 from .forms import RegistroForm
 from .models import Usuario
@@ -11,7 +12,12 @@ def registro_view(request):
         form = RegistroForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, 'Registro exitoso.')
+            auth_user = authenticate(request, email=user.email, password=form.cleaned_data.get('password'))
+            if auth_user is not None:
+                login(request, auth_user)
+                messages.success(request, 'Registro exitoso.')
+                return redirect('listado_pets')
+            messages.success(request, 'Registro exitoso. Inicia sesión.')
             return redirect('login')
         else:
             messages.error(request, 'Corrige los errores del formulario.')
@@ -22,24 +28,27 @@ def registro_view(request):
 
 def login_view(request):
     last_email = request.COOKIES.get('last_email', '')
+    intentos = request.session.get('login_intentos', 0)
+    if intentos >= 5:
+        messages.error(request, 'Demasiados intentos. Intenta más tarde.')
+        return render(request, 'templatesApp/registro/login.html', {'last_email': last_email})
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        email = (request.POST.get('email') or '').strip().lower()
+        password = request.POST.get('password') or ''
         remember_me = request.POST.get('remember_me')
-        user = None
-        try:
-            user = Usuario.objects.get(email=email)
-        except Usuario.DoesNotExist:
-            user = None
-        if user and check_password(password, user.password):
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
             login(request, user)
-            response = redirect('inicio')
+            request.session['login_intentos'] = 0
+            next_url = request.GET.get('next')
+            target = next_url or 'listado_pets'
+            response = redirect(target)
             if remember_me:
-                response.set_cookie('last_email', email, max_age=30*24*60*60)
+                response.set_cookie('last_email', email, max_age=30*24*60*60, secure=not settings.DEBUG, httponly=True, samesite='Lax')
             else:
                 response.delete_cookie('last_email')
             return response
+        request.session['login_intentos'] = intentos + 1
         messages.error(request, 'Email o contraseña incorrectos.')
     return render(request, 'templatesApp/registro/login.html', {'last_email': last_email})
 

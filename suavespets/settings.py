@@ -33,9 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 _ah = os.getenv('ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = [h.strip() for h in _ah.split(',') if h.strip()] or ['127.0.0.1']
-
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'suavespets.onrender.com').split(',')
+ALLOWED_HOSTS = [h.strip() for h in _ah.split(',') if h.strip()] or ['127.0.0.1', 'localhost']
 
 DATABASES = {'default': dj_database_url.config(default='sqlite:///db.sqlite3')}
 
@@ -95,7 +93,6 @@ def env_bool(name, default=False):
     val = os.getenv(name)
     return (str(val).lower() in ('1', 'true', 'yes')) if val is not None else default
 
-pass
 
 if DEBUG and not DATABASE_URL:
     DATABASES = {
@@ -109,6 +106,13 @@ else:
     DATABASES = {
         'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=env_bool('DB_SSL_REQUIRE', True)),
     }
+
+# CSRF trusted origins
+_csrf = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+if _csrf:
+    CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf.split(',') if o.strip()]
+elif DEBUG:
+    CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000']
 
 
 # Supongamos que defines la variable de entorno DJANGO_DEBUG para controlar el entorno
@@ -198,7 +202,6 @@ PASSWORD_HASHERS = [
 
 
 
-SESSION_COOKIE_AGE = 7200 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
