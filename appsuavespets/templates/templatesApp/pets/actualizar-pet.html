@@ -729,7 +729,7 @@
             fotoInput.addEventListener("change", function (e) {
                 const file = e.target.files[0];
                 if (file) {
-                    const allowed = ['image/jpeg','image/png'];
+                    const allowed = ['image/jpeg','image/png','image/jpg'];
                     if (!allowed.includes(file.type)) {
                         alert('Solo se permiten imágenes JPG o PNG');
                         e.target.value = '';

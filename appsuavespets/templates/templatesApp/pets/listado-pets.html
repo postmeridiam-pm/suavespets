@@ -133,7 +133,6 @@
             </h1>
             
             <div class="d-flex justify-content-center mb-3 gap-2">
-                <a href="{% url 'inicio' %}" class="btn btn-outline-secondary" title="Inicio">🏠 Inicio</a>
                 <a href="{% url 'agregar_pet' %}" class="btn btn-success" title="Agregar nueva mascota">
                     <i class="bi bi-plus-circle"></i> Agregar nueva
                 </a>
@@ -169,6 +168,7 @@
                             <a href="{% url 'actualizar_pet' pet.id_pet %}" class="btn btn-primary btn-sm" title="Actualizar">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
+                            
                             <a href="{% url 'remover_pet' pet.id_pet %}" class="btn btn-danger btn-sm" title="Remover">
                                 <i class="bi bi-trash-fill"></i>
                             </a>

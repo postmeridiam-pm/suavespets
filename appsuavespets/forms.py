@@ -261,8 +261,7 @@ class PetForm(forms.ModelForm):
                 'inputmode': 'decimal',
                 'placeholder': 'Opcional'
             }),
-            'foto_url': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/jpeg,image/png'}),
-            'especie': forms.Select(attrs={'class': 'form-select', 'disabled': 'disabled'}),
+            'foto_url': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/jpeg,image/png,image/jpg'}),
         }
         labels = {
             'nombre_pet': 'Nombre',
