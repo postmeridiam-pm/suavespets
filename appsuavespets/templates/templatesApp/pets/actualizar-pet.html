@@ -447,6 +447,10 @@
                     </div>
                 {% endif %}
                 <p><i class="fas fa-image"></i> Foto actual</p>
+                <button type="button" class="btn-home" id="btn-cambiar-foto" title="Cambiar foto">
+                    <i class="fas fa-camera-retro"></i> Cambiar foto
+                </button>
+                <p id="file-status" aria-live="polite">Ningún archivo seleccionado</p>
             </div>
 
             <!-- Columna derecha: Formulario -->
@@ -686,10 +690,31 @@
 
         // Preview de imagen
         const fotoInput = document.getElementById("id_foto_url");
+        const cambiarFotoBtn = document.getElementById('btn-cambiar-foto');
+        const fileStatus = document.getElementById('file-status');
+        if (cambiarFotoBtn && fotoInput) {
+            cambiarFotoBtn.addEventListener('click', function(){
+                fotoInput.click();
+            });
+        }
         if (fotoInput) {
             fotoInput.addEventListener("change", function (e) {
                 const file = e.target.files[0];
-                if (file && file.type.startsWith("image/")) {
+                if (file) {
+                    const allowed = ['image/jpeg','image/png'];
+                    if (!allowed.includes(file.type)) {
+                        alert('Solo se permiten imágenes JPG o PNG');
+                        e.target.value = '';
+                        if (fileStatus) fileStatus.textContent = 'Ningún archivo seleccionado';
+                        return;
+                    }
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('La imagen supera 5 MB');
+                        e.target.value = '';
+                        if (fileStatus) fileStatus.textContent = 'Ningún archivo seleccionado';
+                        return;
+                    }
+                    if (fileStatus) fileStatus.textContent = file.name;
                     const reader = new FileReader();
                     reader.onload = function (event) {
                         const previewImage = document.getElementById("preview-image");

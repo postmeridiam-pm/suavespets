@@ -564,7 +564,7 @@
                                         id="foto_url" 
                                         name="foto_url"
                                         class="form-control"
-                                        accept="image/*"
+                                        accept="image/jpeg,image/png"
                                     />
                                     <div class="help-text">Opcional. Tamaño máximo: 5MB</div>
                                     <div class="invalid-feedback">Archivo inválido o muy grande</div>
@@ -1214,12 +1214,12 @@ foto_urlInput.addEventListener('change', function(e) {
             alert('El archivo es demasiado grande. Máximo 5MB.');
             return;
         }
-        
-        if (!file.type.startsWith('image/')) {
+        const allowed = ['image/jpeg','image/png'];
+        if (!allowed.includes(file.type)) {
             this.classList.add('is-invalid');
             this.value = '';
             photoPreview.classList.remove('show');
-            alert('Por favor seleccione un archivo de imagen válido.');
+            alert('Solo se permiten imágenes JPG o PNG.');
             return;
         }
         

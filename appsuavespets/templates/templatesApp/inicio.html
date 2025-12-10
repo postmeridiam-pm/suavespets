@@ -36,13 +36,13 @@
     color: #184e52;
     border: none;
     font-weight: 700;
-    padding: 0.5em 1.2em;
+    padding: 0.5em 0.9em;
     border-radius: 30px;
     cursor: pointer;
-    margin-left: 1rem;
+    margin-left: auto;
     transition: background 0.25s, color 0.25s;
     box-shadow: 0 1px 8px #184e5220;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
   .dark-toggle-btn:hover { background: #81c784; }
 
@@ -62,7 +62,7 @@
     background: #528979;
   }
   .welcome-top {
-    margin-left: auto;
+    margin-left: 1rem;
     font-weight: 700;
     color: #184e52;
   }
@@ -275,10 +275,11 @@
       });
     });
     const toggleBtn = document.getElementById('dark-mode-toggle');
+    const toggleIcon = document.getElementById('dark-mode-icon');
     toggleBtn.addEventListener('click', function(){
-      document.body.classList.toggle('dark-mode');
-      toggleBtn.textContent =
-        document.body.classList.contains('dark-mode') ? "Modo claro" : "Modo oscuro";
+      const isDark = document.body.classList.toggle('dark-mode');
+      toggleIcon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+      toggleBtn.setAttribute('aria-label', isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
     });
   });
 
@@ -294,11 +295,14 @@
 <body>
 <header>
   <div class="logo">Suaves Pets</div>
-  <button id="dark-mode-toggle" class="dark-toggle-btn" aria-label="Cambiar modo oscuro">Modo oscuro</button>
   {% if user.is_authenticated %}
     <div class="welcome-top">Bienvenido/a a Suaves Pets {{ user.nombre }}!❤️</div>
-  {% else %}
-    <button class="login-top-btn" onclick="location.href='{% url 'login' %}'">Iniciar sesión</button>
+  {% endif %}
+  <button id="dark-mode-toggle" class="dark-toggle-btn" aria-label="Cambiar modo oscuro" title="Modo">
+    <i id="dark-mode-icon" class="bi bi-moon-fill"></i>
+  </button>
+  {% if not user.is_authenticated %}
+    <button class="login-top-btn" onclick="handleMisMascotasClick()">Ingresar</button>
   {% endif %}
 </header>
 <main>

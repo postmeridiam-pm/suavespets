@@ -558,7 +558,18 @@ def pet_list_api(request):
             pet.save()
 
             if 'foto_url' in request.FILES:
-                pet.foto_url = request.FILES['foto_url']
+                foto = request.FILES['foto_url']
+                allowed_ct = ['image/jpeg','image/png']
+                if getattr(foto, 'content_type', '').lower() not in allowed_ct:
+                    return Response({'error': 'Solo se permiten imágenes JPG o PNG'}, status=status.HTTP_400_BAD_REQUEST)
+                if getattr(foto, 'size', 0) > 5 * 1024 * 1024:
+                    return Response({'error': 'La imagen supera 5 MB'}, status=status.HTTP_400_BAD_REQUEST)
+                try:
+                    from PIL import Image
+                    Image.open(foto).verify()
+                except Exception:
+                    return Response({'error': 'Archivo de imagen inválido'}, status=status.HTTP_400_BAD_REQUEST)
+                pet.foto_url = foto
                 pet.save()
 
             logger.info(f'Pet creado via API por usuario {request.user.id_usuario} (id_pet={pet.id_pet})')
@@ -575,7 +586,7 @@ def pet_list_api(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 @login_required
 def pet_detail_api(request, pk):
-    """API para detalle, actualizar y eliminar mascota"""
+    """API para detalle, actualizar y remover mascota"""
     try:
         pet = Pet.objects.filter(pk=pk, responsable_id=request.user.id_usuario).filter(Q(is_deleted=0) | Q(is_deleted__isnull=True)).first()
         if not pet:
@@ -616,7 +627,7 @@ def pet_detail_api(request, pk):
         except Exception as e:
             logger.error(f'Error en API DELETE pet: {e}')
             return Response(
-                {'error': 'Error al eliminar mascota'},
+                {'error': 'Error al remover mascota'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -864,7 +875,7 @@ def gestionar_cuidados(request, pk):
                 )
         except Exception as e:
             logger.warning(f'No se pudo crear notificación: {e}')
-        messages.success(request, 'Cuidado agregado exitosamente.')
+        messages.success(request, 'Cuidado agregado exitosamente.', extra_tags='cuidados')
         return redirect('gestionar_cuidados', pk=pk)
     
     return render(request, 'templatesApp/cuidados/gestionar-cuidados.html', {
@@ -925,7 +936,7 @@ def editar_cuidado(request, pk, cuidado_id):
                 )
         except Exception as e:
             logger.warning(f'No se pudo crear notificación (edición): {e}')
-        messages.success(request, 'Cuidado actualizado exitosamente.')
+        messages.success(request, 'Cuidado actualizado.', extra_tags='cuidados')
         return redirect('gestionar_cuidados', pk=pk)
     
     return render(request, 'templatesApp/cuidados/gestionar-cuidados.html', {
@@ -938,9 +949,9 @@ def editar_cuidado(request, pk, cuidado_id):
 def eliminar_cuidado(request, pk, cuidado_id):
     cuidado = get_object_or_404(Cuidados, id_cuidado=cuidado_id, id_pet=pk)
     if getattr(request.user, 'tipo_usuario', '') in ['clinica', 'veterinario']:
-        messages.error(request, 'No tienes permiso para eliminar cuidados.')
+        messages.error(request, 'No tienes permiso para remover cuidados.')
         return redirect('gestionar_cuidados', pk=pk)
     cuidado.is_deleted = 1
     cuidado.save()
-    messages.success(request, 'Cuidado eliminado exitosamente.')
+    messages.success(request, 'Cuidado removido.', extra_tags='cuidados')
     return redirect('gestionar_cuidados', pk=pk)

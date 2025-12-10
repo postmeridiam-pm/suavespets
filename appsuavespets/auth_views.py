@@ -29,6 +29,10 @@ def registro_view(request):
 def login_view(request):
     last_email = request.COOKIES.get('last_email', '')
     intentos = request.session.get('login_intentos', 0)
+    # Limpiar mensajes antiguos al mostrar el login
+    if request.method == 'GET':
+        for _ in messages.get_messages(request):
+            pass
     if intentos >= 5:
         messages.error(request, 'Demasiados intentos. Intenta más tarde.')
         return render(request, 'templatesApp/registro/login.html', {'last_email': last_email})

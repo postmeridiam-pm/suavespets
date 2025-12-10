@@ -261,7 +261,8 @@ class PetForm(forms.ModelForm):
                 'inputmode': 'decimal',
                 'placeholder': 'Opcional'
             }),
-            'foto_url': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'foto_url': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/jpeg,image/png'}),
+            'especie': forms.Select(attrs={'class': 'form-select', 'disabled': 'disabled'}),
         }
         labels = {
             'nombre_pet': 'Nombre',
@@ -311,7 +312,34 @@ class PetForm(forms.ModelForm):
                 years = int((date.today() - dob).days // 365)
                 if years != int(edad):
                     self.add_error('edad', 'La edad no coincide con la fecha de nacimiento')
+        # No permitir modificar especie desde este formulario
+        if self.instance and getattr(self.instance, 'especie', None):
+            cleaned['especie'] = self.instance.especie
         return cleaned
+
+    def clean_foto_url(self):
+        foto = self.cleaned_data.get('foto_url')
+        if not foto:
+            return foto
+        content_type = getattr(foto, 'content_type', '')
+        name = getattr(foto, 'name', '')
+        allowed_ct = ['image/jpeg', 'image/png']
+        allowed_ext = ('.jpg', '.jpeg', '.png')
+        if content_type and content_type.lower() not in allowed_ct:
+            raise forms.ValidationError('Solo se permiten imágenes JPG o PNG')
+        if name and not name.lower().endswith(allowed_ext):
+            raise forms.ValidationError('Extensión de archivo no permitida')
+        # Validar que realmente es una imagen
+        try:
+            from PIL import Image
+            Image.open(foto).verify()
+        except Exception:
+            raise forms.ValidationError('Archivo de imagen inválido')
+        # Limitar tamaño (5 MB)
+        max_bytes = 5 * 1024 * 1024
+        if getattr(foto, 'size', 0) > max_bytes:
+            raise forms.ValidationError('La imagen supera 5 MB')
+        return foto
     
     
 class ArchivoAdjuntoForm(forms.ModelForm):

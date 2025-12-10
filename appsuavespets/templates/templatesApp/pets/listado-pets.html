@@ -131,15 +131,7 @@
             <h1 class="display-4 mb-4">
                   Pets registradas 🐾
             </h1>
-            {% if messages %}
-            <div class="container mb-3">
-                {% for message in messages %}
-                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} text-center" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+            
             <div class="d-flex justify-content-center mb-3 gap-2">
                 <a href="{% url 'inicio' %}" class="btn btn-outline-secondary" title="Inicio">
                     <i class="bi bi-house-fill"></i> Inicio
@@ -167,8 +159,8 @@
                 {% for pet in pets %}
                 <tr>
                     <td>{{ pet.nombre_pet }}</td>
-                    <td>{{ pet.especie }}</td>
-                    <td>{{ pet.tamanio }}</td>
+                    <td>{{ pet.especie|capfirst }}</td>
+                    <td>{{ pet.tamanio|capfirst }}</td>
                         <td>
                             <a href="{% url 'detalle_pet' pet.id_pet %}" class="btn btn-info btn-sm" title="Ver detalles">
                                 <i class="bi bi-eye-fill"></i>
