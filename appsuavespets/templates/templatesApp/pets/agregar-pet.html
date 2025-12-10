@@ -447,9 +447,7 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <h1><i class="bi bi-heart-pulse-fill"></i> Suaves Pets</h1>
-            <a href="{% url 'inicio' %}" class="btn btn-home">
-                <i class="bi bi-house-fill"></i> Inicio
-            </a>
+            <a href="{% url 'inicio' %}" class="btn btn-home">🏠 Inicio</a>
         </div>
     </div>
 </div>
@@ -612,14 +610,13 @@
                                     <label for="raza" class="form-label">
                                         Raza <span class="required-mark">*</span>
                                     </label>
-                                    <select id="raza" name="raza" class="form-select" disabled>
-                                        <option value="">Primero seleccione una especie...</option>
-                                    </select>
+                                    <input id="raza" name="raza" class="form-control" list="raza-list" placeholder="Escribe para buscar o ingresa otra" />
+                                    <datalist id="raza-list"></datalist>
                                     <div class="loading-spinner" id="raza-loading">
                                         <span class="spinner-border spinner-border-sm"></span>
                                         <span>Cargando razas...</span>
                                     </div>
-                                    <div class="invalid-feedback">Debe seleccionar una raza</div>
+                                    <div class="invalid-feedback">Debe ingresar una raza</div>
                                 </div>
 
                                 <input type="hidden" id="es_mestizo" name="es_mestizo" value="0">
@@ -637,13 +634,15 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="tamanio" class="form-label">
+                                    <label for="tamanio_search" class="form-label">
                                         Tamaño <span class="required-mark">*</span>
                                     </label>
-                                    <select id="tamanio" name="tamanio" class="form-select" required disabled>
+                                    <input id="tamanio_search" class="form-control" list="tamanio-options" placeholder="Escribe para buscar tamaño" disabled />
+                                    <datalist id="tamanio-options"></datalist>
+                                    <select id="tamanio" name="tamanio" class="form-select" required disabled style="display:none">
                                         <option value="">Primero seleccione una especie...</option>
                                     </select>
-                                    <div class="invalid-feedback" id="tamanio-error">Debe seleccionar un tamaño</div>
+                                    <div class="invalid-feedback" id="tamanio-error">Debe seleccionar un tamaño válido</div>
                                 </div>
 
                                 <div class="row mb-4">
@@ -751,7 +750,8 @@ const form = document.getElementById('form-pet');
 const formSlider = document.getElementById('form-slider');
 const progressBar = document.getElementById('progress-bar');
 const especieSelect = document.getElementById('especie');
-const razaSelect = document.getElementById('raza');
+const razaInput = document.getElementById('raza');
+const razaDatalist = document.getElementById('raza-list');
 const razaContainer = document.getElementById('raza-container');
 const razaLoading = document.getElementById('raza-loading');
 const otraRazaContainer = document.getElementById('otra-raza-container');
@@ -928,6 +928,7 @@ function actualizarTamanios(especie) {
             { value: 'mediano', text: 'Mediano (11-25kg)', min: 11, max: 25 },
             { value: 'pequeno', text: 'Pequeño (<10kg)', min: 0.4, max: 10 }
         ];
+        tamanioOptions.innerHTML = '';
         opciones.forEach(opt => {
             const option = document.createElement('option');
             option.value = opt.value;
@@ -935,7 +936,12 @@ function actualizarTamanios(especie) {
             option.dataset.min = opt.min;
             option.dataset.max = opt.max;
             tamanioSelect.appendChild(option);
+            const optList = document.createElement('option');
+            optList.value = opt.text;
+            optList.setAttribute('data-code', opt.value);
+            tamanioOptions.appendChild(optList);
         });
+        tamanioSearchInput.disabled = false;
     } else if (especie === 'gato') {
         const opciones = [
             { value: 'gigante', text: 'Gigante (10kg o más)', min: 10, max: 15 },
@@ -943,6 +949,7 @@ function actualizarTamanios(especie) {
             { value: 'mediano', text: 'Mediano (4.5-7kg)', min: 4.5, max: 7 },
             { value: 'pequeno', text: 'Pequeño (0.4-4.5kg)', min: 0.4, max: 4.5 }
         ];
+        tamanioOptions.innerHTML = '';
         opciones.forEach(opt => {
             const option = document.createElement('option');
             option.value = opt.value;
@@ -950,7 +957,12 @@ function actualizarTamanios(especie) {
             option.dataset.min = opt.min;
             option.dataset.max = opt.max;
             tamanioSelect.appendChild(option);
+            const optList = document.createElement('option');
+            optList.value = opt.text;
+            optList.setAttribute('data-code', opt.value);
+            tamanioOptions.appendChild(optList);
         });
+        tamanioSearchInput.disabled = false;
     }
 }
 
@@ -961,7 +973,7 @@ especieSelect.addEventListener('change', function() {
     // Resetear estado
     mestizoQuestion.classList.add('d-none');
     razaContainer.style.display = 'none';
-    razaSelect.value = '';
+    razaInput.value = '';
     esMestizoInput.value = '0';
     
     // Actualizar límites de peso según especie
@@ -979,6 +991,9 @@ especieSelect.addEventListener('change', function() {
         tamanioSelect.innerHTML = '<option value="">Primero seleccione una especie...</option>';
         tamanioSelect.disabled = true;
         pesoHelp.textContent = 'Seleccione primero la especie';
+        tamanioOptions.innerHTML = '';
+        tamanioSearchInput.value = '';
+        tamanioSearchInput.disabled = true;
     }
     
     // Validar peso actual
@@ -988,8 +1003,7 @@ especieSelect.addEventListener('change', function() {
 // ====== BOTONES MESTIZO ======
 btnMestizoSi.addEventListener('click', function() {
     esMestizoInput.value = '1';
-    razaSelect.disabled = false;
-    razaSelect.value = 'Mestizo';
+    razaInput.value = 'Mestizo';
     mestizoQuestion.classList.add('d-none');
     razaContainer.style.display = 'none';
 });
@@ -1004,9 +1018,7 @@ btnMestizoNo.addEventListener('click', function() {
 // ====== CARGAR RAZAS DESDE API ======
 function cargarRazas(especie) {
     razaLoading.classList.add('show');
-    razaSelect.innerHTML = '<option value="">Cargando...</option>';
-    razaSelect.disabled = true;
-    
+    razaDatalist.innerHTML = '';
     fetch(`/api/razas/?especie=${especie}`)
         .then(response => {
             if (!response.ok) throw new Error('Error al cargar razas');
@@ -1014,34 +1026,25 @@ function cargarRazas(especie) {
         })
         .then(data => {
             razaLoading.classList.remove('show');
-            razaSelect.disabled = false;
-            razaSelect.innerHTML = '<option value="">Seleccionar raza...</option>';
-            
             if (data.razas && data.razas.length > 0) {
+                const frag = document.createDocumentFragment();
                 data.razas.forEach(raza => {
-                    const option = document.createElement('option');
-                    option.value = raza.name;
-                    option.textContent = raza.name;
-                    razaSelect.appendChild(option);
+                    const opt = document.createElement('option');
+                    opt.value = raza.name;
+                    frag.appendChild(opt);
                 });
-                
-                const otraOpt = document.createElement('option');
-                otraOpt.value = 'Otra';
-                otraOpt.textContent = '--- Otra ---';
-                razaSelect.appendChild(otraOpt);
+                razaDatalist.appendChild(frag);
             }
         })
         .catch(error => {
             console.error('Error:', error);
             razaLoading.classList.remove('show');
-            razaSelect.disabled = false;
-            razaSelect.innerHTML = '<option value="">Error al cargar</option>';
         });
 }
 
 // ====== LÓGICA RAZA Y MESTIZO ======
-razaSelect.addEventListener('change', function() {
-    if (this.value === 'Otra') {
+razaInput.addEventListener('input', function() {
+    if (this.value && this.value.toLowerCase() === 'otra') {
         otraRazaContainer.classList.remove('d-none');
     } else {
         otraRazaContainer.classList.add('d-none');
@@ -1114,6 +1117,9 @@ tamanioSelect.addEventListener('change', function() {
     this.classList.remove('is-invalid');
     validarPeso();
 });
+
+const tamanioSearchInput = document.getElementById('tamanio_search');
+const tamanioOptions = document.getElementById('tamanio-options');
 
 document.getElementById('btn-peso-desconocido').addEventListener('click', function(e) {
     e.preventDefault();
@@ -1214,7 +1220,7 @@ foto_urlInput.addEventListener('change', function(e) {
             alert('El archivo es demasiado grande. Máximo 5MB.');
             return;
         }
-        const allowed = ['image/jpeg','image/png'];
+        const allowed = ['image/jpeg','image/png','image/jpg'];
         if (!allowed.includes(file.type)) {
             this.classList.add('is-invalid');
             this.value = '';
@@ -1266,11 +1272,11 @@ form.addEventListener('submit', function(e) {
     
     // Validar raza solo si no es mestizo
     if (esMestizoInput.value === '0') {
-        if (!razaSelect.value) {
-            razaSelect.classList.add('is-invalid');
+        if (!razaInput.value) {
+            razaInput.classList.add('is-invalid');
             isValid = false;
         } else {
-            razaSelect.classList.remove('is-invalid');
+            razaInput.classList.remove('is-invalid');
         }
     }
     
@@ -1342,3 +1348,17 @@ updateProgress();
 </script>
 </body>
 </html>
+// Selección de tamaño vía input con sugerencias
+tamanioSearchInput && tamanioSearchInput.addEventListener('change', function(){
+    const val = this.value;
+    const match = Array.from(tamanioOptions.children).find(o => o.value === val);
+    if (match) {
+        const code = match.getAttribute('data-code');
+        tamanioSelect.value = code;
+        tamanioSelect.dispatchEvent(new Event('change'));
+        tamanioSelect.classList.remove('is-invalid');
+    } else {
+        tamanioSelect.value = '';
+        tamanioSelect.classList.add('is-invalid');
+    }
+});

@@ -197,9 +197,28 @@
             padding: 6px 12px;
             font-size: 0.875rem;
         }
+        .home-top-btn {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            background: #6eb5c0;
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 6px 12px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .home-top-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
     </style>
 </head>
 <body class="container mt-5">
+    <a href="{% url 'inicio' %}" class="home-top-btn" title="Inicio">🏠</a>
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <h1 class="text-center mb-4">

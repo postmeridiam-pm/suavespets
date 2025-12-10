@@ -559,7 +559,7 @@ def pet_list_api(request):
 
             if 'foto_url' in request.FILES:
                 foto = request.FILES['foto_url']
-                allowed_ct = ['image/jpeg','image/png']
+                allowed_ct = ['image/jpeg','image/png','image/jpg']
                 if getattr(foto, 'content_type', '').lower() not in allowed_ct:
                     return Response({'error': 'Solo se permiten imágenes JPG o PNG'}, status=status.HTTP_400_BAD_REQUEST)
                 if getattr(foto, 'size', 0) > 5 * 1024 * 1024:
@@ -567,6 +567,10 @@ def pet_list_api(request):
                 try:
                     from PIL import Image
                     Image.open(foto).verify()
+                    try:
+                        foto.seek(0)
+                    except Exception:
+                        pass
                 except Exception:
                     return Response({'error': 'Archivo de imagen inválido'}, status=status.HTTP_400_BAD_REQUEST)
                 pet.foto_url = foto

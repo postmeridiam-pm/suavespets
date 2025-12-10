@@ -323,7 +323,7 @@ class PetForm(forms.ModelForm):
             return foto
         content_type = getattr(foto, 'content_type', '')
         name = getattr(foto, 'name', '')
-        allowed_ct = ['image/jpeg', 'image/png']
+        allowed_ct = ['image/jpeg', 'image/png', 'image/jpg']
         allowed_ext = ('.jpg', '.jpeg', '.png')
         if content_type and content_type.lower() not in allowed_ct:
             raise forms.ValidationError('Solo se permiten imágenes JPG o PNG')
@@ -333,6 +333,10 @@ class PetForm(forms.ModelForm):
         try:
             from PIL import Image
             Image.open(foto).verify()
+            try:
+                foto.seek(0)
+            except Exception:
+                pass
         except Exception:
             raise forms.ValidationError('Archivo de imagen inválido')
         # Limitar tamaño (5 MB)

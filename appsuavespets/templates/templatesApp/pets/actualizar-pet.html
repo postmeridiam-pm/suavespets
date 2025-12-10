@@ -415,10 +415,7 @@
                 <i class="fas fa-paw"></i>
                 Fundación Pet
             </a>
-            <a href="{% url 'inicio' %}" class="btn-home">
-                <i class="fas fa-home"></i>
-                Inicio
-            </a>
+            <a href="{% url 'inicio' %}" class="btn-home">🏠 Inicio</a>
         </div>
     </nav>
 
@@ -544,10 +541,12 @@
 
                     <!-- Tamaño -->
                     <div class="form-group">
-                        <label for="{{ form.tamanio.id_for_label }}">
+                        <label for="tamanio_search_edit">
                             Tamaño
                             {% if form.tamanio.field.required %}<span class="required">*</span>{% endif %}
                         </label>
+                        <input id="tamanio_search_edit" class="form-control" list="tamanio-edit-options" placeholder="Escribe para buscar tamaño" />
+                        <datalist id="tamanio-edit-options"></datalist>
                         {{ form.tamanio }}
                         {% if form.tamanio.errors %}
                             <div class="error-message">
@@ -644,6 +643,9 @@
         const especieEditSelect = document.getElementById('id_especie');
         const razaInputEdit = document.getElementById('id_raza');
         const razaDatalist = document.getElementById('raza-options');
+        const tamanioSelectEdit = document.getElementById('id_tamanio');
+        const tamanioSearchEdit = document.getElementById('tamanio_search_edit');
+        const tamanioDatalistEdit = document.getElementById('tamanio-edit-options');
         function cargarRazasEdit(especie) {
             if (!especie || !razaDatalist) return;
             razaDatalist.innerHTML = '';
@@ -670,6 +672,32 @@
                 especieEditSelect.addEventListener('change', function() {
                     cargarRazasEdit(this.value || '');
                 });
+            }
+            if (tamanioSelectEdit && tamanioDatalistEdit) {
+                const opts = Array.from(tamanioSelectEdit.options).filter(o => o.value);
+                tamanioDatalistEdit.innerHTML = '';
+                const frag = document.createDocumentFragment();
+                opts.forEach(o => {
+                    const opt = document.createElement('option');
+                    opt.value = o.textContent;
+                    opt.setAttribute('data-code', o.value);
+                    frag.appendChild(opt);
+                });
+                tamanioDatalistEdit.appendChild(frag);
+                if (tamanioSearchEdit && tamanioSelectEdit.value) {
+                    const current = opts.find(o => o.value === tamanioSelectEdit.value);
+                    if (current) tamanioSearchEdit.value = current.textContent;
+                }
+                if (tamanioSearchEdit) {
+                    tamanioSearchEdit.addEventListener('change', function(){
+                        const val = this.value;
+                        const match = Array.from(tamanioDatalistEdit.children).find(o => o.value === val);
+                        if (match) {
+                            const code = match.getAttribute('data-code');
+                            tamanioSelectEdit.value = code;
+                        }
+                    });
+                }
             }
         });
         // Mostrar/ocultar "otra raza"
