@@ -292,12 +292,12 @@ def agregar_pet(request):
                 logger.warning(f'Formulario pet inválido: {form.errors}')
         
         except IntegrityError as e:
-            logger.error(f'Error de integridad al crear pet: {e}')
-            messages.error(request, '❌ Error: Ya existe una mascota con ese número de ficha.')
+            logger.error(f'Error al crear pet: {e}')
+            messages.error(request, 'Error: Ya existe una mascota con ese número de ficha.')
         
         except Exception as e:
             logger.error(f'Error inesperado al crear pet: {e}')
-            messages.error(request, '❌ Ocurrió un error inesperado. Intenta nuevamente.')
+            messages.error(request, 'Ocurrió un error. Intenta nuevamente.')
     
     else:
         form = PetForm()
@@ -316,7 +316,6 @@ def agregar_pet_api(request):
         es_mestizo = request.data.get('es_mestizo', '0') == '1'
         peso_kg = request.data.get('peso_kg')
         edad = request.data.get('edad')
-        fecha_nacimiento = request.data.get('fecha_nacimiento')
         alergias = request.data.get('alergias')
         numero_ficha = request.data.get('numero_ficha')
         foto_url = request.FILES.get('foto_url')
@@ -346,7 +345,6 @@ def agregar_pet_api(request):
                 es_mestizo=es_mestizo,
                 peso_kg=float(peso_kg) if peso_kg else None,
                 edad=int(edad) if edad else None,
-                fecha_nacimiento=fecha_nacimiento if fecha_nacimiento else None,
                 alergias=alergias if alergias else None,
                 numero_ficha=numero,
                 responsable_id=request.user.id_usuario,
@@ -372,7 +370,7 @@ def actualizar_pet(request, pk):
     elif request.user.tipo_usuario == 'veterinario':
         pet_qs = Pet.objects.only('id_pet','nombre_pet','descripcion_pet','especie','tamanio','raza','es_mestizo','sexo','edad','peso_kg','foto_url')
         pet = get_object_or_404(pet_qs, id_pet=pk, veterinario_id=request.user.id_usuario, is_deleted=0)
-        if not request.GET.get('consent') == '1':
+        if request.GET.get('consent') != '1':
             messages.error(request, 'Se requiere consentimiento previo.')
             return redirect('detalle_pet', pk=pk)
     else:
@@ -503,9 +501,9 @@ def pet_list_api(request):
             es_mestizo_val = 1 if str(es_mestizo) in ['1', 'true', 'True'] else 0
             peso_kg = request.data.get('peso_kg')
             edad = request.data.get('edad')
-            fecha_nacimiento = request.data.get('fecha_nacimiento') or None
             alergias = request.data.get('alergias') or ''
             numero_ficha = request.data.get('numero_ficha')
+            fecha_nacimiento = request.data.get('fecha_nacimiento')
 
             if not all([nombre_pet, descripcion_pet, especie, sexo, tamanio]):
                 return Response({'error': 'Faltan campos obligatorios'}, status=status.HTTP_400_BAD_REQUEST)
@@ -517,13 +515,29 @@ def pet_list_api(request):
             if es_mestizo_val == 1 and not raza:
                 raza = 'Mestizo'
 
-            # Convertir peso a Decimal si corresponde
             peso_decimal = None
             if peso_kg not in [None, '']:
                 try:
                     peso_decimal = Decimal(str(peso_kg).replace(',', '.'))
                 except InvalidOperation:
                     return Response({'error': 'Peso inválido'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Validación y cálculo de fecha de nacimiento
+            if (edad in [None, '']) and (fecha_nacimiento not in [None, '']):
+                return Response({'error': 'No puedes ingresar fecha si la edad es desconocida'}, status=status.HTTP_400_BAD_REQUEST)
+
+            dob = None
+            if fecha_nacimiento not in [None, '']:
+                try:
+                    dob = datetime.date.fromisoformat(fecha_nacimiento)
+                except Exception:
+                    return Response({'error': 'Fecha de nacimiento inválida'}, status=status.HTTP_400_BAD_REQUEST)
+                if dob > datetime.date.today():
+                    return Response({'error': 'Fecha de nacimiento no puede ser futura'}, status=status.HTTP_400_BAD_REQUEST)
+                if edad not in [None, '']:
+                    years = int((datetime.date.today() - dob).days // 365)
+                    if years != int(edad):
+                        return Response({'error': 'Edad no coincide con fecha de nacimiento'}, status=status.HTTP_400_BAD_REQUEST)
 
             pet = Pet(
                 nombre_pet=nombre_pet,
@@ -535,7 +549,7 @@ def pet_list_api(request):
                 es_mestizo=es_mestizo_val,
                 peso_kg=peso_decimal,
                 edad=int(edad) if edad not in [None, ''] else None,
-                fecha_nacimiento=fecha_nacimiento,
+                fecha_nacimiento=dob,
                 alergias=alergias,
                 numero_ficha=numero_ficha,
                 responsable_id=request.user.id_usuario,
@@ -755,16 +769,17 @@ class RazasAPI(View):
             response.raise_for_status()
             
             razas = [{'id': r.get('id', r.get('name', '').lower().replace(' ', '_')), 'name': r['name']} for r in response.json()]
+            logger.info('RazasAPI externo OK: %s (%d items)', especie, len(razas))
             return JsonResponse({'razas': razas})
         
         except requests.Timeout:
-            pass
+            logger.warning('RazasAPI timeout: %s', especie)
         
         except requests.RequestException as e:
-            pass
+            logger.error('RazasAPI error de red: %s', e)
         
         except Exception as e:
-            pass
+            logger.error('RazasAPI error inesperado: %s', e)
         
         if especie == 'perro':
             nombres = [
@@ -777,6 +792,7 @@ class RazasAPI(View):
                 'Russian Blue','Norwegian Forest','Savannah','Bombay','Birman','Oriental','Manx','Chartreux','Turkish Angora','Himalayan'
             ]
         fallback = [{'id': n.lower().replace(' ', '_'), 'name': n} for n in nombres]
+        logger.info('RazasAPI fallback usado: %s (%d items)', especie, len(fallback))
         return JsonResponse({'razas': fallback})
         
         

@@ -1115,21 +1115,22 @@ tamanioSelect.addEventListener('change', function() {
     validarPeso();
 });
 
-document.getElementById('btn-peso-desconocido').addEventListener('click', function() {
-    pesoInput.value = '';
-    pesoInput.classList.add('disabled-field');
-    pesoInput.disabled = true;
-    pesoInput.classList.remove('is-invalid');
-    pesoWarning.classList.remove('show');
-    pesoInput.placeholder = 'Peso desconocido';
-});
-
-// Re-habilitar peso al hacer clic
-pesoInput.addEventListener('focus', function() {
-    if (this.classList.contains('disabled-field')) {
-        this.classList.remove('disabled-field');
-        this.disabled = false;
-        this.placeholder = 'Ej: 4.5';
+document.getElementById('btn-peso-desconocido').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (pesoInput.classList.contains('disabled-field')) {
+        // Toggle a conocido
+        pesoInput.classList.remove('disabled-field');
+        pesoInput.disabled = false;
+        pesoInput.placeholder = 'Ej: 4.5';
+        pesoInput.focus();
+    } else {
+        // Toggle a desconocido
+        pesoInput.value = '';
+        pesoInput.classList.add('disabled-field');
+        pesoInput.disabled = true;
+        pesoInput.classList.remove('is-invalid');
+        pesoWarning.classList.remove('show');
+        pesoInput.placeholder = 'Peso desconocido';
     }
 });
 
@@ -1149,20 +1150,27 @@ edadInput.addEventListener('blur', function() {
     }
 });
 
-document.getElementById('btn-edad-desconocida').addEventListener('click', function() {
-    edadInput.value = '';
-    edadInput.classList.add('disabled-field');
-    edadInput.disabled = true;
-    edadInput.classList.remove('is-invalid');
-    edadInput.placeholder = 'Edad desconocida';
-});
-
-// Re-habilitar edad al hacer clic
-edadInput.addEventListener('focus', function() {
-    if (this.classList.contains('disabled-field')) {
-        this.classList.remove('disabled-field');
-        this.disabled = false;
-        this.placeholder = 'Ej: 3';
+document.getElementById('btn-edad-desconocida').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (edadInput.classList.contains('disabled-field')) {
+        edadInput.classList.remove('disabled-field');
+        edadInput.disabled = false;
+        edadInput.placeholder = 'Ej: 3';
+        edadInput.focus();
+        // Re-habilitar fecha de nacimiento al volver a conocer la edad
+        fechaNacInput.disabled = false;
+        fechaNacInput.placeholder = 'Opcional';
+    } else {
+        edadInput.value = '';
+        edadInput.classList.add('disabled-field');
+        edadInput.disabled = true;
+        edadInput.classList.remove('is-invalid');
+        edadInput.placeholder = 'Edad desconocida';
+        // Si la edad es desconocida, no permitir ingresar fecha
+        fechaNacInput.value = '';
+        fechaNacInput.disabled = true;
+        fechaNacInput.classList.remove('is-invalid');
+        fechaNacInput.placeholder = 'Fecha no disponible sin edad';
     }
 });
 
@@ -1304,6 +1312,7 @@ form.addEventListener('submit', function(e) {
     // No enviar edad si es desconocida
     if (edadInput.classList.contains('disabled-field')) {
         formData.delete('edad');
+        formData.delete('fecha_nacimiento');
     }
     
     const csrftoken = formData.get('csrfmiddlewaretoken');

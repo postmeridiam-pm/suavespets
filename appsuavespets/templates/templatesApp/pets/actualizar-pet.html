@@ -524,6 +524,20 @@
                         {% endif %}
                     </div>
 
+                    <!-- Fecha de nacimiento -->
+                    <div class="form-group">
+                        <label for="{{ form.fecha_nacimiento.id_for_label }}">
+                            Fecha de nacimiento
+                        </label>
+                        {{ form.fecha_nacimiento }}
+                        {% if form.fecha_nacimiento.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ form.fecha_nacimiento.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
                     <!-- Tamaño -->
                     <div class="form-group">
                         <label for="{{ form.tamanio.id_for_label }}">

@@ -115,6 +115,7 @@ class Pet(models.Model):
     es_mestizo = models.BooleanField(default=False)
     sexo = models.CharField(max_length=10, choices=SEXO_CHOICES, blank=True, null=True) 
     edad = models.IntegerField(blank=True, null=True) 
+    fecha_nacimiento = models.DateField(blank=True, null=True)
     peso_kg = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     numero_ficha = models.CharField(max_length=50, unique=True, blank=True, null=True)
     alergias = models.TextField(blank=True, null=True)

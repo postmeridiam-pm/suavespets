@@ -129,6 +129,7 @@ class GeminiVetService:
                 start = texto.find('REFERENCIAS:') + len('REFERENCIAS:')
                 info['referencias'] = texto[start:].strip()
             
+            logger.info('Gemini OK: contenido generado para pet %s (%s)', pet.id_pet, pet.raza)
             return info
         
         except Exception as e:

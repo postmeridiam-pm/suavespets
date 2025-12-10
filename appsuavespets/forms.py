@@ -235,7 +235,7 @@ class UsuarioForm(forms.ModelForm):
 class PetForm(forms.ModelForm):
     class Meta:
         model = Pet
-        fields = ['nombre_pet', 'descripcion_pet', 'especie', 'tamanio', 'raza', 'es_mestizo', 'sexo', 'edad', 'peso_kg', 'foto_url']
+        fields = ['nombre_pet', 'descripcion_pet', 'especie', 'tamanio', 'raza', 'es_mestizo', 'sexo', 'edad', 'fecha_nacimiento', 'peso_kg', 'foto_url']
         widgets = {
             'nombre_pet': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre de la mascota'}),
             'descripcion_pet': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Describe temperamento, salud y otros detalles'}),
@@ -251,6 +251,7 @@ class PetForm(forms.ModelForm):
                 'step': '1',
                 'placeholder': 'Dejar vacío si es desconocida'
             }),
+            'fecha_nacimiento': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'peso_kg': forms.NumberInput(attrs={
                 'class': 'form-control', 
                 'step': '0.01', 
@@ -270,6 +271,7 @@ class PetForm(forms.ModelForm):
             'raza': 'Raza',
             'sexo': 'Sexo',
             'edad': 'Edad (años)',
+            'fecha_nacimiento': 'Fecha de nacimiento',
             'peso_kg': 'Peso (kg)',
             'foto_url': 'Foto',
         }
@@ -296,6 +298,20 @@ class PetForm(forms.ModelForm):
                 raise forms.ValidationError('El peso puede tener máximo 2 decimales')
         
         return peso
+
+    def clean(self):
+        cleaned = super().clean()
+        dob = cleaned.get('fecha_nacimiento')
+        edad = cleaned.get('edad')
+        from datetime import date
+        if dob:
+            if dob > date.today():
+                self.add_error('fecha_nacimiento', 'La fecha no puede ser futura')
+            if edad is not None:
+                years = int((date.today() - dob).days // 365)
+                if years != int(edad):
+                    self.add_error('edad', 'La edad no coincide con la fecha de nacimiento')
+        return cleaned
     
     
 class ArchivoAdjuntoForm(forms.ModelForm):

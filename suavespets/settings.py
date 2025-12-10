@@ -33,9 +33,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 
-ALLOWED_HOSTS = ['suavespets.onrender.com']
-
-DATABASES = {'default': dj_database_url.config(default='sqlite:///db.sqlite3')}
+_ah = os.getenv('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [h.strip() for h in _ah.split(',') if h.strip()] or ['127.0.0.1', 'localhost', 'suavespets.onrender.com']
 
 
 
@@ -94,17 +93,17 @@ def env_bool(name, default=False):
     return (str(val).lower() in ('1', 'true', 'yes')) if val is not None else default
 
 
-if DEBUG and not DATABASE_URL:
+# Base de datos: usa DATABASE_URL si existe; si no, SQLite local
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=env_bool('DB_SSL_REQUIRE', True)),
+    }
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
-    }
-else:
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=env_bool('DB_SSL_REQUIRE', True)),
     }
 
 # CSRF trusted origins
@@ -218,6 +217,8 @@ USE_TZ = True
 
 
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+DOG_API_KEY = os.getenv('DOG_API_KEY')
+CAT_API_KEY = os.getenv('CAT_API_KEY')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
