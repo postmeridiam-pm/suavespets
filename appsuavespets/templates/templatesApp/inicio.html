@@ -37,6 +37,13 @@
     letter-spacing: -0.3px;
   }
   
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
   .dark-toggle-btn {
     background: #b0dab3;
     color: #184e52;
@@ -45,7 +52,6 @@
     padding: 0.5em 0.9em;
     border-radius: 30px;
     cursor: pointer;
-    margin-left: auto;
     transition: background 0.25s, color 0.25s, transform 0.2s;
     box-shadow: 0 2px 8px rgba(24,78,82,0.15);
     font-size: 1.2rem;
@@ -65,7 +71,6 @@
     border-radius: 30px;
     padding: 0.55em 1.6em;
     cursor: pointer;
-    margin-left: 1rem;
     transition: all 0.3s ease;
     font-size: 1rem;
     box-shadow: 0 2px 10px rgba(67,160,71,0.25);
@@ -75,6 +80,25 @@
     background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(67,160,71,0.35);
+  }
+
+  .logout-top-btn {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    color: white;
+    border: none;
+    font-weight: 700;
+    border-radius: 30px;
+    padding: 0.55em 1.6em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    box-shadow: 0 2px 10px rgba(245,124,0,0.25);
+  }
+
+  .logout-top-btn:hover {
+    background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(230,81,0,0.35);
   }
   
   .welcome-top {
@@ -282,8 +306,17 @@
     box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
   }
   
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     header {padding: 0 1rem;}
+    
+    .welcome-top {
+      display: none;
+    }
+    
+    .header-right {
+      gap: 0.5rem;
+    }
+    
     .main-card {padding: 3rem 2rem;}
     .main-card h1 { font-size: 2.1rem; }
     .main-card p { font-size: 1.1rem; }
@@ -297,14 +330,25 @@
     .youtube-rect { max-width:99vw; min-height:180px;}
   }
   
+  @media (max-width: 480px) {
+    .login-top-btn, .logout-top-btn {
+      padding: 0.5em 1.2em;
+      font-size: 0.9rem;
+    }
+    
+    .logo {
+      font-size: 1.4rem;
+    }
+  }
+  
   /* ---- DARK MODE ---- */
   body.dark-mode {
-    background: linear-gradient(135deg, #1a2332, #0f1419);
+    background: #181c1f;
     color: #e0f7fa;
   }
   
   body.dark-mode header {
-    background: #1e2a35;
+    background: #232b31;
     color: #e0f7fa;
     box-shadow: 0 2px 12px rgba(0,0,0,0.3);
   }
@@ -333,19 +377,35 @@
     background: linear-gradient(135deg, #1ba6b3 0%, #158791 100%);
     box-shadow: 0 4px 16px rgba(55,202,216,0.4);
   }
+
+  body.dark-mode .logout-top-btn {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    box-shadow: 0 2px 10px rgba(255,152,0,0.3);
+  }
+
+  body.dark-mode .logout-top-btn:hover {
+    background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+    box-shadow: 0 4px 16px rgba(230,81,0,0.4);
+  }
   
   body.dark-mode .welcome-top {
     color: #62dde9;
   }
   
   body.dark-mode .main-card {
-    background: linear-gradient(135deg, #1ba6b3 0%, #37cad8 50%, #62dde9 100%);
-    box-shadow: 0 6px 30px rgba(98,221,233,0.25);
+    background: #232b31;
+    box-shadow: 0 4px 24px rgba(16,26,30,0.27);
+    color: #e0f7fa;
   }
   
   body.dark-mode .main-card h1 {
-    color: #ffffff;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    font-size: 2.7rem;
+    color: #65def1;
+    background: none;
+    letter-spacing: 1.5px;
+    text-shadow: 0 2px 8px rgba(23,166,195,0.38);
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
   }
   
   body.dark-mode .main-card .paws { 
@@ -354,29 +414,29 @@
   }
   
   body.dark-mode .main-card p { 
-    color: #ffffff;
+    color: #d0e9f0;
     text-shadow: 0 1px 4px rgba(0,0,0,0.15);
   }
   
   body.dark-mode .main-card .cta-btns a, 
   body.dark-mode .main-card .cta-btns button.suscribir {
-    background: #ffffff;
-    color: #158791;
-    box-shadow: 0 3px 20px rgba(0,0,0,0.3);
+    background: linear-gradient(74deg, #43b3c9 45%, #60c1c6 100%);
+    color: #002b31;
+    box-shadow: 0 1.5px 16px rgba(98,221,233,0.4);
   }
   
   body.dark-mode .main-card .cta-btns a:hover, 
   body.dark-mode .main-card .cta-btns button.suscribir:hover {
-    background: #b39cd0;
-    color: #1a2332;
-    box-shadow: 0 6px 28px rgba(179,156,208,0.4);
+    background: linear-gradient(74deg,#62dde9 60%, #37cad8 100%);
+    color:#232b31;
+    box-shadow: 0 4px 24px rgba(55,202,216,0.13);
   }
   
   body.dark-mode .card {
-    background: #1e2a35;
+    background: #26343A;
     color: #e0f7fa;
-    border-left-color: #37cad8;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    border-left-color: #62dde9;
+    box-shadow: 0 6px 20px rgba(24,187,200,0.2);
   }
   
   body.dark-mode .card::before {
@@ -393,23 +453,24 @@
   
   body.dark-mode .card:hover {
     border-left-color: #b39cd0;
-    background: #25343f;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    background: #273943;
+    box-shadow: 0 12px 30px rgba(35,43,49,0.07);
+    transform: translateY(-4px);
   }
   
   body.dark-mode .youtube-rect {
-    background: #1e2a35;
-    box-shadow: 0 3px 18px rgba(0,0,0,0.4);
+    background: #273943;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.5);
   }
   
   body.dark-mode .youtube-rect:hover {
-    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.6);
   }
   
   body.dark-mode footer {
-    background: linear-gradient(135deg, #1ba6b3 0%, #158791 100%);
-    color: #ffffff;
-    border-top: 3px solid #37cad8;
+    background: #232b31;
+    color: #e0f7fa;
+    border-top: 2px solid #62dde9;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
   }
 </style>
@@ -448,6 +509,12 @@
       window.location.href = "{% url 'login' %}";
     {% endif %}
   }
+
+  function handleLogout() {
+    if(confirm('¿Estás seguro que deseas cerrar sesión?')) {
+      window.location.href = "{% url 'logout' %}";
+    }
+  }
 </script>
 </head>
 <body>
@@ -456,12 +523,16 @@
   {% if user.is_authenticated %}
     <div class="welcome-top">Bienvenido/a a Suaves Pets {{ user.nombre }}!❤️</div>
   {% endif %}
-  <button id="dark-mode-toggle" class="dark-toggle-btn" aria-label="Cambiar a modo oscuro" title="Modo oscuro">
-    <span id="dark-mode-emoji" aria-hidden="true">🌙</span>
-  </button>
-  {% if not user.is_authenticated %}
-    <button class="login-top-btn" onclick="handleMisMascotasClick()">Ingresar</button>
-  {% endif %}
+  <div class="header-right">
+    <button id="dark-mode-toggle" class="dark-toggle-btn" aria-label="Cambiar a modo oscuro" title="Modo oscuro">
+      <span id="dark-mode-emoji" aria-hidden="true">🌙</span>
+    </button>
+    {% if user.is_authenticated %}
+      <button class="logout-top-btn" onclick="handleLogout()">Cerrar Sesión</button>
+    {% else %}
+      <button class="login-top-btn" onclick="handleMisMascotasClick()">Ingresar</button>
+    {% endif %}
+  </div>
 </header>
 <main>
   <div class="main-card">
@@ -475,8 +546,8 @@
   </div>
   <section class="cards" aria-label="Beneficios de la membresía">
     <article class="card">
-      <h3>Registro y Seguimiento</h3>
-      <p>Mediante una suscripción mensual, crea perfiles detallados para cada una de tus mascotas. Registra información importante, historial médico y mantén un seguimiento completo de sus cuidados.</p>
+      <h3>Gestiona tus Mascotas</h3>
+      <p>Mantén un registro completo de tus mascotas: información médica, vacunas, controles veterinarios y más. Todo en un solo lugar, accesible cuando lo necesites.</p>
     </article>
     <article class="card">
       <h3>Apoyo a Fundaciones Rescatistas</h3>
@@ -484,7 +555,7 @@
     </article>
     <article class="card">
       <h3>Plataforma Amigable con Clínicas Veterinarias</h3>
-      <p>Conecta de forma rápida y sencilla con clínicas y médicos veterinarios de confianza para el cuidado de tus mascotas.</p>
+      <p>Con una suscripción mensual accesible, conecta de forma rápida y sencilla con clínicas y médicos veterinarios de confianza para el cuidado de tus mascotas.</p>
     </article>
   </section>
 
