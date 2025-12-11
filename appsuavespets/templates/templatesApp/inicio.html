@@ -7,14 +7,16 @@
 <title>Suaves Pets - Membresía y Cuidados</title>
 <style>
   * { margin:0; padding:0; box-sizing: border-box;}
+  
   body {
-    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family:'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background: linear-gradient(135deg, #e0f7fa, #fafcfd);
     color: #3d4f41;
     padding-top: 70px;
     line-height: 1.6;
     transition: background 0.35s, color 0.3s;
   }
+  
   header {
     position: fixed; top: 0; left: 0; right: 0;
     background: #c8e6c9;
@@ -23,14 +25,18 @@
     display: flex;
     align-items: center;
     padding: 0 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 1000;
     transition: background 0.3s;
   }
+  
   .logo {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 1.7rem;
+    color: #1a5738;
+    letter-spacing: -0.3px;
   }
+  
   .dark-toggle-btn {
     background: #b0dab3;
     color: #184e52;
@@ -40,31 +46,42 @@
     border-radius: 30px;
     cursor: pointer;
     margin-left: auto;
-    transition: background 0.25s, color 0.25s;
-    box-shadow: 0 1px 8px #184e5220;
+    transition: background 0.25s, color 0.25s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(24,78,82,0.15);
     font-size: 1.2rem;
   }
-  .dark-toggle-btn:hover { background: #81c784; }
+  
+  .dark-toggle-btn:hover { 
+    background: #81c784;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 12px rgba(24,78,82,0.2);
+  }
 
   .login-top-btn {
-    background: #7ebc92;
+    background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
     color: white;
     border: none;
     font-weight: 700;
     border-radius: 30px;
-    padding: 0.5em 1.5em;
+    padding: 0.55em 1.6em;
     cursor: pointer;
     margin-left: 1rem;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
     font-size: 1rem;
+    box-shadow: 0 2px 10px rgba(67,160,71,0.25);
   }
+  
   .login-top-btn:hover {
-    background: #528979;
+    background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(67,160,71,0.35);
   }
+  
   .welcome-top {
     margin-left: 1rem;
     font-weight: 700;
     color: #184e52;
+    font-size: 1rem;
   }
 
   main {
@@ -72,66 +89,105 @@
     margin: 0 auto;
     padding: 1rem 1rem 3rem;
   }
+  
   .main-card {
     margin: 3rem auto 4rem auto;
-    background: #b0dab3;
-    border-radius: 18px;
-    box-shadow: 0 4px 22px rgba(125, 185, 134, 0.105);
-    padding: 3rem 2rem 3rem 2rem;
+    background: linear-gradient(135deg, #81c784 0%, #66bb6a 50%, #4caf50 100%);
+    border-radius: 20px;
+    box-shadow: 0 6px 30px rgba(76, 175, 80, 0.25);
+    padding: 3.5rem 2.5rem 3.5rem 2.5rem;
     text-align: center;
     max-width: 1000px;
     position: relative;
+    overflow: hidden;
   }
+  
+  .main-card::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  
+  .main-card::after {
+    content: "";
+    position: absolute;
+    bottom: -25%;
+    left: -8%;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  
   .main-card h1 {
     font-size: 2.7rem;
     font-weight: 700;
-    color: #219ebc;
-    letter-spacing: 1.5px;
-    margin-bottom: 0.3em;
-    text-shadow: none;
-    background: none;
-    -webkit-background-clip: unset;
-    -webkit-text-fill-color: unset;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.4em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    position: relative;
+    z-index: 1;
   }
+  
   .main-card .paws {
     font-size: 2.3rem;
     margin: 0.5rem 0 1.5rem 0;
-    color: #6b588e;
+    color: #ffd54f;
     letter-spacing: 0.2em;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    position: relative;
+    z-index: 1;
   }
+  
   .main-card p {
-    font-size: 1.25rem;
+    font-size: 1.28rem;
     font-weight: 400;
-    color: #39594a;
+    color: #ffffff;
     margin-bottom: 0.8em;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 1;
   }
+  
   .main-card .cta-btns {
     display: flex;
     gap: 2rem;
     justify-content: center;
     margin-top: 2.5rem;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
   }
+  
   .main-card .cta-btns a, .main-card .cta-btns button.suscribir {
-    background: linear-gradient(74deg, #a1cba1 70%, #7ebc92 100%);
-    color: #fff;
+    background: #ffffff;
+    color: #2e7d32;
     font-weight: 700;
     font-size: 1.18rem;
     border: none;
     border-radius: 30px;
-    box-shadow: 0 2px 22px rgba(90,110,88, 0.15);
-    padding: 1rem 3.2rem;
+    box-shadow: 0 3px 20px rgba(0,0,0,0.2);
+    padding: 1.1rem 3.2rem;
     margin-top: 0.2em;
     cursor: pointer;
     text-decoration: none;
-    transition: background 0.27s, transform 0.2s, box-shadow 0.2s;
+    transition: all 0.27s ease;
     display: inline-block;
   }
+  
   .main-card .cta-btns a:hover, .main-card .cta-btns button.suscribir:hover {
-    background: linear-gradient(74deg, #8bc399 85%, #528979 100%);
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 6px 28px rgba(59,120,80,0.17);
+    background: #ffd54f;
+    color: #1b5e20;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 28px rgba(255,213,79,0.4);
   }
+  
   section.cards {
     margin-top: 2rem;
     display: grid;
@@ -139,27 +195,59 @@
     gap: 2.5rem;
     padding-bottom: 1em;
   }
+  
   .card {
-    background: #e9f7ed;
-    border-radius: 14px;
-    padding: 2rem 1rem 1.5rem;
-    box-shadow: 0 6px 20px rgba(86,125,90,0.11);
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2.2rem 1.8rem 1.8rem;
+    box-shadow: 0 4px 20px rgba(86,125,90,0.12);
     color: #31573b;
-    border-left: 6px solid #90bba1;
+    border-left: 5px solid #66bb6a;
     text-align: center;
-    transition: box-shadow 0.3s, border-color 0.3s;
+    transition: all 0.3s ease;
+    position: relative;
   }
+  
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent 0%, rgba(102,187,106,0.03) 100%);
+    border-radius: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
   .card:hover {
-    border-left-color: #7ebc92;
-    box-shadow: 0 12px 26px rgba(86,125,90,0.14);
-    transform: translateY(-4px);
+    border-left-color: #ffd54f;
+    box-shadow: 0 8px 32px rgba(86,125,90,0.18);
+    transform: translateY(-6px);
   }
+  
+  .card:hover::before {
+    opacity: 1;
+  }
+  
   .card h3 {
-    margin-bottom: 0.6em;
-    color: #2d6c54;
-    font-size: 1.35em;
-    font-weight: 600;
+    margin-bottom: 0.7em;
+    color: #2e7d32;
+    font-size: 1.38em;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
   }
+  
+  .card p {
+    color: #546e7a;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    position: relative;
+    z-index: 1;
+  }
+  
   .youtube-rect {
     background: #fff;
     border-radius: 14px;
@@ -167,93 +255,162 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 3px 18px #0002;
+    box-shadow: 0 3px 18px rgba(0,0,0,0.12);
     width: 100%;
     max-width: 480px;
     min-height: 130px;
     padding: 0.7em 1em;
-    transition: background 0.38s;
+    transition: all 0.3s ease;
   }
+  
+  .youtube-rect:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+  }
+  
   .youtube-rect iframe {
     width: 100%; min-height: 120px; max-height: 250px; border: none;
   }
+  
   footer {
     text-align: center;
     padding: 2.5rem 1rem;
-    background: #c8e6c9;
-    color: #294a36;
-    border-top: 2px solid #81c784;
+    background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+    color: #ffffff;
+    border-top: 3px solid #81c784;
     margin-top: 4rem;
-    font-size: 1.1em;
+    font-size: 1.05em;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
   }
+  
   @media (max-width: 640px) {
     header {padding: 0 1rem;}
+    .main-card {padding: 3rem 2rem;}
     .main-card h1 { font-size: 2.1rem; }
-    .main-card p { font-size: 1.08rem; }
-    .main-card .cta-btns a, .main-card .cta-btns button.suscribir { font-size: 1em; padding: 0.85rem 2rem;}
+    .main-card p { font-size: 1.1rem; }
+    .main-card .cta-btns a, .main-card .cta-btns button.suscribir { 
+      font-size: 1.05em; 
+      padding: 0.95rem 2.2rem;
+    }
     section.cards { grid-template-columns: 1fr; gap: 1.6rem;}
-    .card h3 { font-size: 1.13em; }
+    .card { padding: 2rem 1.5rem; }
+    .card h3 { font-size: 1.2em; }
     .youtube-rect { max-width:99vw; min-height:180px;}
   }
+  
   /* ---- DARK MODE ---- */
   body.dark-mode {
-    background: #181c1f;
+    background: linear-gradient(135deg, #1a2332, #0f1419);
     color: #e0f7fa;
   }
+  
   body.dark-mode header {
-    background: #232b31;
+    background: #1e2a35;
     color: #e0f7fa;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
   }
+  
   body.dark-mode .logo {
     color: #62dde9;
   }
+  
+  body.dark-mode .dark-toggle-btn {
+    background: #2a3f4d;
+    color: #62dde9;
+    box-shadow: 0 2px 8px rgba(98,221,233,0.2);
+  }
+  
+  body.dark-mode .dark-toggle-btn:hover {
+    background: #3a5f6d;
+    box-shadow: 0 3px 12px rgba(98,221,233,0.3);
+  }
+  
+  body.dark-mode .login-top-btn {
+    background: linear-gradient(135deg, #37cad8 0%, #1ba6b3 100%);
+    box-shadow: 0 2px 10px rgba(55,202,216,0.3);
+  }
+  
+  body.dark-mode .login-top-btn:hover {
+    background: linear-gradient(135deg, #1ba6b3 0%, #158791 100%);
+    box-shadow: 0 4px 16px rgba(55,202,216,0.4);
+  }
+  
+  body.dark-mode .welcome-top {
+    color: #62dde9;
+  }
+  
   body.dark-mode .main-card {
-    background: #232b31;
-    box-shadow: 0 4px 24px #101a1e44;
-    color: #e0f7fa;
+    background: linear-gradient(135deg, #1ba6b3 0%, #37cad8 50%, #62dde9 100%);
+    box-shadow: 0 6px 30px rgba(98,221,233,0.25);
   }
+  
   body.dark-mode .main-card h1 {
-    font-size: 2.7rem;
-    color: #65def1;
-    background: none;
-    letter-spacing: 1.5px;
-    text-shadow: 0 2px 8px #17a6c360;
-    -webkit-background-clip: unset;
-    -webkit-text-fill-color: unset;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
   }
-  body.dark-mode .main-card .paws { color: #b39cd0; }
-  body.dark-mode .main-card p { color: #d0e9f0; }
-  body.dark-mode .main-card .cta-btns a, body.dark-mode .main-card .cta-btns button.suscribir {
-    background: linear-gradient(74deg, #43b3c9 45%, #60c1c6 100%);
-    color: #002b31;
-    box-shadow: 0 1.5px 16px #62dde966;
+  
+  body.dark-mode .main-card .paws { 
+    color: #b39cd0;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
   }
-  body.dark-mode .main-card .cta-btns a:hover, body.dark-mode .main-card .cta-btns button.suscribir:hover {
-    background: linear-gradient(74deg,#62dde9 60%, #37cad8 100%);
-    color:#232b31;
-    box-shadow: 0 4px 24px #37cad822;
+  
+  body.dark-mode .main-card p { 
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.15);
   }
+  
+  body.dark-mode .main-card .cta-btns a, 
+  body.dark-mode .main-card .cta-btns button.suscribir {
+    background: #ffffff;
+    color: #158791;
+    box-shadow: 0 3px 20px rgba(0,0,0,0.3);
+  }
+  
+  body.dark-mode .main-card .cta-btns a:hover, 
+  body.dark-mode .main-card .cta-btns button.suscribir:hover {
+    background: #b39cd0;
+    color: #1a2332;
+    box-shadow: 0 6px 28px rgba(179,156,208,0.4);
+  }
+  
   body.dark-mode .card {
-    background: #26343A;
+    background: #1e2a35;
     color: #e0f7fa;
-    border-left-color: #62dde9;
-    box-shadow: 0 6px 20px #18bbc833;
+    border-left-color: #37cad8;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   }
-  body.dark-mode .card h3 { color: #62dde9; }
+  
+  body.dark-mode .card::before {
+    background: linear-gradient(135deg, transparent 0%, rgba(55,202,216,0.05) 100%);
+  }
+  
+  body.dark-mode .card h3 { 
+    color: #62dde9;
+  }
+  
+  body.dark-mode .card p {
+    color: #b0c4d0;
+  }
+  
   body.dark-mode .card:hover {
     border-left-color: #b39cd0;
-    background: #273943;
-    box-shadow: 0 12px 30px #232b3122;
-    transform: none;
+    background: #25343f;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
   }
+  
   body.dark-mode .youtube-rect {
-    background: #273943;
-    box-shadow: 0 3px 14px #0008;
+    background: #1e2a35;
+    box-shadow: 0 3px 18px rgba(0,0,0,0.4);
   }
+  
+  body.dark-mode .youtube-rect:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+  }
+  
   body.dark-mode footer {
-    background: #232b31;
-    color: #e0f7fa;
-    border-top: 2px solid #62dde9;
+    background: linear-gradient(135deg, #1ba6b3 0%, #158791 100%);
+    color: #ffffff;
+    border-top: 3px solid #37cad8;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
   }
 </style>
 <script>
@@ -318,8 +475,8 @@
   </div>
   <section class="cards" aria-label="Beneficios de la membresía">
     <article class="card">
-      <h3>Recordatorios Personalizados</h3>
-      <p>Recibe alertas oportunas para vacunas y controles, asegurando el bienestar y salud de tus mascotas con una pequeña suscripción mensual.</p>
+      <h3>Registro y Seguimiento</h3>
+      <p>Mediante una suscripción mensual, crea perfiles detallados para cada una de tus mascotas. Registra información importante, historial médico y mantén un seguimiento completo de sus cuidados.</p>
     </article>
     <article class="card">
       <h3>Apoyo a Fundaciones Rescatistas</h3>
@@ -327,7 +484,7 @@
     </article>
     <article class="card">
       <h3>Plataforma Amigable con Clínicas Veterinarias</h3>
-      <p>Con una suscripción mensual accesible, conecta de forma rápida y sencilla con clínicas y médicos veterinarios de confianza para el cuidado de tus mascotas.</p>
+      <p>Conecta de forma rápida y sencilla con clínicas y médicos veterinarios de confianza para el cuidado de tus mascotas.</p>
     </article>
   </section>
 
