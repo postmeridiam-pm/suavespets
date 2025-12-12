@@ -15,7 +15,6 @@ def registro_view(request):
             auth_user = authenticate(request, email=user.email, password=form.cleaned_data.get('password'))
             if auth_user is not None:
                 login(request, auth_user)
-                messages.success(request, 'Registro exitoso.')
                 return redirect('listado_pets')
             messages.success(request, 'Registro exitoso. Inicia sesión.')
             return redirect('login')
@@ -57,6 +56,9 @@ def login_view(request):
     return render(request, 'templatesApp/registro/login.html', {'last_email': last_email})
 
 def logout_view(request):
+    # limpiar cualquier mensaje pendiente para que la página de inicio de sesión no muestre mensajes anteriores
+    for _ in messages.get_messages(request):
+        pass
     logout(request)
     return redirect('login')
 
@@ -64,16 +66,4 @@ def logout_view(request):
 def acceso_denegado(request):
     return render(request, 'templatesApp/registro/acceso-denegado.html')
 
-# eliminado duplicado de registro_view (se usa el definido arriba)
-
-
-# eliminado duplicado de login_view
-
-
-def logout_view(request):
-    logout(request)
-    return redirect('login')
-
-
-def acceso_denegado(request):
-    return render(request, 'templatesApp/registro/acceso-denegado.html')
+# eliminado duplicado de logout_view y acceso_denegado
