@@ -2,23 +2,25 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
-from .models import Usuario, Pet, EventoClinico
+from .models import Usuario, Pet, EventoClinico, Cuidados
 from appsuavespets.views import is_admin
 from django import forms
 
 @login_required
 @user_passes_test(is_admin)
 def admin_configuracion(request):
-    total_usuarios = Usuario.objects.count()
     total_mascotas = Pet.objects.filter(Q(is_deleted=0) | Q(is_deleted__isnull=True)).count()
     total_eventos = EventoClinico.objects.filter(Q(is_deleted=0) | Q(is_deleted__isnull=True)).count()
-    socios_premium = Usuario.objects.filter(tipo_usuario='socio_premium').count()
+    veterinarios = Usuario.objects.filter(tipo_usuario='veterinario').count()
+    socios = Usuario.objects.filter(tipo_usuario='socio').count()
+    total_cuidados = Cuidados.objects.filter(Q(is_deleted=0) | Q(is_deleted__isnull=True)).count()
 
     context = {
-        'total_usuarios': total_usuarios,
         'total_mascotas': total_mascotas,
         'total_eventos': total_eventos,
-        'socios_premium': socios_premium,
+        'veterinarios': veterinarios,
+        'socios': socios,
+        'total_cuidados': total_cuidados,
     }
     return render(request, 'templatesApp/configuracion/admin-configuracion.html', context)
 

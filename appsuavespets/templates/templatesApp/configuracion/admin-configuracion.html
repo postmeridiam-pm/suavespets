@@ -329,9 +329,9 @@
         <!-- Estadísticas Generales -->
         <section class="stats-grid">
             <div class="stat-card">
-                <h3>Total Usuarios</h3>
-                <div class="stat-number">{{ total_usuarios|default:'0' }}</div>
-                <div class="stat-label">Registrados en el sistema</div>
+                <h3>Total Socios</h3>
+                <div class="stat-number">{{ socios|default:'0' }}</div>
+                <div class="stat-label">Usuarios con rol socio</div>
             </div>
             <div class="stat-card">
                 <h3>Mascotas Registradas</h3>
@@ -341,12 +341,17 @@
             <div class="stat-card">
                 <h3>Eventos Clínicos</h3>
                 <div class="stat-number">{{ total_eventos|default:'0' }}</div>
-                <div class="stat-label">Registrados este mes</div>
+                <div class="stat-label">Registrados en el sistema</div>
             </div>
             <div class="stat-card">
-                <h3>Socios Premium</h3>
-                <div class="stat-number">{{ socios_premium|default:'0' }}</div>
-                <div class="stat-label">Suscripciones activas</div>
+                <h3>Cuidados</h3>
+                <div class="stat-number">{{ total_cuidados|default:'0' }}</div>
+                <div class="stat-label">Programados o registrados</div>
+            </div>
+            <div class="stat-card">
+                <h3>Veterinarios Registrados</h3>
+                <div class="stat-number">{{ veterinarios|default:'0' }}</div>
+                <div class="stat-label">Usuarios con rol veterinario</div>
             </div>
         </section>
 
