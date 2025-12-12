@@ -25,7 +25,7 @@
     display: flex;
     align-items: center;
     padding: 0 2rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     z-index: 1000;
     transition: background 0.3s;
   }
@@ -34,7 +34,6 @@
     font-weight: 700;
     font-size: 1.7rem;
     color: #1a5738;
-    letter-spacing: -0.3px;
   }
   
   .header-right {
@@ -52,41 +51,35 @@
     padding: 0.5em 0.9em;
     border-radius: 30px;
     cursor: pointer;
-    transition: background 0.25s, color 0.25s, transform 0.2s;
-    box-shadow: 0 2px 8px rgba(24,78,82,0.15);
+    transition: background 0.25s, color 0.25s;
+    box-shadow: 0 1px 8px rgba(24,78,82,0.13);
     font-size: 1.2rem;
   }
   
   .dark-toggle-btn:hover { 
     background: #81c784;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 12px rgba(24,78,82,0.2);
   }
 
   .login-top-btn, .logout-top-btn {
-    background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+    background: #7ebc92;
     color: white;
     border: none;
     font-weight: 700;
     border-radius: 30px;
-    padding: 0.55em 1.6em;
+    padding: 0.5em 1.5em;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.3s;
     font-size: 1rem;
-    box-shadow: 0 2px 10px rgba(67,160,71,0.25);
   }
   
   .login-top-btn:hover, .logout-top-btn:hover {
-    background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(67,160,71,0.35);
+    background: #528979;
   }
   
   .welcome-top {
     margin-left: 1rem;
     font-weight: 700;
     color: #184e52;
-    font-size: 1rem;
   }
 
   main {
@@ -97,67 +90,35 @@
   
   .main-card {
     margin: 3rem auto 4rem auto;
-    background: linear-gradient(135deg, #81c784 0%, #66bb6a 50%, #4caf50 100%);
-    border-radius: 20px;
-    box-shadow: 0 6px 30px rgba(76, 175, 80, 0.25);
-    padding: 3.5rem 2.5rem 3.5rem 2.5rem;
+    background: #b0dab3;
+    border-radius: 18px;
+    box-shadow: 0 4px 22px rgba(125, 185, 134, 0.105);
+    padding: 3rem 2rem 3rem 2rem;
     text-align: center;
     max-width: 1000px;
     position: relative;
-    overflow: hidden;
-  }
-  
-  .main-card::before {
-    content: "";
-    position: absolute;
-    top: -20%;
-    right: -10%;
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  
-  .main-card::after {
-    content: "";
-    position: absolute;
-    bottom: -25%;
-    left: -8%;
-    width: 280px;
-    height: 280px;
-    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
-    border-radius: 50%;
   }
   
   .main-card h1 {
     font-size: 2.7rem;
     font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.4em;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    position: relative;
-    z-index: 1;
+    color: #219ebc;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.3em;
   }
   
   .main-card .paws {
     font-size: 2.3rem;
     margin: 0.5rem 0 1.5rem 0;
-    color: #ffd54f;
+    color: #6b588e;
     letter-spacing: 0.2em;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-    position: relative;
-    z-index: 1;
   }
   
   .main-card p {
-    font-size: 1.28rem;
+    font-size: 1.25rem;
     font-weight: 400;
-    color: #ffffff;
+    color: #39594a;
     margin-bottom: 0.8em;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    position: relative;
-    z-index: 1;
   }
   
   .main-card .cta-btns {
@@ -166,31 +127,28 @@
     justify-content: center;
     margin-top: 2.5rem;
     flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
   }
   
   .main-card .cta-btns a, .main-card .cta-btns button.suscribir {
-    background: #ffffff;
-    color: #2e7d32;
+    background: linear-gradient(74deg, #a1cba1 70%, #7ebc92 100%);
+    color: #fff;
     font-weight: 700;
     font-size: 1.18rem;
     border: none;
     border-radius: 30px;
-    box-shadow: 0 3px 20px rgba(0,0,0,0.2);
-    padding: 1.1rem 3.2rem;
+    box-shadow: 0 2px 22px rgba(90,110,88, 0.15);
+    padding: 1rem 3.2rem;
     margin-top: 0.2em;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.27s ease;
+    transition: background 0.27s, transform 0.2s, box-shadow 0.2s;
     display: inline-block;
   }
   
   .main-card .cta-btns a:hover, .main-card .cta-btns button.suscribir:hover {
-    background: #ffd54f;
-    color: #1b5e20;
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 6px 28px rgba(255,213,79,0.4);
+    background: linear-gradient(74deg, #8bc399 85%, #528979 100%);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 6px 28px rgba(59,120,80,0.17);
   }
   
   section.cards {
@@ -202,55 +160,27 @@
   }
   
   .card {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 2.2rem 1.8rem 1.8rem;
-    box-shadow: 0 4px 20px rgba(86,125,90,0.12);
+    background: #e9f7ed;
+    border-radius: 14px;
+    padding: 2rem 1rem 1.5rem;
+    box-shadow: 0 6px 20px rgba(86,125,90,0.11);
     color: #31573b;
-    border-left: 5px solid #66bb6a;
+    border-left: 6px solid #90bba1;
     text-align: center;
-    transition: all 0.3s ease;
-    position: relative;
-  }
-  
-  .card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, transparent 0%, rgba(102,187,106,0.03) 100%);
-    border-radius: 16px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: box-shadow 0.3s, border-color 0.3s;
   }
   
   .card:hover {
-    border-left-color: #ffd54f;
-    box-shadow: 0 8px 32px rgba(86,125,90,0.18);
-    transform: translateY(-6px);
-  }
-  
-  .card:hover::before {
-    opacity: 1;
+    border-left-color: #7ebc92;
+    box-shadow: 0 12px 26px rgba(86,125,90,0.14);
+    transform: translateY(-4px);
   }
   
   .card h3 {
-    margin-bottom: 0.7em;
-    color: #2e7d32;
-    font-size: 1.38em;
-    font-weight: 700;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .card p {
-    color: #546e7a;
-    font-size: 1.05rem;
-    line-height: 1.65;
-    position: relative;
-    z-index: 1;
+    margin-bottom: 0.6em;
+    color: #2d6c54;
+    font-size: 1.35em;
+    font-weight: 600;
   }
   
   .youtube-rect {
@@ -260,16 +190,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 3px 18px rgba(0,0,0,0.12);
+    box-shadow: 0 3px 18px rgba(0,0,0,0.13);
     width: 100%;
     max-width: 480px;
     min-height: 130px;
     padding: 0.7em 1em;
-    transition: all 0.3s ease;
-  }
-  
-  .youtube-rect:hover {
-    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    transition: background 0.38s;
   }
   
   .youtube-rect iframe {
@@ -279,47 +205,24 @@
   footer {
     text-align: center;
     padding: 2.5rem 1rem;
-    background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
-    color: #ffffff;
-    border-top: 3px solid #81c784;
+    background: #c8e6c9;
+    color: #294a36;
+    border-top: 2px solid #81c784;
     margin-top: 4rem;
-    font-size: 1.05em;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+    font-size: 1.1em;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     header {padding: 0 1rem;}
-    
     .welcome-top {
       display: none;
     }
-    
-    .header-right {
-      gap: 0.5rem;
-    }
-    
-    .main-card {padding: 3rem 2rem;}
     .main-card h1 { font-size: 2.1rem; }
-    .main-card p { font-size: 1.1rem; }
-    .main-card .cta-btns a, .main-card .cta-btns button.suscribir { 
-      font-size: 1.05em; 
-      padding: 0.95rem 2.2rem;
-    }
+    .main-card p { font-size: 1.08rem; }
+    .main-card .cta-btns a, .main-card .cta-btns button.suscribir { font-size: 1em; padding: 0.85rem 2rem;}
     section.cards { grid-template-columns: 1fr; gap: 1.6rem;}
-    .card { padding: 2rem 1.5rem; }
-    .card h3 { font-size: 1.2em; }
+    .card h3 { font-size: 1.13em; }
     .youtube-rect { max-width:99vw; min-height:180px;}
-  }
-  
-  @media (max-width: 480px) {
-    .login-top-btn, .logout-top-btn {
-      padding: 0.5em 1.2em;
-      font-size: 0.9rem;
-    }
-    
-    .logo {
-      font-size: 1.4rem;
-    }
   }
   
   /* ---- DARK MODE ---- */
@@ -331,39 +234,9 @@
   body.dark-mode header {
     background: #232b31;
     color: #e0f7fa;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
   }
   
   body.dark-mode .logo {
-    color: #62dde9;
-  }
-  
-  body.dark-mode .dark-toggle-btn {
-    background: #2a3f4d;
-    color: #62dde9;
-    box-shadow: 0 2px 8px rgba(98,221,233,0.2);
-  }
-  
-  body.dark-mode .dark-toggle-btn:hover {
-    background: #3a5f6d;
-    box-shadow: 0 3px 12px rgba(98,221,233,0.3);
-  }
-  
-  body.dark-mode .login-top-btn,
-  body.dark-mode .logout-top-btn {
-    background: linear-gradient(74deg, #43b3c9 45%, #60c1c6 100%);
-    color: #002b31;
-    box-shadow: 0 2px 10px rgba(67,179,201,0.3);
-  }
-  
-  body.dark-mode .login-top-btn:hover,
-  body.dark-mode .logout-top-btn:hover {
-    background: linear-gradient(74deg,#62dde9 60%, #37cad8 100%);
-    color:#232b31;
-    box-shadow: 0 4px 16px rgba(98,221,233,0.4);
-  }
-  
-  body.dark-mode .welcome-top {
     color: #62dde9;
   }
   
@@ -381,24 +254,20 @@
   }
   
   body.dark-mode .main-card .paws { 
-    color: #b39cd0;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+    color: #b39cd0; 
   }
   
   body.dark-mode .main-card p { 
-    color: #d0e9f0;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    color: #d0e9f0; 
   }
   
-  body.dark-mode .main-card .cta-btns a, 
-  body.dark-mode .main-card .cta-btns button.suscribir {
+  body.dark-mode .main-card .cta-btns a, body.dark-mode .main-card .cta-btns button.suscribir {
     background: linear-gradient(74deg, #43b3c9 45%, #60c1c6 100%);
     color: #002b31;
     box-shadow: 0 1.5px 16px rgba(98,221,233,0.4);
   }
   
-  body.dark-mode .main-card .cta-btns a:hover, 
-  body.dark-mode .main-card .cta-btns button.suscribir:hover {
+  body.dark-mode .main-card .cta-btns a:hover, body.dark-mode .main-card .cta-btns button.suscribir:hover {
     background: linear-gradient(74deg,#62dde9 60%, #37cad8 100%);
     color:#232b31;
     box-shadow: 0 4px 24px rgba(55,202,216,0.13);
@@ -411,23 +280,14 @@
     box-shadow: 0 6px 20px rgba(24,187,200,0.2);
   }
   
-  body.dark-mode .card::before {
-    background: none;
-  }
-  
   body.dark-mode .card h3 { 
-    color: #62dde9;
-  }
-  
-  body.dark-mode .card p {
-    color: #b0c4d0;
+    color: #62dde9; 
   }
   
   body.dark-mode .card:hover {
     border-left-color: #b39cd0;
     background: #273943;
     box-shadow: 0 12px 30px rgba(35,43,49,0.07);
-    transform: translateY(-4px);
   }
   
   body.dark-mode .youtube-rect {
@@ -435,15 +295,10 @@
     box-shadow: 0 3px 14px rgba(0,0,0,0.5);
   }
   
-  body.dark-mode .youtube-rect:hover {
-    box-shadow: 0 6px 24px rgba(0,0,0,0.6);
-  }
-  
   body.dark-mode footer {
     background: #232b31;
     color: #e0f7fa;
     border-top: 2px solid #62dde9;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
   }
 </style>
 <script>
@@ -518,8 +373,8 @@
   </div>
   <section class="cards" aria-label="Beneficios de la membresía">
     <article class="card">
-      <h3>Gestiona tus Mascotas</h3>
-      <p>Mantén un registro completo de tus mascotas: información médica, vacunas, controles veterinarios y más. Todo en un solo lugar, accesible cuando lo necesites.</p>
+      <h3>Registra tus Mascotas</h3>
+      <p>Mantén un control completo de la información de tus mascotas: información médica, vacunas, controles veterinarios y más. Todo en un solo lugar, accesible cuando lo necesites.</p>
     </article>
     <article class="card">
       <h3>Apoyo a Fundaciones Rescatistas</h3>
