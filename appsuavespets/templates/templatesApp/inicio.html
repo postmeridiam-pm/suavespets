@@ -63,7 +63,7 @@
     box-shadow: 0 3px 12px rgba(24,78,82,0.2);
   }
 
-  .login-top-btn {
+  .login-top-btn, .logout-top-btn {
     background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
     color: white;
     border: none;
@@ -76,29 +76,10 @@
     box-shadow: 0 2px 10px rgba(67,160,71,0.25);
   }
   
-  .login-top-btn:hover {
+  .login-top-btn:hover, .logout-top-btn:hover {
     background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(67,160,71,0.35);
-  }
-
-  .logout-top-btn {
-    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-    color: white;
-    border: none;
-    font-weight: 700;
-    border-radius: 30px;
-    padding: 0.55em 1.6em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-    box-shadow: 0 2px 10px rgba(245,124,0,0.25);
-  }
-
-  .logout-top-btn:hover {
-    background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(230,81,0,0.35);
   }
   
   .welcome-top {
@@ -368,24 +349,18 @@
     box-shadow: 0 3px 12px rgba(98,221,233,0.3);
   }
   
-  body.dark-mode .login-top-btn {
-    background: linear-gradient(135deg, #37cad8 0%, #1ba6b3 100%);
-    box-shadow: 0 2px 10px rgba(55,202,216,0.3);
+  body.dark-mode .login-top-btn,
+  body.dark-mode .logout-top-btn {
+    background: linear-gradient(74deg, #43b3c9 45%, #60c1c6 100%);
+    color: #002b31;
+    box-shadow: 0 2px 10px rgba(67,179,201,0.3);
   }
   
-  body.dark-mode .login-top-btn:hover {
-    background: linear-gradient(135deg, #1ba6b3 0%, #158791 100%);
-    box-shadow: 0 4px 16px rgba(55,202,216,0.4);
-  }
-
-  body.dark-mode .logout-top-btn {
-    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-    box-shadow: 0 2px 10px rgba(255,152,0,0.3);
-  }
-
+  body.dark-mode .login-top-btn:hover,
   body.dark-mode .logout-top-btn:hover {
-    background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
-    box-shadow: 0 4px 16px rgba(230,81,0,0.4);
+    background: linear-gradient(74deg,#62dde9 60%, #37cad8 100%);
+    color:#232b31;
+    box-shadow: 0 4px 16px rgba(98,221,233,0.4);
   }
   
   body.dark-mode .welcome-top {
@@ -401,11 +376,8 @@
   body.dark-mode .main-card h1 {
     font-size: 2.7rem;
     color: #65def1;
-    background: none;
     letter-spacing: 1.5px;
     text-shadow: 0 2px 8px rgba(23,166,195,0.38);
-    -webkit-background-clip: unset;
-    -webkit-text-fill-color: unset;
   }
   
   body.dark-mode .main-card .paws { 
@@ -440,7 +412,7 @@
   }
   
   body.dark-mode .card::before {
-    background: linear-gradient(135deg, transparent 0%, rgba(55,202,216,0.05) 100%);
+    background: none;
   }
   
   body.dark-mode .card h3 { 
